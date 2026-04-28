@@ -744,10 +744,16 @@ class BPILoader:
                         report.source_path = str(path)
                         break
 
-        # Try 2: Load from cache (try CSV first, then XES)
+        # Try 2: Load from cache (try CSV first, then XES in both compressed and uncompressed forms)
         if not dataset:
-            for fmt in ['csv', 'xes']:
-                cache_path = self._get_cache_path(resolved_name, fmt)
+            # Check all possible cache formats
+            cache_formats = [
+                ('csv', self.cache_dir / f"{resolved_name}.csv"),
+                ('csv', self.cache_dir / f"{resolved_name}.csv.gz"),
+                ('xes', self.cache_dir / f"{resolved_name}.xes"),
+                ('xes', self.cache_dir / f"{resolved_name}.xes.gz"),
+            ]
+            for fmt, cache_path in cache_formats:
                 if cache_path.exists():
                     if fmt == 'csv':
                         dataset = self._load_from_csv(cache_path, resolved_name)
