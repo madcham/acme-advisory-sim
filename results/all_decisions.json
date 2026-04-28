@@ -1,0 +1,222 @@
+{
+  "without_bank": [
+    {
+      "decision_id": "DEC-NB-000001",
+      "week": 3,
+      "agent_id": "vendor_agent",
+      "scenario_type": "vendor_sow",
+      "decision_taken": "Issue SOW to Brightline Consulting as requested",
+      "outcome": "incorrect",
+      "context_retrieved": [],
+      "context_used": []
+    },
+    {
+      "decision_id": "DEC-NB-000002",
+      "week": 4,
+      "agent_id": "proposal_agent",
+      "scenario_type": "go_no_go",
+      "decision_taken": "Proceed with go decision. Marcus Webb override applies to Hartwell Group.",
+      "outcome": "correct",
+      "context_retrieved": [],
+      "context_used": []
+    },
+    {
+      "decision_id": "DEC-NB-000003",
+      "week": 5,
+      "agent_id": "billing_agent",
+      "scenario_type": "payment_escalation",
+      "decision_taken": "Do not escalate until day 65. TerraLogic has 60-day actual payment cycle.",
+      "outcome": "correct",
+      "context_retrieved": [],
+      "context_used": []
+    },
+    {
+      "decision_id": "DEC-NB-000004",
+      "week": 6,
+      "agent_id": "staffing_agent",
+      "scenario_type": "staffing_assignment",
+      "decision_taken": "Do not assign Jordan Park to Nexum Partners work. Find alternative staffing.",
+      "outcome": "correct",
+      "context_retrieved": [],
+      "context_used": []
+    },
+    {
+      "decision_id": "DEC-NB-000005",
+      "week": 7,
+      "agent_id": "vendor_agent",
+      "scenario_type": "vendor_sow",
+      "decision_taken": "Issue SOW to Brightline Consulting as requested",
+      "outcome": "incorrect",
+      "context_retrieved": [],
+      "context_used": []
+    },
+    {
+      "decision_id": "DEC-NB-000006",
+      "week": 8,
+      "agent_id": "proposal_agent",
+      "scenario_type": "go_no_go",
+      "decision_taken": "Recommend no-go due to margin below threshold",
+      "outcome": "incorrect",
+      "context_retrieved": [],
+      "context_used": []
+    },
+    {
+      "decision_id": "DEC-NB-000007",
+      "week": 10,
+      "agent_id": "billing_agent",
+      "scenario_type": "payment_escalation",
+      "decision_taken": "Escalate to collections given payment is past 45 days",
+      "outcome": "escalated",
+      "context_retrieved": [],
+      "context_used": []
+    },
+    {
+      "decision_id": "DEC-NB-000008",
+      "week": 11,
+      "agent_id": "vendor_agent",
+      "scenario_type": "vendor_sow",
+      "decision_taken": "Route SOW through secondary approval from David Okafor before issuance",
+      "outcome": "correct",
+      "context_retrieved": [],
+      "context_used": []
+    },
+    {
+      "decision_id": "DEC-NB-000009",
+      "week": 11,
+      "agent_id": "staffing_agent",
+      "scenario_type": "staffing_assignment",
+      "decision_taken": "Assign Jordan Park to Nexum Partners engagement based on skills match",
+      "outcome": "incorrect",
+      "context_retrieved": [],
+      "context_used": []
+    }
+  ],
+  "with_bank": [
+    {
+      "decision_id": "DEC-WB-000001",
+      "week": 3,
+      "agent_id": "vendor_agent",
+      "scenario_type": "vendor_sow",
+      "decision_taken": "Route SOW through secondary approval from David Okafor before issuance",
+      "outcome": "correct",
+      "context_retrieved": [
+        "CTX-001"
+      ],
+      "context_used": [
+        "CTX-001"
+      ]
+    },
+    {
+      "decision_id": "DEC-WB-000002",
+      "week": 4,
+      "agent_id": "proposal_agent",
+      "scenario_type": "go_no_go",
+      "decision_taken": "Proceed with go decision. Marcus Webb override applies to Hartwell Group.",
+      "outcome": "correct",
+      "context_retrieved": [
+        "CTX-003"
+      ],
+      "context_used": [
+        "CTX-003"
+      ]
+    },
+    {
+      "decision_id": "DEC-WB-000003",
+      "week": 5,
+      "agent_id": "billing_agent",
+      "scenario_type": "payment_escalation",
+      "decision_taken": "Escalate to collections given payment is past 45 days",
+      "outcome": "escalated",
+      "context_retrieved": [
+        "CTX-006"
+      ],
+      "context_used": []
+    },
+    {
+      "decision_id": "DEC-WB-000004",
+      "week": 6,
+      "agent_id": "staffing_agent",
+      "scenario_type": "staffing_assignment",
+      "decision_taken": "Do not assign Jordan Park to Nexum Partners work. Find alternative staffing.",
+      "outcome": "correct",
+      "context_retrieved": [
+        "CTX-010"
+      ],
+      "context_used": [
+        "CTX-010"
+      ]
+    },
+    {
+      "decision_id": "DEC-WB-000005",
+      "week": 7,
+      "agent_id": "vendor_agent",
+      "scenario_type": "vendor_sow",
+      "decision_taken": "Route SOW through secondary approval from David Okafor before issuance",
+      "outcome": "correct",
+      "context_retrieved": [
+        "CTX-001",
+        "CTX-1E9F2679"
+      ],
+      "context_used": [
+        "CTX-001"
+      ]
+    },
+    {
+      "decision_id": "DEC-WB-000006",
+      "week": 8,
+      "agent_id": "proposal_agent",
+      "scenario_type": "go_no_go",
+      "decision_taken": "Proceed with go decision. Marcus Webb override applies to Hartwell Group.",
+      "outcome": "correct",
+      "context_retrieved": [
+        "CTX-003",
+        "CTX-79832B7C"
+      ],
+      "context_used": [
+        "CTX-003"
+      ]
+    },
+    {
+      "decision_id": "DEC-WB-000007",
+      "week": 10,
+      "agent_id": "billing_agent",
+      "scenario_type": "payment_escalation",
+      "decision_taken": "Do not escalate until day 65. TerraLogic has 60-day actual payment cycle.",
+      "outcome": "correct",
+      "context_retrieved": [
+        "CTX-006"
+      ],
+      "context_used": [
+        "CTX-006"
+      ]
+    },
+    {
+      "decision_id": "DEC-WB-000008",
+      "week": 11,
+      "agent_id": "vendor_agent",
+      "scenario_type": "vendor_sow",
+      "decision_taken": "Route SOW through secondary approval from David Okafor before issuance",
+      "outcome": "correct",
+      "context_retrieved": [
+        "CTX-001",
+        "CTX-B67CE8EE"
+      ],
+      "context_used": [
+        "CTX-001"
+      ]
+    },
+    {
+      "decision_id": "DEC-WB-000009",
+      "week": 11,
+      "agent_id": "staffing_agent",
+      "scenario_type": "staffing_assignment",
+      "decision_taken": "Assign Jordan Park to Nexum Partners engagement based on skills match",
+      "outcome": "incorrect",
+      "context_retrieved": [
+        "CTX-010",
+        "CTX-22C64E1A"
+      ],
+      "context_used": []
+    }
+  ]
+}

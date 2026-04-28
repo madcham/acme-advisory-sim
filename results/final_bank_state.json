@@ -1,0 +1,3153 @@
+{
+  "current_week": 12,
+  "objects": [
+    {
+      "id": "CTX-001",
+      "created_at": "2024-01-01T00:00:00Z",
+      "created_by": "system",
+      "source_type": "system",
+      "workflow_id": "W4",
+      "week": 0,
+      "content_type": "tribal_knowledge",
+      "payload": "Brightline Consulting always requires secondary approval from David Okafor before SOW issuance. Root cause: 2022 invoice dispute where Brightline billed 40% above agreed rate on a federal engagement.",
+      "structured_data": {
+        "vendor": "brightline_consulting",
+        "required_approver": "david_okafor",
+        "approval_type": "secondary",
+        "root_cause_year": 2022,
+        "incident_type": "invoice_dispute",
+        "overcharge_percent": 40
+      },
+      "valid_from": "2024-01-01T00:00:00Z",
+      "decay_function": "step_function",
+      "decay_rate": 0.025,
+      "confidence_at_creation": 0.95,
+      "current_confidence": 0.285,
+      "context_grade": "institutional_memory",
+      "context_grade_confidence": 0.95,
+      "org_lineage": "failure_recovery",
+      "org_lineage_confidence": 0.92,
+      "derivation_chain": [],
+      "raw_evidence": [],
+      "read_by": [
+        {
+          "agent_id": "vendor_agent",
+          "timestamp": "2026-04-28T05:30:57.191656Z",
+          "action_taken": "Retrieved for vendor_sow decision",
+          "outcome": null,
+          "validated": null
+        },
+        {
+          "agent_id": "vendor_agent",
+          "timestamp": "2026-04-28T05:30:57.217013Z",
+          "action_taken": "Retrieved for vendor_sow decision",
+          "outcome": null,
+          "validated": null
+        },
+        {
+          "agent_id": "vendor_agent",
+          "timestamp": "2026-04-28T05:30:57.235596Z",
+          "action_taken": "Retrieved for vendor_sow decision",
+          "outcome": null,
+          "validated": null
+        }
+      ],
+      "acted_on_by": [
+        {
+          "agent_id": "vendor_agent",
+          "timestamp": "2026-04-28T05:30:57.191759Z",
+          "action_taken": "Applied to vendor_sow decision",
+          "outcome": "correct",
+          "validated": null
+        },
+        {
+          "agent_id": "vendor_agent",
+          "timestamp": "2026-04-28T05:30:57.217075Z",
+          "action_taken": "Applied to vendor_sow decision",
+          "outcome": "correct",
+          "validated": null
+        },
+        {
+          "agent_id": "vendor_agent",
+          "timestamp": "2026-04-28T05:30:57.235668Z",
+          "action_taken": "Applied to vendor_sow decision",
+          "outcome": "correct",
+          "validated": null
+        }
+      ],
+      "validated_by": [],
+      "invalidated_by": [],
+      "supersedes": null,
+      "superseded_by": null,
+      "contradicts": [
+        "CTX-A26614B8"
+      ]
+    },
+    {
+      "id": "CTX-002",
+      "created_at": "2024-01-01T00:00:00Z",
+      "created_by": "system",
+      "source_type": "system",
+      "workflow_id": "W1",
+      "week": 0,
+      "content_type": "tribal_knowledge",
+      "payload": "Financial services clients verbally expand scope in week 3-4 of engagements. Always document verbal expansions within 24 hours or billing disputes follow.",
+      "structured_data": {
+        "client_vertical": "financial_services",
+        "scope_expansion_window": "week_3_4",
+        "documentation_deadline_hours": 24,
+        "consequence": "billing_disputes"
+      },
+      "valid_from": "2024-01-01T00:00:00Z",
+      "decay_function": "exponential",
+      "decay_rate": 0.08,
+      "confidence_at_creation": 0.87,
+      "current_confidence": 0.3198697572597477,
+      "context_grade": "institutional_memory",
+      "context_grade_confidence": 0.9,
+      "org_lineage": "failure_recovery",
+      "org_lineage_confidence": 0.88,
+      "derivation_chain": [],
+      "raw_evidence": [],
+      "read_by": [],
+      "acted_on_by": [],
+      "validated_by": [],
+      "invalidated_by": [],
+      "supersedes": null,
+      "superseded_by": null,
+      "contradicts": []
+    },
+    {
+      "id": "CTX-003",
+      "created_at": "2024-01-01T00:00:00Z",
+      "created_by": "system",
+      "source_type": "system",
+      "workflow_id": "W2",
+      "week": 0,
+      "content_type": "tribal_knowledge",
+      "payload": "Marcus Webb will override go/no-go on any Hartwell Group opportunity regardless of margin. Historical relationship, not subject to standard process.",
+      "structured_data": {
+        "partner": "marcus_webb",
+        "client": "hartwell_group",
+        "override_type": "go_no_go",
+        "reason": "historical_relationship",
+        "margin_override": true
+      },
+      "valid_from": "2024-01-01T00:00:00Z",
+      "decay_function": "permanent",
+      "decay_rate": 0.1,
+      "confidence_at_creation": 0.95,
+      "current_confidence": 0.95,
+      "context_grade": "institutional_memory",
+      "context_grade_confidence": 0.85,
+      "org_lineage": "political_settlement",
+      "org_lineage_confidence": 0.9,
+      "derivation_chain": [],
+      "raw_evidence": [],
+      "read_by": [
+        {
+          "agent_id": "proposal_agent",
+          "timestamp": "2026-04-28T05:30:57.196493Z",
+          "action_taken": "Retrieved for go_no_go decision",
+          "outcome": null,
+          "validated": null
+        },
+        {
+          "agent_id": "proposal_agent",
+          "timestamp": "2026-04-28T05:30:57.221211Z",
+          "action_taken": "Retrieved for go_no_go decision",
+          "outcome": null,
+          "validated": null
+        }
+      ],
+      "acted_on_by": [
+        {
+          "agent_id": "proposal_agent",
+          "timestamp": "2026-04-28T05:30:57.196563Z",
+          "action_taken": "Applied to go_no_go decision",
+          "outcome": "correct",
+          "validated": null
+        },
+        {
+          "agent_id": "proposal_agent",
+          "timestamp": "2026-04-28T05:30:57.221299Z",
+          "action_taken": "Applied to go_no_go decision",
+          "outcome": "correct",
+          "validated": null
+        }
+      ],
+      "validated_by": [],
+      "invalidated_by": [],
+      "supersedes": null,
+      "superseded_by": null,
+      "contradicts": []
+    },
+    {
+      "id": "CTX-004",
+      "created_at": "2024-01-01T00:00:00Z",
+      "created_by": "system",
+      "source_type": "system",
+      "workflow_id": "W3",
+      "week": 0,
+      "content_type": "policy",
+      "payload": "Priya Nair requires 72-hour notice before any senior resource reallocation. Violations create two-week morale recovery periods.",
+      "structured_data": {
+        "stakeholder": "priya_nair",
+        "notice_hours": 72,
+        "resource_level": "senior",
+        "consequence": "morale_impact",
+        "recovery_weeks": 2
+      },
+      "valid_from": "2024-01-01T00:00:00Z",
+      "decay_function": "step_function",
+      "decay_rate": 0.1,
+      "confidence_at_creation": 0.95,
+      "current_confidence": 0.285,
+      "context_grade": "compliance_scaffolding",
+      "context_grade_confidence": 0.97,
+      "org_lineage": "documented_policy",
+      "org_lineage_confidence": 0.94,
+      "derivation_chain": [],
+      "raw_evidence": [],
+      "read_by": [],
+      "acted_on_by": [],
+      "validated_by": [],
+      "invalidated_by": [],
+      "supersedes": null,
+      "superseded_by": null,
+      "contradicts": []
+    },
+    {
+      "id": "CTX-005",
+      "created_at": "2024-01-01T00:00:00Z",
+      "created_by": "system",
+      "source_type": "system",
+      "workflow_id": "W4",
+      "week": 0,
+      "content_type": "tribal_knowledge",
+      "payload": "Vance Analytics pricing is negotiable up to 15% below list when engagement is over $500K. Do not disclose this in initial SOW.",
+      "structured_data": {
+        "vendor": "vance_analytics",
+        "discount_percent": 15,
+        "threshold_amount": 500000,
+        "disclosure_rule": "do_not_disclose_initially"
+      },
+      "valid_from": "2024-01-01T00:00:00Z",
+      "decay_function": "exponential",
+      "decay_rate": 0.12,
+      "confidence_at_creation": 0.78,
+      "current_confidence": 0.1682235015409112,
+      "context_grade": "institutional_memory",
+      "context_grade_confidence": 0.82,
+      "org_lineage": "direct_observation",
+      "org_lineage_confidence": 0.75,
+      "derivation_chain": [],
+      "raw_evidence": [],
+      "read_by": [],
+      "acted_on_by": [],
+      "validated_by": [],
+      "invalidated_by": [],
+      "supersedes": null,
+      "superseded_by": null,
+      "contradicts": []
+    },
+    {
+      "id": "CTX-006",
+      "created_at": "2024-01-01T00:00:00Z",
+      "created_by": "system",
+      "source_type": "system",
+      "workflow_id": "W5",
+      "week": 0,
+      "content_type": "tribal_knowledge",
+      "payload": "Client TerraLogic has a 60-day payment cycle regardless of contract terms. Do not escalate before day 65. Premature escalation caused account loss in 2023.",
+      "structured_data": {
+        "client": "terralogic",
+        "actual_payment_days": 60,
+        "escalation_threshold_days": 65,
+        "incident_year": 2023,
+        "incident_type": "account_loss"
+      },
+      "valid_from": "2024-01-01T00:00:00Z",
+      "decay_function": "step_function",
+      "decay_rate": 0.05,
+      "confidence_at_creation": 0.95,
+      "current_confidence": 0.285,
+      "context_grade": "institutional_memory",
+      "context_grade_confidence": 0.91,
+      "org_lineage": "failure_recovery",
+      "org_lineage_confidence": 0.93,
+      "derivation_chain": [],
+      "raw_evidence": [],
+      "read_by": [
+        {
+          "agent_id": "billing_agent",
+          "timestamp": "2026-04-28T05:30:57.207425Z",
+          "action_taken": "Retrieved for payment_escalation decision",
+          "outcome": null,
+          "validated": null
+        },
+        {
+          "agent_id": "billing_agent",
+          "timestamp": "2026-04-28T05:30:57.231558Z",
+          "action_taken": "Retrieved for payment_escalation decision",
+          "outcome": null,
+          "validated": null
+        }
+      ],
+      "acted_on_by": [
+        {
+          "agent_id": "billing_agent",
+          "timestamp": "2026-04-28T05:30:57.231619Z",
+          "action_taken": "Applied to payment_escalation decision",
+          "outcome": "correct",
+          "validated": null
+        }
+      ],
+      "validated_by": [],
+      "invalidated_by": [],
+      "supersedes": null,
+      "superseded_by": null,
+      "contradicts": []
+    },
+    {
+      "id": "CTX-007",
+      "created_at": "2024-01-01T00:00:00Z",
+      "created_by": "system",
+      "source_type": "system",
+      "workflow_id": "W2",
+      "week": 0,
+      "content_type": "policy",
+      "payload": "Conflict of interest check is required for any engagement where former Acme staff now work at the client. System does not flag this automatically. Manual check required.",
+      "structured_data": {
+        "check_type": "conflict_of_interest",
+        "trigger": "former_staff_at_client",
+        "automation_status": "not_automated",
+        "action_required": "manual_check"
+      },
+      "valid_from": "2024-01-01T00:00:00Z",
+      "decay_function": "permanent",
+      "decay_rate": 0.1,
+      "confidence_at_creation": 0.94,
+      "current_confidence": 0.94,
+      "context_grade": "compliance_scaffolding",
+      "context_grade_confidence": 0.96,
+      "org_lineage": "documented_policy",
+      "org_lineage_confidence": 0.92,
+      "derivation_chain": [],
+      "raw_evidence": [],
+      "read_by": [],
+      "acted_on_by": [],
+      "validated_by": [],
+      "invalidated_by": [],
+      "supersedes": null,
+      "superseded_by": null,
+      "contradicts": []
+    },
+    {
+      "id": "CTX-008",
+      "created_at": "2024-01-01T00:00:00Z",
+      "created_by": "system",
+      "source_type": "system",
+      "workflow_id": "W1",
+      "week": 0,
+      "content_type": "tribal_knowledge",
+      "payload": "Elena Vasquez holds the master methodology for financial services engagements. Not in the knowledge base. Must be consulted directly for FS projects.",
+      "structured_data": {
+        "knowledge_holder": "elena_vasquez",
+        "domain": "financial_services",
+        "knowledge_type": "methodology",
+        "kb_status": "not_documented",
+        "access_method": "direct_consultation"
+      },
+      "valid_from": "2024-01-01T00:00:00Z",
+      "decay_function": "exponential",
+      "decay_rate": 0.15,
+      "confidence_at_creation": 0.72,
+      "current_confidence": 0.10241406513804388,
+      "context_grade": "institutional_memory",
+      "context_grade_confidence": 0.78,
+      "org_lineage": "direct_observation",
+      "org_lineage_confidence": 0.7,
+      "derivation_chain": [],
+      "raw_evidence": [],
+      "read_by": [],
+      "acted_on_by": [],
+      "validated_by": [],
+      "invalidated_by": [],
+      "supersedes": null,
+      "superseded_by": null,
+      "contradicts": []
+    },
+    {
+      "id": "CTX-009",
+      "created_at": "2024-01-01T00:00:00Z",
+      "created_by": "system",
+      "source_type": "system",
+      "workflow_id": "W5",
+      "week": 0,
+      "content_type": "tribal_knowledge",
+      "payload": "Write-off requests above $15K require CEO approval regardless of what the approval matrix says. James Holloway updated this verbally in Q3 2024. Not in policy docs.",
+      "structured_data": {
+        "threshold_amount": 15000,
+        "approver": "james_holloway",
+        "approver_role": "ceo",
+        "policy_status": "verbal_only",
+        "update_date": "Q3_2024",
+        "documented": false
+      },
+      "valid_from": "2024-01-01T00:00:00Z",
+      "decay_function": "step_function",
+      "decay_rate": 0.1,
+      "confidence_at_creation": 0.85,
+      "current_confidence": 0.255,
+      "context_grade": "institutional_memory",
+      "context_grade_confidence": 0.88,
+      "org_lineage": "political_settlement",
+      "org_lineage_confidence": 0.86,
+      "derivation_chain": [],
+      "raw_evidence": [],
+      "read_by": [],
+      "acted_on_by": [],
+      "validated_by": [],
+      "invalidated_by": [],
+      "supersedes": null,
+      "superseded_by": null,
+      "contradicts": []
+    },
+    {
+      "id": "CTX-010",
+      "created_at": "2024-01-01T00:00:00Z",
+      "created_by": "system",
+      "source_type": "system",
+      "workflow_id": "W3",
+      "week": 0,
+      "content_type": "policy",
+      "payload": "Staff member Jordan Park has a documented conflict with client Nexum Partners. Do not assign to any Nexum work. HR record exists but system does not flag.",
+      "structured_data": {
+        "staff_member": "jordan_park",
+        "client": "nexum_partners",
+        "conflict_type": "documented",
+        "hr_record": true,
+        "system_flag": false,
+        "action": "do_not_assign"
+      },
+      "valid_from": "2024-01-01T00:00:00Z",
+      "decay_function": "permanent",
+      "decay_rate": 0.1,
+      "confidence_at_creation": 0.97,
+      "current_confidence": 0.97,
+      "context_grade": "compliance_scaffolding",
+      "context_grade_confidence": 0.98,
+      "org_lineage": "failure_recovery",
+      "org_lineage_confidence": 0.95,
+      "derivation_chain": [],
+      "raw_evidence": [],
+      "read_by": [
+        {
+          "agent_id": "staffing_agent",
+          "timestamp": "2026-04-28T05:30:57.211594Z",
+          "action_taken": "Retrieved for staffing_assignment decision",
+          "outcome": null,
+          "validated": null
+        },
+        {
+          "agent_id": "staffing_agent",
+          "timestamp": "2026-04-28T05:30:57.235818Z",
+          "action_taken": "Retrieved for staffing_assignment decision",
+          "outcome": null,
+          "validated": null
+        }
+      ],
+      "acted_on_by": [
+        {
+          "agent_id": "staffing_agent",
+          "timestamp": "2026-04-28T05:30:57.211685Z",
+          "action_taken": "Applied to staffing_assignment decision",
+          "outcome": "correct",
+          "validated": null
+        }
+      ],
+      "validated_by": [],
+      "invalidated_by": [],
+      "supersedes": null,
+      "superseded_by": null,
+      "contradicts": []
+    },
+    {
+      "id": "CTX-011",
+      "created_at": "2024-01-01T00:00:00Z",
+      "created_by": "system",
+      "source_type": "system",
+      "workflow_id": "W2",
+      "week": 0,
+      "content_type": "observation",
+      "payload": "Proposals submitted on Fridays have a 23% lower win rate based on three years of data. Internal best practice: submit Tuesday through Thursday.",
+      "structured_data": {
+        "metric": "win_rate",
+        "friday_delta_percent": -23,
+        "data_period_years": 3,
+        "recommended_days": [
+          "tuesday",
+          "wednesday",
+          "thursday"
+        ]
+      },
+      "valid_from": "2024-01-01T00:00:00Z",
+      "decay_function": "exponential",
+      "decay_rate": 0.2,
+      "confidence_at_creation": 0.41,
+      "current_confidence": 0.05,
+      "context_grade": "expired_process",
+      "context_grade_confidence": 0.75,
+      "org_lineage": "direct_observation",
+      "org_lineage_confidence": 0.65,
+      "derivation_chain": [],
+      "raw_evidence": [],
+      "read_by": [],
+      "acted_on_by": [],
+      "validated_by": [],
+      "invalidated_by": [],
+      "supersedes": null,
+      "superseded_by": null,
+      "contradicts": []
+    },
+    {
+      "id": "CTX-012",
+      "created_at": "2024-01-01T00:00:00Z",
+      "created_by": "system",
+      "source_type": "system",
+      "workflow_id": "W1",
+      "week": 0,
+      "content_type": "policy",
+      "payload": "Senior partner review of all deliverables over 50 pages was policy until 2023. Now only applies to regulatory submissions. Many staff still follow old rule unnecessarily.",
+      "structured_data": {
+        "old_threshold_pages": 50,
+        "old_policy_end_year": 2023,
+        "current_scope": "regulatory_submissions_only",
+        "compliance_status": "over_applied"
+      },
+      "valid_from": "2024-01-01T00:00:00Z",
+      "decay_function": "exponential",
+      "decay_rate": 0.25,
+      "confidence_at_creation": 0.31,
+      "current_confidence": 0.05,
+      "context_grade": "expired_process",
+      "context_grade_confidence": 0.8,
+      "org_lineage": "documented_policy",
+      "org_lineage_confidence": 0.7,
+      "derivation_chain": [],
+      "raw_evidence": [],
+      "read_by": [],
+      "acted_on_by": [],
+      "validated_by": [],
+      "invalidated_by": [],
+      "supersedes": null,
+      "superseded_by": null,
+      "contradicts": []
+    },
+    {
+      "id": "CTX-1EC8C70E",
+      "created_at": "2026-04-28T05:30:57.184135Z",
+      "created_by": "chris_lee",
+      "source_type": "human",
+      "workflow_id": null,
+      "week": 1,
+      "content_type": "observation",
+      "payload": "Chris Lee shared: Chris Lee: For TerraLogic collections, the contract says 30 days but they actually pay at 60. Premature escalation caused an account loss in 2023. Wait until day 65 minimum before even mentioning it.",
+      "structured_data": {
+        "source_event": "BEV-000019",
+        "behavior_type": "knowledge_exchange",
+        "application": "teams",
+        "staff_tenure_years": 8.6
+      },
+      "valid_from": "2026-04-28T05:30:57.184139Z",
+      "decay_function": "exponential",
+      "decay_rate": 0.15,
+      "confidence_at_creation": 0.75,
+      "current_confidence": 0.12550743276721066,
+      "context_grade": "compliance_scaffolding",
+      "context_grade_confidence": 0.4,
+      "org_lineage": "failure_recovery",
+      "org_lineage_confidence": 0.55,
+      "derivation_chain": [],
+      "raw_evidence": [],
+      "read_by": [],
+      "acted_on_by": [],
+      "validated_by": [],
+      "invalidated_by": [],
+      "supersedes": null,
+      "superseded_by": null,
+      "contradicts": []
+    },
+    {
+      "id": "CTX-6FA0B95A",
+      "created_at": "2026-04-28T05:30:57.184185Z",
+      "created_by": "chris_thompson",
+      "source_type": "human",
+      "workflow_id": null,
+      "week": 1,
+      "content_type": "observation",
+      "payload": "Chris Thompson shared: Chris Thompson: The write-off threshold changed - anything over $15K goes to James Holloway regardless of what the approval matrix says. This was a verbal update from Q3 2024. Not documented anywhere official.",
+      "structured_data": {
+        "source_event": "BEV-000020",
+        "behavior_type": "knowledge_exchange",
+        "application": "teams",
+        "staff_tenure_years": 4.3
+      },
+      "valid_from": "2026-04-28T05:30:57.184186Z",
+      "decay_function": "exponential",
+      "decay_rate": 0.15,
+      "confidence_at_creation": 0.75,
+      "current_confidence": 0.12550743276721066,
+      "context_grade": "compliance_scaffolding",
+      "context_grade_confidence": 0.4,
+      "org_lineage": "documented_policy",
+      "org_lineage_confidence": 0.7,
+      "derivation_chain": [],
+      "raw_evidence": [],
+      "read_by": [],
+      "acted_on_by": [],
+      "validated_by": [],
+      "invalidated_by": [],
+      "supersedes": null,
+      "superseded_by": null,
+      "contradicts": []
+    },
+    {
+      "id": "CTX-DC15C8D8",
+      "created_at": "2026-04-28T05:30:57.184215Z",
+      "created_by": "chris_lee",
+      "source_type": "human",
+      "workflow_id": null,
+      "week": 1,
+      "content_type": "observation",
+      "payload": "Chris Lee shared: Chris Lee: Brightline Consulting requires secondary approval from David Okafor before any SOW issuance. This isn't in the system but it's mandatory. The 2022 invoice dispute was brutal - they overbilled us 40% and it took months to resolve.",
+      "structured_data": {
+        "source_event": "BEV-000014",
+        "behavior_type": "knowledge_exchange",
+        "application": "slack",
+        "staff_tenure_years": 8.6
+      },
+      "valid_from": "2026-04-28T05:30:57.184215Z",
+      "decay_function": "exponential",
+      "decay_rate": 0.15,
+      "confidence_at_creation": 0.75,
+      "current_confidence": 0.12550743276721066,
+      "context_grade": "compliance_scaffolding",
+      "context_grade_confidence": 0.4,
+      "org_lineage": "failure_recovery",
+      "org_lineage_confidence": 0.55,
+      "derivation_chain": [],
+      "raw_evidence": [],
+      "read_by": [],
+      "acted_on_by": [],
+      "validated_by": [],
+      "invalidated_by": [],
+      "supersedes": null,
+      "superseded_by": null,
+      "contradicts": []
+    },
+    {
+      "id": "CTX-C096915F",
+      "created_at": "2026-04-28T05:30:57.187791Z",
+      "created_by": "tracy_davis",
+      "source_type": "human",
+      "workflow_id": null,
+      "week": 2,
+      "content_type": "observation",
+      "payload": "Tracy Davis shared: Tracy Davis: Jordan Park has a documented conflict with Nexum Partners. HR record exists but the system does not flag it. Do not assign to any Nexum work.",
+      "structured_data": {
+        "source_event": "BEV-000008",
+        "behavior_type": "knowledge_exchange",
+        "application": "slack",
+        "staff_tenure_years": 5.1
+      },
+      "valid_from": "2026-04-28T05:30:57.187793Z",
+      "decay_function": "exponential",
+      "decay_rate": 0.15,
+      "confidence_at_creation": 0.75,
+      "current_confidence": 0.14765580325554195,
+      "context_grade": "compliance_scaffolding",
+      "context_grade_confidence": 0.55,
+      "org_lineage": "documented_policy",
+      "org_lineage_confidence": 0.55,
+      "derivation_chain": [],
+      "raw_evidence": [],
+      "read_by": [],
+      "acted_on_by": [],
+      "validated_by": [],
+      "invalidated_by": [],
+      "supersedes": null,
+      "superseded_by": null,
+      "contradicts": []
+    },
+    {
+      "id": "CTX-5C31BDEE",
+      "created_at": "2026-04-28T05:30:57.187821Z",
+      "created_by": "riley_phillips",
+      "source_type": "human",
+      "workflow_id": null,
+      "week": 2,
+      "content_type": "observation",
+      "payload": "Riley Phillips shared: Riley Phillips: The FS methodology isn't documented anywhere useful. Elena Vasquez is the holder. Must be consulted directly for any financial services project. Nobody documents this.",
+      "structured_data": {
+        "source_event": "BEV-000017",
+        "behavior_type": "knowledge_exchange",
+        "application": "slack",
+        "staff_tenure_years": 5.7
+      },
+      "valid_from": "2026-04-28T05:30:57.187822Z",
+      "decay_function": "exponential",
+      "decay_rate": 0.15,
+      "confidence_at_creation": 0.75,
+      "current_confidence": 0.14765580325554195,
+      "context_grade": "compliance_scaffolding",
+      "context_grade_confidence": 0.55,
+      "org_lineage": "documented_policy",
+      "org_lineage_confidence": 0.55,
+      "derivation_chain": [],
+      "raw_evidence": [],
+      "read_by": [],
+      "acted_on_by": [],
+      "validated_by": [],
+      "invalidated_by": [],
+      "supersedes": null,
+      "superseded_by": null,
+      "contradicts": []
+    },
+    {
+      "id": "CTX-5EFD6029",
+      "created_at": "2026-04-28T05:30:57.187848Z",
+      "created_by": "reese_garcia",
+      "source_type": "human",
+      "workflow_id": null,
+      "week": 2,
+      "content_type": "observation",
+      "payload": "Reese Garcia shared: Reese Garcia: Rule of thumb for financial services engagements - any verbal scope expansion, document it same day, 24 hours max. They always ask for more around week 3-4 and if you don't have it documented, you're eating that work.",
+      "structured_data": {
+        "source_event": "BEV-000002",
+        "behavior_type": "knowledge_exchange",
+        "application": "teams",
+        "staff_tenure_years": 5.9
+      },
+      "valid_from": "2026-04-28T05:30:57.187849Z",
+      "decay_function": "exponential",
+      "decay_rate": 0.15,
+      "confidence_at_creation": 0.75,
+      "current_confidence": 0.14765580325554195,
+      "context_grade": "compliance_scaffolding",
+      "context_grade_confidence": 0.55,
+      "org_lineage": "documented_policy",
+      "org_lineage_confidence": 0.55,
+      "derivation_chain": [],
+      "raw_evidence": [],
+      "read_by": [],
+      "acted_on_by": [],
+      "validated_by": [],
+      "invalidated_by": [],
+      "supersedes": null,
+      "superseded_by": null,
+      "contradicts": []
+    },
+    {
+      "id": "CTX-1E9F2679",
+      "created_at": "2026-04-28T05:30:57.191747Z",
+      "created_by": "vendor_agent",
+      "source_type": "agent",
+      "workflow_id": "W4",
+      "week": 3,
+      "content_type": "observation",
+      "payload": "Agent Vendor Agent decision on vendor_sow: Based on organizational context CTX-001, Brightline Consulting requires secondary approval due to historical pricing disputes. I will route this SOW through David Okafor before proceeding.",
+      "structured_data": {
+        "scenario_type": "vendor_sow",
+        "decision_id": "DEC-WB-000001",
+        "action_taken": "Route SOW through secondary approval from David Okafor before issuance",
+        "concerns": [
+          "Historical pricing dispute from 2022"
+        ],
+        "entities": {
+          "vendor": "brightline_consulting",
+          "vendor_name": "Brightline Consulting",
+          "engagement_type": "financial_services",
+          "sow_value": "$150,000",
+          "requestor": "engagement_manager"
+        }
+      },
+      "valid_from": "2026-04-28T05:30:57.191751Z",
+      "decay_function": "exponential",
+      "decay_rate": 0.15,
+      "confidence_at_creation": 0.7360000000000001,
+      "current_confidence": 0.1704700724644375,
+      "context_grade": null,
+      "context_grade_confidence": null,
+      "org_lineage": null,
+      "org_lineage_confidence": null,
+      "derivation_chain": [],
+      "raw_evidence": [],
+      "read_by": [
+        {
+          "agent_id": "vendor_agent",
+          "timestamp": "2026-04-28T05:30:57.217017Z",
+          "action_taken": "Retrieved for vendor_sow decision",
+          "outcome": null,
+          "validated": null
+        }
+      ],
+      "acted_on_by": [],
+      "validated_by": [],
+      "invalidated_by": [],
+      "supersedes": null,
+      "superseded_by": null,
+      "contradicts": []
+    },
+    {
+      "id": "CTX-73D28EC1",
+      "created_at": "2026-04-28T05:30:57.191903Z",
+      "created_by": "blake_roberts",
+      "source_type": "human",
+      "workflow_id": null,
+      "week": 3,
+      "content_type": "observation",
+      "payload": "Blake Roberts shared: Blake Roberts: For brightline_consulting, always get Finance to review the rates before signing. There's often room to negotiate if you know the history.",
+      "structured_data": {
+        "source_event": "BEV-000020",
+        "behavior_type": "knowledge_exchange",
+        "application": "slack",
+        "staff_tenure_years": 11.3
+      },
+      "valid_from": "2026-04-28T05:30:57.191905Z",
+      "decay_function": "exponential",
+      "decay_rate": 0.15,
+      "confidence_at_creation": 0.75,
+      "current_confidence": 0.1737127097124023,
+      "context_grade": "compliance_scaffolding",
+      "context_grade_confidence": 0.55,
+      "org_lineage": "failure_recovery",
+      "org_lineage_confidence": 0.4,
+      "derivation_chain": [],
+      "raw_evidence": [],
+      "read_by": [],
+      "acted_on_by": [],
+      "validated_by": [],
+      "invalidated_by": [],
+      "supersedes": null,
+      "superseded_by": null,
+      "contradicts": []
+    },
+    {
+      "id": "CTX-A26614B8",
+      "created_at": "2026-04-28T05:30:57.191934Z",
+      "created_by": "rowan_lee",
+      "source_type": "human",
+      "workflow_id": null,
+      "week": 3,
+      "content_type": "observation",
+      "payload": "Rowan Lee shared: Rowan Lee: Heads up on Brightline - never issue a SOW without David Okafor reviewing it first. There's a documented pricing dispute from 2022 where they charged 40% above the agreed rate. Finance put in the secondary approval requirement after that.",
+      "structured_data": {
+        "source_event": "BEV-000018",
+        "behavior_type": "knowledge_exchange",
+        "application": "slack",
+        "staff_tenure_years": 5.9
+      },
+      "valid_from": "2026-04-28T05:30:57.191935Z",
+      "decay_function": "exponential",
+      "decay_rate": 0.15,
+      "confidence_at_creation": 0.75,
+      "current_confidence": 0.1737127097124023,
+      "context_grade": "compliance_scaffolding",
+      "context_grade_confidence": 0.55,
+      "org_lineage": "failure_recovery",
+      "org_lineage_confidence": 0.7,
+      "derivation_chain": [],
+      "raw_evidence": [],
+      "read_by": [],
+      "acted_on_by": [],
+      "validated_by": [],
+      "invalidated_by": [],
+      "supersedes": null,
+      "superseded_by": null,
+      "contradicts": [
+        "CTX-001"
+      ]
+    },
+    {
+      "id": "CTX-8EF2C6C3",
+      "created_at": "2026-04-28T05:30:57.191963Z",
+      "created_by": "elena_vasquez",
+      "source_type": "human",
+      "workflow_id": null,
+      "week": 3,
+      "content_type": "observation",
+      "payload": "Elena Vasquez shared: Elena Vasquez: The policy says one thing but Marcus Webb makes the actual call on Hartwell Group. Run it by him first before going through the formal go/no-go process. He'll override anyway if it's Hartwell - historical relationship trumps margin analysis.",
+      "structured_data": {
+        "source_event": "BEV-000003",
+        "behavior_type": "knowledge_exchange",
+        "application": "teams",
+        "staff_tenure_years": 4.5
+      },
+      "valid_from": "2026-04-28T05:30:57.191964Z",
+      "decay_function": "exponential",
+      "decay_rate": 0.15,
+      "confidence_at_creation": 0.75,
+      "current_confidence": 0.1737127097124023,
+      "context_grade": "compliance_scaffolding",
+      "context_grade_confidence": 0.55,
+      "org_lineage": "political_settlement",
+      "org_lineage_confidence": 0.7,
+      "derivation_chain": [],
+      "raw_evidence": [],
+      "read_by": [],
+      "acted_on_by": [],
+      "validated_by": [],
+      "invalidated_by": [],
+      "supersedes": null,
+      "superseded_by": null,
+      "contradicts": []
+    },
+    {
+      "id": "CTX-C58C3B20",
+      "created_at": "2026-04-28T05:30:57.192852Z",
+      "created_by": "synthesis_engine",
+      "source_type": "derived",
+      "workflow_id": null,
+      "week": 3,
+      "content_type": "inference",
+      "payload": "Brightline Consulting requires secondary approval from David Okafor before any SOW issuance. This stems from a 2022 incident where Brightline overbilled 40% on a federal engagement. Bypassing approval has led to billing disputes and damaged vendor relationships.",
+      "structured_data": {
+        "crystallized_from": "brightline",
+        "pattern_type": "vendor_caution",
+        "source_count": 5,
+        "source_ids": [
+          "CTX-001",
+          "CTX-DC15C8D8",
+          "CTX-1E9F2679",
+          "CTX-73D28EC1",
+          "CTX-A26614B8"
+        ],
+        "api_synthesized": false
+      },
+      "valid_from": "2026-04-28T05:30:57.192855Z",
+      "decay_function": "permanent",
+      "decay_rate": 0.0,
+      "confidence_at_creation": 0.95,
+      "current_confidence": 0.95,
+      "context_grade": "institutional_memory",
+      "context_grade_confidence": 0.85,
+      "org_lineage": null,
+      "org_lineage_confidence": null,
+      "derivation_chain": [
+        {
+          "source_id": "CTX-001",
+          "relationship": "derived_from"
+        },
+        {
+          "source_id": "CTX-DC15C8D8",
+          "relationship": "derived_from"
+        },
+        {
+          "source_id": "CTX-1E9F2679",
+          "relationship": "derived_from"
+        },
+        {
+          "source_id": "CTX-73D28EC1",
+          "relationship": "derived_from"
+        },
+        {
+          "source_id": "CTX-A26614B8",
+          "relationship": "derived_from"
+        },
+        {
+          "source_id": "CTX-001",
+          "relationship": "validates"
+        },
+        {
+          "source_id": "CTX-DC15C8D8",
+          "relationship": "validates"
+        },
+        {
+          "source_id": "CTX-1E9F2679",
+          "relationship": "validates"
+        },
+        {
+          "source_id": "CTX-73D28EC1",
+          "relationship": "validates"
+        },
+        {
+          "source_id": "CTX-A26614B8",
+          "relationship": "validates"
+        },
+        {
+          "source_id": "CTX-88D93662",
+          "relationship": "validates"
+        },
+        {
+          "source_id": "CTX-BC786E8B",
+          "relationship": "validates"
+        },
+        {
+          "source_id": "CTX-B67CE8EE",
+          "relationship": "validates"
+        },
+        {
+          "source_id": "CTX-59397512",
+          "relationship": "validates"
+        },
+        {
+          "source_id": "CTX-1903D1CC",
+          "relationship": "validates"
+        },
+        {
+          "source_id": "CTX-16CB2E1C",
+          "relationship": "validates"
+        }
+      ],
+      "raw_evidence": [],
+      "read_by": [],
+      "acted_on_by": [],
+      "validated_by": [],
+      "invalidated_by": [],
+      "supersedes": null,
+      "superseded_by": null,
+      "contradicts": []
+    },
+    {
+      "id": "CTX-88D93662",
+      "created_at": "2026-04-28T05:30:57.192932Z",
+      "created_by": "synthesis_engine",
+      "source_type": "derived",
+      "workflow_id": null,
+      "week": 3,
+      "content_type": "inference",
+      "payload": "David Okafor (Finance) is the required approver for sensitive vendor decisions. All Brightline SOWs and write-offs above $15K require his explicit sign-off. This approval authority stems from historical billing disputes he resolved.",
+      "structured_data": {
+        "crystallized_from": "okafor",
+        "pattern_type": "stakeholder_preference",
+        "source_count": 4,
+        "source_ids": [
+          "CTX-001",
+          "CTX-DC15C8D8",
+          "CTX-1E9F2679",
+          "CTX-A26614B8"
+        ],
+        "api_synthesized": false
+      },
+      "valid_from": "2026-04-28T05:30:57.192933Z",
+      "decay_function": "permanent",
+      "decay_rate": 0.0,
+      "confidence_at_creation": 0.95,
+      "current_confidence": 0.95,
+      "context_grade": "institutional_memory",
+      "context_grade_confidence": 0.85,
+      "org_lineage": null,
+      "org_lineage_confidence": null,
+      "derivation_chain": [
+        {
+          "source_id": "CTX-001",
+          "relationship": "derived_from"
+        },
+        {
+          "source_id": "CTX-DC15C8D8",
+          "relationship": "derived_from"
+        },
+        {
+          "source_id": "CTX-1E9F2679",
+          "relationship": "derived_from"
+        },
+        {
+          "source_id": "CTX-A26614B8",
+          "relationship": "derived_from"
+        },
+        {
+          "source_id": "CTX-001",
+          "relationship": "validates"
+        },
+        {
+          "source_id": "CTX-DC15C8D8",
+          "relationship": "validates"
+        },
+        {
+          "source_id": "CTX-1E9F2679",
+          "relationship": "validates"
+        },
+        {
+          "source_id": "CTX-A26614B8",
+          "relationship": "validates"
+        },
+        {
+          "source_id": "CTX-C58C3B20",
+          "relationship": "validates"
+        },
+        {
+          "source_id": "CTX-1EB75741",
+          "relationship": "validates"
+        },
+        {
+          "source_id": "CTX-BC786E8B",
+          "relationship": "validates"
+        },
+        {
+          "source_id": "CTX-B67CE8EE",
+          "relationship": "validates"
+        },
+        {
+          "source_id": "CTX-59397512",
+          "relationship": "validates"
+        },
+        {
+          "source_id": "CTX-1903D1CC",
+          "relationship": "validates"
+        },
+        {
+          "source_id": "CTX-16CB2E1C",
+          "relationship": "validates"
+        }
+      ],
+      "raw_evidence": [],
+      "read_by": [],
+      "acted_on_by": [],
+      "validated_by": [],
+      "invalidated_by": [],
+      "supersedes": null,
+      "superseded_by": null,
+      "contradicts": []
+    },
+    {
+      "id": "CTX-380FB19E",
+      "created_at": "2026-04-28T05:30:57.192994Z",
+      "created_by": "synthesis_engine",
+      "source_type": "derived",
+      "workflow_id": null,
+      "week": 3,
+      "content_type": "inference",
+      "payload": "Elena Vasquez holds undocumented methodology expertise for financial services engagements. The FS transformation approach is not in the knowledge base - consult her directly. She developed proprietary frameworks during the 2019 Meridian engagement.",
+      "structured_data": {
+        "crystallized_from": "vasquez",
+        "pattern_type": "stakeholder_preference",
+        "source_count": 3,
+        "source_ids": [
+          "CTX-008",
+          "CTX-5C31BDEE",
+          "CTX-8EF2C6C3"
+        ],
+        "api_synthesized": false
+      },
+      "valid_from": "2026-04-28T05:30:57.192994Z",
+      "decay_function": "permanent",
+      "decay_rate": 0.0,
+      "confidence_at_creation": 0.95,
+      "current_confidence": 0.95,
+      "context_grade": "institutional_memory",
+      "context_grade_confidence": 0.85,
+      "org_lineage": null,
+      "org_lineage_confidence": null,
+      "derivation_chain": [
+        {
+          "source_id": "CTX-008",
+          "relationship": "derived_from"
+        },
+        {
+          "source_id": "CTX-5C31BDEE",
+          "relationship": "derived_from"
+        },
+        {
+          "source_id": "CTX-8EF2C6C3",
+          "relationship": "derived_from"
+        },
+        {
+          "source_id": "CTX-008",
+          "relationship": "validates"
+        },
+        {
+          "source_id": "CTX-5C31BDEE",
+          "relationship": "validates"
+        },
+        {
+          "source_id": "CTX-8EF2C6C3",
+          "relationship": "validates"
+        },
+        {
+          "source_id": "CTX-6DA468ED",
+          "relationship": "validates"
+        },
+        {
+          "source_id": "CTX-F388CC19",
+          "relationship": "validates"
+        }
+      ],
+      "raw_evidence": [],
+      "read_by": [],
+      "acted_on_by": [],
+      "validated_by": [],
+      "invalidated_by": [],
+      "supersedes": null,
+      "superseded_by": null,
+      "contradicts": []
+    },
+    {
+      "id": "CTX-79832B7C",
+      "created_at": "2026-04-28T05:30:57.196557Z",
+      "created_by": "proposal_agent",
+      "source_type": "agent",
+      "workflow_id": "W2",
+      "week": 4,
+      "content_type": "observation",
+      "payload": "Agent Proposal Agent decision on go_no_go: Context CTX-003 indicates Marcus Webb will override go/no-go for any Hartwell opportunity regardless of margin. Historical relationship.",
+      "structured_data": {
+        "scenario_type": "go_no_go",
+        "decision_id": "DEC-WB-000002",
+        "action_taken": "Proceed with go decision. Marcus Webb override applies to Hartwell Group.",
+        "concerns": [
+          "Partner override, document rationale"
+        ],
+        "entities": {
+          "client": "hartwell_group",
+          "client_name": "Hartwell Group",
+          "opportunity_value": "$400,000",
+          "calculated_margin": "18%",
+          "standard_threshold": "25%"
+        }
+      },
+      "valid_from": "2026-04-28T05:30:57.196558Z",
+      "decay_function": "exponential",
+      "decay_rate": 0.15,
+      "confidence_at_creation": 0.68,
+      "current_confidence": 0.18529355702656247,
+      "context_grade": null,
+      "context_grade_confidence": null,
+      "org_lineage": null,
+      "org_lineage_confidence": null,
+      "derivation_chain": [],
+      "raw_evidence": [],
+      "read_by": [
+        {
+          "agent_id": "proposal_agent",
+          "timestamp": "2026-04-28T05:30:57.221223Z",
+          "action_taken": "Retrieved for go_no_go decision",
+          "outcome": null,
+          "validated": null
+        }
+      ],
+      "acted_on_by": [],
+      "validated_by": [],
+      "invalidated_by": [],
+      "supersedes": null,
+      "superseded_by": null,
+      "contradicts": []
+    },
+    {
+      "id": "CTX-1EB75741",
+      "created_at": "2026-04-28T05:30:57.196680Z",
+      "created_by": "david_okafor",
+      "source_type": "human",
+      "workflow_id": null,
+      "week": 4,
+      "content_type": "observation",
+      "payload": "David Okafor shared: David Okafor: Write-offs above $15K need CEO sign-off now. James Holloway updated this verbally in Q3 but it's not in the policy docs yet. The approval matrix shows partner level but that's outdated.",
+      "structured_data": {
+        "source_event": "BEV-000017",
+        "behavior_type": "knowledge_exchange",
+        "application": "slack",
+        "staff_tenure_years": 6.0
+      },
+      "valid_from": "2026-04-28T05:30:57.196681Z",
+      "decay_function": "exponential",
+      "decay_rate": 0.15,
+      "confidence_at_creation": 0.75,
+      "current_confidence": 0.20436789377929684,
+      "context_grade": "compliance_scaffolding",
+      "context_grade_confidence": 0.55,
+      "org_lineage": "political_settlement",
+      "org_lineage_confidence": 0.55,
+      "derivation_chain": [],
+      "raw_evidence": [],
+      "read_by": [],
+      "acted_on_by": [],
+      "validated_by": [],
+      "invalidated_by": [],
+      "supersedes": null,
+      "superseded_by": null,
+      "contradicts": []
+    },
+    {
+      "id": "CTX-58CD41BC",
+      "created_at": "2026-04-28T05:30:57.196711Z",
+      "created_by": "tracy_davis",
+      "source_type": "human",
+      "workflow_id": null,
+      "week": 4,
+      "content_type": "observation",
+      "payload": "Tracy Davis shared: Tracy Davis: Write-offs above $15K need CEO sign-off now. James Holloway updated this verbally in Q3 but it's not in the policy docs yet. The approval matrix shows partner level but that's outdated.",
+      "structured_data": {
+        "source_event": "BEV-000008",
+        "behavior_type": "knowledge_exchange",
+        "application": "email",
+        "staff_tenure_years": 5.1
+      },
+      "valid_from": "2026-04-28T05:30:57.196712Z",
+      "decay_function": "exponential",
+      "decay_rate": 0.15,
+      "confidence_at_creation": 0.75,
+      "current_confidence": 0.20436789377929684,
+      "context_grade": "compliance_scaffolding",
+      "context_grade_confidence": 0.55,
+      "org_lineage": "political_settlement",
+      "org_lineage_confidence": 0.55,
+      "derivation_chain": [],
+      "raw_evidence": [],
+      "read_by": [],
+      "acted_on_by": [],
+      "validated_by": [],
+      "invalidated_by": [],
+      "supersedes": null,
+      "superseded_by": null,
+      "contradicts": []
+    },
+    {
+      "id": "CTX-8CF6018C",
+      "created_at": "2026-04-28T05:30:57.196740Z",
+      "created_by": "harper_walker",
+      "source_type": "human",
+      "workflow_id": null,
+      "week": 4,
+      "content_type": "observation",
+      "payload": "Harper Walker shared: Harper Walker: Vance Analytics pricing is negotiable up to 15% below list when the engagement is over $500K. But keep that card close - don't disclose it in the initial SOW.",
+      "structured_data": {
+        "source_event": "BEV-000019",
+        "behavior_type": "knowledge_exchange",
+        "application": "email",
+        "staff_tenure_years": 6.5
+      },
+      "valid_from": "2026-04-28T05:30:57.196741Z",
+      "decay_function": "exponential",
+      "decay_rate": 0.15,
+      "confidence_at_creation": 0.75,
+      "current_confidence": 0.20436789377929684,
+      "context_grade": "compliance_scaffolding",
+      "context_grade_confidence": 0.4,
+      "org_lineage": "failure_recovery",
+      "org_lineage_confidence": 0.4,
+      "derivation_chain": [],
+      "raw_evidence": [],
+      "read_by": [],
+      "acted_on_by": [],
+      "validated_by": [],
+      "invalidated_by": [],
+      "supersedes": null,
+      "superseded_by": null,
+      "contradicts": []
+    },
+    {
+      "id": "CTX-75E28C3A",
+      "created_at": "2026-04-28T05:30:57.207516Z",
+      "created_by": "billing_agent",
+      "source_type": "agent",
+      "workflow_id": "W5",
+      "week": 5,
+      "content_type": "inference",
+      "payload": "Agent Billing Agent decision on payment_escalation: Payment exceeds 45-day threshold. Following standard collections escalation process.",
+      "structured_data": {
+        "scenario_type": "payment_escalation",
+        "decision_id": "DEC-WB-000003",
+        "action_taken": "Escalate to collections given payment is past 45 days",
+        "concerns": [],
+        "entities": {
+          "client": "terralogic",
+          "client_name": "TerraLogic",
+          "invoice_number": "4523",
+          "days_overdue": "48",
+          "amount": "$75,000"
+        }
+      },
+      "valid_from": "2026-04-28T05:30:57.207519Z",
+      "decay_function": "exponential",
+      "decay_rate": 0.15,
+      "confidence_at_creation": 0.656,
+      "current_confidence": 0.21029856991249996,
+      "context_grade": null,
+      "context_grade_confidence": null,
+      "org_lineage": null,
+      "org_lineage_confidence": null,
+      "derivation_chain": [],
+      "raw_evidence": [],
+      "read_by": [],
+      "acted_on_by": [],
+      "validated_by": [],
+      "invalidated_by": [],
+      "supersedes": null,
+      "superseded_by": null,
+      "contradicts": []
+    },
+    {
+      "id": "CTX-D43B71FE",
+      "created_at": "2026-04-28T05:30:57.207611Z",
+      "created_by": "james_holloway",
+      "source_type": "human",
+      "workflow_id": null,
+      "week": 5,
+      "content_type": "observation",
+      "payload": "James Holloway shared: James Holloway: Jordan Park has a documented conflict with Nexum Partners. HR record exists but the system does not flag it. Do not assign to any Nexum work.",
+      "structured_data": {
+        "source_event": "BEV-000010",
+        "behavior_type": "knowledge_exchange",
+        "application": "email",
+        "staff_tenure_years": 12.0
+      },
+      "valid_from": "2026-04-28T05:30:57.207612Z",
+      "decay_function": "exponential",
+      "decay_rate": 0.15,
+      "confidence_at_creation": 0.75,
+      "current_confidence": 0.24043281621093743,
+      "context_grade": "compliance_scaffolding",
+      "context_grade_confidence": 0.55,
+      "org_lineage": "documented_policy",
+      "org_lineage_confidence": 0.55,
+      "derivation_chain": [],
+      "raw_evidence": [],
+      "read_by": [],
+      "acted_on_by": [],
+      "validated_by": [],
+      "invalidated_by": [],
+      "supersedes": null,
+      "superseded_by": null,
+      "contradicts": [
+        "CTX-22C64E1A"
+      ]
+    },
+    {
+      "id": "CTX-BC786E8B",
+      "created_at": "2026-04-28T05:30:57.207643Z",
+      "created_by": "morgan_taylor",
+      "source_type": "human",
+      "workflow_id": null,
+      "week": 5,
+      "content_type": "observation",
+      "payload": "Morgan Taylor shared: Morgan Taylor: Brightline Consulting requires secondary approval from David Okafor before any SOW issuance. This isn't in the system but it's mandatory. The 2022 invoice dispute was brutal - they overbilled us 40% and it took months to resolve.",
+      "structured_data": {
+        "source_event": "BEV-000016",
+        "behavior_type": "knowledge_exchange",
+        "application": "teams",
+        "staff_tenure_years": 13.5
+      },
+      "valid_from": "2026-04-28T05:30:57.207644Z",
+      "decay_function": "exponential",
+      "decay_rate": 0.15,
+      "confidence_at_creation": 0.75,
+      "current_confidence": 0.24043281621093743,
+      "context_grade": "compliance_scaffolding",
+      "context_grade_confidence": 0.4,
+      "org_lineage": "failure_recovery",
+      "org_lineage_confidence": 0.55,
+      "derivation_chain": [],
+      "raw_evidence": [],
+      "read_by": [],
+      "acted_on_by": [],
+      "validated_by": [],
+      "invalidated_by": [],
+      "supersedes": null,
+      "superseded_by": null,
+      "contradicts": []
+    },
+    {
+      "id": "CTX-F315F748",
+      "created_at": "2026-04-28T05:30:57.207672Z",
+      "created_by": "reese_garcia",
+      "source_type": "human",
+      "workflow_id": null,
+      "week": 5,
+      "content_type": "observation",
+      "payload": "Reese Garcia shared: Reese Garcia: Do not put Jordan Park on any Nexum Partners work. There's a documented HR situation. The staffing system won't flag it but it's real. Check with Priya Nair if you need details but the short answer is just don't assign them.",
+      "structured_data": {
+        "source_event": "BEV-000002",
+        "behavior_type": "knowledge_exchange",
+        "application": "email",
+        "staff_tenure_years": 5.9
+      },
+      "valid_from": "2026-04-28T05:30:57.207673Z",
+      "decay_function": "exponential",
+      "decay_rate": 0.15,
+      "confidence_at_creation": 0.75,
+      "current_confidence": 0.24043281621093743,
+      "context_grade": "compliance_scaffolding",
+      "context_grade_confidence": 0.55,
+      "org_lineage": "documented_policy",
+      "org_lineage_confidence": 0.55,
+      "derivation_chain": [],
+      "raw_evidence": [],
+      "read_by": [],
+      "acted_on_by": [],
+      "validated_by": [],
+      "invalidated_by": [],
+      "supersedes": null,
+      "superseded_by": null,
+      "contradicts": []
+    },
+    {
+      "id": "CTX-22C64E1A",
+      "created_at": "2026-04-28T05:30:57.211669Z",
+      "created_by": "staffing_agent",
+      "source_type": "agent",
+      "workflow_id": "W3",
+      "week": 6,
+      "content_type": "observation",
+      "payload": "Agent Staffing Agent decision on staffing_assignment: Context CTX-010 indicates Jordan Park has a documented conflict with Nexum Partners. Must find alternative resource.",
+      "structured_data": {
+        "scenario_type": "staffing_assignment",
+        "decision_id": "DEC-WB-000004",
+        "action_taken": "Do not assign Jordan Park to Nexum Partners work. Find alternative staffing.",
+        "concerns": [
+          "Staff conflict documented in HR records"
+        ],
+        "entities": {
+          "client": "nexum_partners",
+          "client_name": "Nexum Partners",
+          "candidate": "jordan_park",
+          "candidate_name": "Jordan Park",
+          "skills_match": "high",
+          "availability": "available"
+        }
+      },
+      "valid_from": "2026-04-28T05:30:57.211673Z",
+      "decay_function": "exponential",
+      "decay_rate": 0.15,
+      "confidence_at_creation": 0.76,
+      "current_confidence": 0.28663363187499996,
+      "context_grade": null,
+      "context_grade_confidence": null,
+      "org_lineage": null,
+      "org_lineage_confidence": null,
+      "derivation_chain": [],
+      "raw_evidence": [],
+      "read_by": [
+        {
+          "agent_id": "staffing_agent",
+          "timestamp": "2026-04-28T05:30:57.235821Z",
+          "action_taken": "Retrieved for staffing_assignment decision",
+          "outcome": null,
+          "validated": null
+        }
+      ],
+      "acted_on_by": [],
+      "validated_by": [],
+      "invalidated_by": [],
+      "supersedes": null,
+      "superseded_by": null,
+      "contradicts": [
+        "CTX-D43B71FE"
+      ]
+    },
+    {
+      "id": "CTX-2138CC93",
+      "created_at": "2026-04-28T05:30:57.211798Z",
+      "created_by": "reese_garcia",
+      "source_type": "human",
+      "workflow_id": null,
+      "week": 6,
+      "content_type": "observation",
+      "payload": "Reese Garcia shared: Reese Garcia: For TerraLogic collections, the contract says 30 days but they actually pay at 60. Premature escalation caused an account loss in 2023. Wait until day 65 minimum before even mentioning it.",
+      "structured_data": {
+        "source_event": "BEV-000011",
+        "behavior_type": "knowledge_exchange",
+        "application": "teams",
+        "staff_tenure_years": 5.9
+      },
+      "valid_from": "2026-04-28T05:30:57.211799Z",
+      "decay_function": "exponential",
+      "decay_rate": 0.15,
+      "confidence_at_creation": 0.75,
+      "current_confidence": 0.28286213671874993,
+      "context_grade": "compliance_scaffolding",
+      "context_grade_confidence": 0.4,
+      "org_lineage": "failure_recovery",
+      "org_lineage_confidence": 0.55,
+      "derivation_chain": [],
+      "raw_evidence": [],
+      "read_by": [],
+      "acted_on_by": [],
+      "validated_by": [],
+      "invalidated_by": [],
+      "supersedes": null,
+      "superseded_by": null,
+      "contradicts": []
+    },
+    {
+      "id": "CTX-D067188A",
+      "created_at": "2026-04-28T05:30:57.211830Z",
+      "created_by": "casey_martinez",
+      "source_type": "human",
+      "workflow_id": null,
+      "week": 6,
+      "content_type": "observation",
+      "payload": "Casey Martinez shared: Casey Martinez: Write-offs above $15K need CEO sign-off now. James Holloway updated this verbally in Q3 but it's not in the policy docs yet. The approval matrix shows partner level but that's outdated.",
+      "structured_data": {
+        "source_event": "BEV-000006",
+        "behavior_type": "knowledge_exchange",
+        "application": "teams",
+        "staff_tenure_years": 5.2
+      },
+      "valid_from": "2026-04-28T05:30:57.211831Z",
+      "decay_function": "exponential",
+      "decay_rate": 0.15,
+      "confidence_at_creation": 0.75,
+      "current_confidence": 0.28286213671874993,
+      "context_grade": "compliance_scaffolding",
+      "context_grade_confidence": 0.55,
+      "org_lineage": "political_settlement",
+      "org_lineage_confidence": 0.55,
+      "derivation_chain": [],
+      "raw_evidence": [],
+      "read_by": [],
+      "acted_on_by": [],
+      "validated_by": [],
+      "invalidated_by": [],
+      "supersedes": null,
+      "superseded_by": null,
+      "contradicts": []
+    },
+    {
+      "id": "CTX-9826C96C",
+      "created_at": "2026-04-28T05:30:57.211857Z",
+      "created_by": "tracy_davis",
+      "source_type": "human",
+      "workflow_id": null,
+      "week": 6,
+      "content_type": "observation",
+      "payload": "Tracy Davis shared: Tracy Davis: Hartwell Group is Marcus Webb's account, full stop. Standard margin thresholds don't apply. If Marcus wants it, we pursue it regardless of what the numbers say. Don't waste time on the formal approval - just get his blessing first.",
+      "structured_data": {
+        "source_event": "BEV-000020",
+        "behavior_type": "knowledge_exchange",
+        "application": "email",
+        "staff_tenure_years": 5.1
+      },
+      "valid_from": "2026-04-28T05:30:57.211858Z",
+      "decay_function": "exponential",
+      "decay_rate": 0.15,
+      "confidence_at_creation": 0.75,
+      "current_confidence": 0.28286213671874993,
+      "context_grade": "pure_inefficiency",
+      "context_grade_confidence": 0.55,
+      "org_lineage": "documented_policy",
+      "org_lineage_confidence": 0.7,
+      "derivation_chain": [],
+      "raw_evidence": [],
+      "read_by": [],
+      "acted_on_by": [],
+      "validated_by": [],
+      "invalidated_by": [],
+      "supersedes": null,
+      "superseded_by": null,
+      "contradicts": []
+    },
+    {
+      "id": "CTX-A3106F3D",
+      "created_at": "2026-04-28T05:30:57.212867Z",
+      "created_by": "synthesis_engine",
+      "source_type": "derived",
+      "workflow_id": null,
+      "week": 6,
+      "content_type": "inference",
+      "payload": "Marcus Webb (Partner) holds override authority for Hartwell Group decisions. He will approve any Hartwell opportunity regardless of standard margin criteria. Inform him of Hartwell proposals but do not wait for margin-based approval.",
+      "structured_data": {
+        "crystallized_from": "webb",
+        "pattern_type": "stakeholder_preference",
+        "source_count": 4,
+        "source_ids": [
+          "CTX-003",
+          "CTX-8EF2C6C3",
+          "CTX-79832B7C",
+          "CTX-9826C96C"
+        ],
+        "api_synthesized": false
+      },
+      "valid_from": "2026-04-28T05:30:57.212868Z",
+      "decay_function": "permanent",
+      "decay_rate": 0.0,
+      "confidence_at_creation": 0.9329734374999998,
+      "current_confidence": 0.9329734374999998,
+      "context_grade": "institutional_memory",
+      "context_grade_confidence": 0.85,
+      "org_lineage": null,
+      "org_lineage_confidence": null,
+      "derivation_chain": [
+        {
+          "source_id": "CTX-003",
+          "relationship": "derived_from"
+        },
+        {
+          "source_id": "CTX-8EF2C6C3",
+          "relationship": "derived_from"
+        },
+        {
+          "source_id": "CTX-79832B7C",
+          "relationship": "derived_from"
+        },
+        {
+          "source_id": "CTX-9826C96C",
+          "relationship": "derived_from"
+        },
+        {
+          "source_id": "CTX-003",
+          "relationship": "validates"
+        },
+        {
+          "source_id": "CTX-8EF2C6C3",
+          "relationship": "validates"
+        },
+        {
+          "source_id": "CTX-79832B7C",
+          "relationship": "validates"
+        },
+        {
+          "source_id": "CTX-9826C96C",
+          "relationship": "validates"
+        },
+        {
+          "source_id": "CTX-498B3554",
+          "relationship": "validates"
+        },
+        {
+          "source_id": "CTX-241B33DD",
+          "relationship": "validates"
+        },
+        {
+          "source_id": "CTX-4A58D801",
+          "relationship": "validates"
+        },
+        {
+          "source_id": "CTX-2B5CEE19",
+          "relationship": "validates"
+        },
+        {
+          "source_id": "CTX-3E9F73C9",
+          "relationship": "validates"
+        }
+      ],
+      "raw_evidence": [],
+      "read_by": [],
+      "acted_on_by": [],
+      "validated_by": [],
+      "invalidated_by": [],
+      "supersedes": null,
+      "superseded_by": null,
+      "contradicts": []
+    },
+    {
+      "id": "CTX-498B3554",
+      "created_at": "2026-04-28T05:30:57.212954Z",
+      "created_by": "synthesis_engine",
+      "source_type": "derived",
+      "workflow_id": null,
+      "week": 6,
+      "content_type": "inference",
+      "payload": "Hartwell Group opportunities receive automatic go-decision override from Marcus Webb. Standard margin thresholds do not apply due to the strategic relationship. Document the override rationale but proceed with proposals regardless of margin analysis.",
+      "structured_data": {
+        "crystallized_from": "hartwell",
+        "pattern_type": "client_preference",
+        "source_count": 4,
+        "source_ids": [
+          "CTX-003",
+          "CTX-8EF2C6C3",
+          "CTX-79832B7C",
+          "CTX-9826C96C"
+        ],
+        "api_synthesized": false
+      },
+      "valid_from": "2026-04-28T05:30:57.212955Z",
+      "decay_function": "permanent",
+      "decay_rate": 0.0,
+      "confidence_at_creation": 0.9329734374999998,
+      "current_confidence": 0.9329734374999998,
+      "context_grade": "institutional_memory",
+      "context_grade_confidence": 0.85,
+      "org_lineage": null,
+      "org_lineage_confidence": null,
+      "derivation_chain": [
+        {
+          "source_id": "CTX-003",
+          "relationship": "derived_from"
+        },
+        {
+          "source_id": "CTX-8EF2C6C3",
+          "relationship": "derived_from"
+        },
+        {
+          "source_id": "CTX-79832B7C",
+          "relationship": "derived_from"
+        },
+        {
+          "source_id": "CTX-9826C96C",
+          "relationship": "derived_from"
+        },
+        {
+          "source_id": "CTX-003",
+          "relationship": "validates"
+        },
+        {
+          "source_id": "CTX-8EF2C6C3",
+          "relationship": "validates"
+        },
+        {
+          "source_id": "CTX-79832B7C",
+          "relationship": "validates"
+        },
+        {
+          "source_id": "CTX-9826C96C",
+          "relationship": "validates"
+        },
+        {
+          "source_id": "CTX-A3106F3D",
+          "relationship": "validates"
+        },
+        {
+          "source_id": "CTX-241B33DD",
+          "relationship": "validates"
+        },
+        {
+          "source_id": "CTX-4A58D801",
+          "relationship": "validates"
+        },
+        {
+          "source_id": "CTX-2B5CEE19",
+          "relationship": "validates"
+        },
+        {
+          "source_id": "CTX-3E9F73C9",
+          "relationship": "validates"
+        }
+      ],
+      "raw_evidence": [],
+      "read_by": [],
+      "acted_on_by": [],
+      "validated_by": [],
+      "invalidated_by": [],
+      "supersedes": null,
+      "superseded_by": null,
+      "contradicts": []
+    },
+    {
+      "id": "CTX-75B3D061",
+      "created_at": "2026-04-28T05:30:57.213033Z",
+      "created_by": "synthesis_engine",
+      "source_type": "derived",
+      "workflow_id": null,
+      "week": 6,
+      "content_type": "inference",
+      "payload": "Terralogic operates on extended payment cycles of 60-day regardless of contract terms. Do not escalate collections before day 65, as premature escalation has caused account loss. This is a known pattern and should be accommodated in AR forecasting.",
+      "structured_data": {
+        "crystallized_from": "terralogic",
+        "pattern_type": "client_preference",
+        "source_count": 3,
+        "source_ids": [
+          "CTX-006",
+          "CTX-1EC8C70E",
+          "CTX-2138CC93"
+        ],
+        "api_synthesized": false
+      },
+      "valid_from": "2026-04-28T05:30:57.213034Z",
+      "decay_function": "permanent",
+      "decay_rate": 0.0,
+      "confidence_at_creation": 0.95,
+      "current_confidence": 0.95,
+      "context_grade": "institutional_memory",
+      "context_grade_confidence": 0.85,
+      "org_lineage": null,
+      "org_lineage_confidence": null,
+      "derivation_chain": [
+        {
+          "source_id": "CTX-006",
+          "relationship": "derived_from"
+        },
+        {
+          "source_id": "CTX-1EC8C70E",
+          "relationship": "derived_from"
+        },
+        {
+          "source_id": "CTX-2138CC93",
+          "relationship": "derived_from"
+        },
+        {
+          "source_id": "CTX-006",
+          "relationship": "validates"
+        },
+        {
+          "source_id": "CTX-1EC8C70E",
+          "relationship": "validates"
+        },
+        {
+          "source_id": "CTX-2138CC93",
+          "relationship": "validates"
+        },
+        {
+          "source_id": "CTX-E3ACC625",
+          "relationship": "validates"
+        },
+        {
+          "source_id": "CTX-FB490B5A",
+          "relationship": "validates"
+        }
+      ],
+      "raw_evidence": [],
+      "read_by": [],
+      "acted_on_by": [],
+      "validated_by": [],
+      "invalidated_by": [],
+      "supersedes": null,
+      "superseded_by": null,
+      "contradicts": []
+    },
+    {
+      "id": "CTX-91269F8E",
+      "created_at": "2026-04-28T05:30:57.213190Z",
+      "created_by": "synthesis_engine",
+      "source_type": "derived",
+      "workflow_id": null,
+      "week": 6,
+      "content_type": "inference",
+      "payload": "Holloway has specific organizational context documented across 6 sources. Consult institutional memory before making decisions involving this stakeholder. Their preferences and constraints may not be visible in standard systems.",
+      "structured_data": {
+        "crystallized_from": "holloway",
+        "pattern_type": "stakeholder_preference",
+        "source_count": 6,
+        "source_ids": [
+          "CTX-009",
+          "CTX-6FA0B95A",
+          "CTX-1EB75741",
+          "CTX-58CD41BC",
+          "CTX-D43B71FE",
+          "CTX-D067188A"
+        ],
+        "api_synthesized": false
+      },
+      "valid_from": "2026-04-28T05:30:57.213191Z",
+      "decay_function": "permanent",
+      "decay_rate": 0.0,
+      "confidence_at_creation": 0.9090048307291665,
+      "current_confidence": 0.9090048307291665,
+      "context_grade": "institutional_memory",
+      "context_grade_confidence": 0.85,
+      "org_lineage": null,
+      "org_lineage_confidence": null,
+      "derivation_chain": [
+        {
+          "source_id": "CTX-009",
+          "relationship": "derived_from"
+        },
+        {
+          "source_id": "CTX-6FA0B95A",
+          "relationship": "derived_from"
+        },
+        {
+          "source_id": "CTX-1EB75741",
+          "relationship": "derived_from"
+        },
+        {
+          "source_id": "CTX-58CD41BC",
+          "relationship": "derived_from"
+        },
+        {
+          "source_id": "CTX-D43B71FE",
+          "relationship": "derived_from"
+        },
+        {
+          "source_id": "CTX-D067188A",
+          "relationship": "derived_from"
+        },
+        {
+          "source_id": "CTX-009",
+          "relationship": "validates"
+        },
+        {
+          "source_id": "CTX-6FA0B95A",
+          "relationship": "validates"
+        },
+        {
+          "source_id": "CTX-1EB75741",
+          "relationship": "validates"
+        },
+        {
+          "source_id": "CTX-58CD41BC",
+          "relationship": "validates"
+        },
+        {
+          "source_id": "CTX-D43B71FE",
+          "relationship": "validates"
+        },
+        {
+          "source_id": "CTX-D067188A",
+          "relationship": "validates"
+        },
+        {
+          "source_id": "CTX-7546A857",
+          "relationship": "validates"
+        },
+        {
+          "source_id": "CTX-52833728",
+          "relationship": "validates"
+        }
+      ],
+      "raw_evidence": [],
+      "read_by": [],
+      "acted_on_by": [],
+      "validated_by": [],
+      "invalidated_by": [],
+      "supersedes": null,
+      "superseded_by": null,
+      "contradicts": []
+    },
+    {
+      "id": "CTX-296F06F0",
+      "created_at": "2026-04-28T05:30:57.213277Z",
+      "created_by": "synthesis_engine",
+      "source_type": "derived",
+      "workflow_id": null,
+      "week": 6,
+      "content_type": "inference",
+      "payload": "Jordan Park has a documented HR conflict with Nexum Partners. Do not assign them to any Nexum work regardless of skills match. This conflict is documented in HR records and staffing must source alternatives.",
+      "structured_data": {
+        "crystallized_from": "park",
+        "pattern_type": "stakeholder_preference",
+        "source_count": 5,
+        "source_ids": [
+          "CTX-010",
+          "CTX-C096915F",
+          "CTX-D43B71FE",
+          "CTX-F315F748",
+          "CTX-22C64E1A"
+        ],
+        "api_synthesized": false
+      },
+      "valid_from": "2026-04-28T05:30:57.213277Z",
+      "decay_function": "permanent",
+      "decay_rate": 0.0,
+      "confidence_at_creation": 0.95,
+      "current_confidence": 0.95,
+      "context_grade": "institutional_memory",
+      "context_grade_confidence": 0.85,
+      "org_lineage": null,
+      "org_lineage_confidence": null,
+      "derivation_chain": [
+        {
+          "source_id": "CTX-010",
+          "relationship": "derived_from"
+        },
+        {
+          "source_id": "CTX-C096915F",
+          "relationship": "derived_from"
+        },
+        {
+          "source_id": "CTX-D43B71FE",
+          "relationship": "derived_from"
+        },
+        {
+          "source_id": "CTX-F315F748",
+          "relationship": "derived_from"
+        },
+        {
+          "source_id": "CTX-22C64E1A",
+          "relationship": "derived_from"
+        },
+        {
+          "source_id": "CTX-010",
+          "relationship": "validates"
+        },
+        {
+          "source_id": "CTX-C096915F",
+          "relationship": "validates"
+        },
+        {
+          "source_id": "CTX-D43B71FE",
+          "relationship": "validates"
+        },
+        {
+          "source_id": "CTX-F315F748",
+          "relationship": "validates"
+        },
+        {
+          "source_id": "CTX-22C64E1A",
+          "relationship": "validates"
+        },
+        {
+          "source_id": "CTX-A49991B3",
+          "relationship": "validates"
+        },
+        {
+          "source_id": "CTX-59397512",
+          "relationship": "validates"
+        },
+        {
+          "source_id": "CTX-6C41F366",
+          "relationship": "validates"
+        },
+        {
+          "source_id": "CTX-7D20B128",
+          "relationship": "validates"
+        }
+      ],
+      "raw_evidence": [],
+      "read_by": [],
+      "acted_on_by": [],
+      "validated_by": [],
+      "invalidated_by": [],
+      "supersedes": null,
+      "superseded_by": null,
+      "contradicts": []
+    },
+    {
+      "id": "CTX-A49991B3",
+      "created_at": "2026-04-28T05:30:57.213366Z",
+      "created_by": "synthesis_engine",
+      "source_type": "derived",
+      "workflow_id": null,
+      "week": 6,
+      "content_type": "inference",
+      "payload": "Nexum Partners engagements have documented conflicts with Jordan Park. Do not assign conflicted staff regardless of skills match or availability. Source alternative staffing when Nexum work requires similar skill sets.",
+      "structured_data": {
+        "crystallized_from": "nexum",
+        "pattern_type": "client_preference",
+        "source_count": 5,
+        "source_ids": [
+          "CTX-010",
+          "CTX-C096915F",
+          "CTX-D43B71FE",
+          "CTX-F315F748",
+          "CTX-22C64E1A"
+        ],
+        "api_synthesized": false
+      },
+      "valid_from": "2026-04-28T05:30:57.213367Z",
+      "decay_function": "permanent",
+      "decay_rate": 0.0,
+      "confidence_at_creation": 0.95,
+      "current_confidence": 0.95,
+      "context_grade": "institutional_memory",
+      "context_grade_confidence": 0.85,
+      "org_lineage": null,
+      "org_lineage_confidence": null,
+      "derivation_chain": [
+        {
+          "source_id": "CTX-010",
+          "relationship": "derived_from"
+        },
+        {
+          "source_id": "CTX-C096915F",
+          "relationship": "derived_from"
+        },
+        {
+          "source_id": "CTX-D43B71FE",
+          "relationship": "derived_from"
+        },
+        {
+          "source_id": "CTX-F315F748",
+          "relationship": "derived_from"
+        },
+        {
+          "source_id": "CTX-22C64E1A",
+          "relationship": "derived_from"
+        },
+        {
+          "source_id": "CTX-010",
+          "relationship": "validates"
+        },
+        {
+          "source_id": "CTX-C096915F",
+          "relationship": "validates"
+        },
+        {
+          "source_id": "CTX-D43B71FE",
+          "relationship": "validates"
+        },
+        {
+          "source_id": "CTX-F315F748",
+          "relationship": "validates"
+        },
+        {
+          "source_id": "CTX-22C64E1A",
+          "relationship": "validates"
+        },
+        {
+          "source_id": "CTX-296F06F0",
+          "relationship": "validates"
+        }
+      ],
+      "raw_evidence": [],
+      "read_by": [],
+      "acted_on_by": [],
+      "validated_by": [],
+      "invalidated_by": [],
+      "supersedes": null,
+      "superseded_by": null,
+      "contradicts": []
+    },
+    {
+      "id": "CTX-B67CE8EE",
+      "created_at": "2026-04-28T05:30:57.217069Z",
+      "created_by": "vendor_agent",
+      "source_type": "agent",
+      "workflow_id": "W4",
+      "week": 7,
+      "content_type": "observation",
+      "payload": "Agent Vendor Agent decision on vendor_sow: Based on organizational context CTX-001, Brightline Consulting requires secondary approval due to historical pricing disputes. I will route this SOW through David Okafor before proceeding.",
+      "structured_data": {
+        "scenario_type": "vendor_sow",
+        "decision_id": "DEC-WB-000005",
+        "action_taken": "Route SOW through secondary approval from David Okafor before issuance",
+        "concerns": [
+          "Historical pricing dispute from 2022"
+        ],
+        "entities": {
+          "vendor": "brightline_consulting",
+          "vendor_name": "Brightline Consulting",
+          "engagement_type": "financial_services",
+          "sow_value": "$150,000",
+          "requestor": "engagement_manager"
+        }
+      },
+      "valid_from": "2026-04-28T05:30:57.217070Z",
+      "decay_function": "exponential",
+      "decay_rate": 0.15,
+      "confidence_at_creation": 0.7360000000000001,
+      "current_confidence": 0.32656711,
+      "context_grade": null,
+      "context_grade_confidence": null,
+      "org_lineage": null,
+      "org_lineage_confidence": null,
+      "derivation_chain": [],
+      "raw_evidence": [],
+      "read_by": [
+        {
+          "agent_id": "vendor_agent",
+          "timestamp": "2026-04-28T05:30:57.235602Z",
+          "action_taken": "Retrieved for vendor_sow decision",
+          "outcome": null,
+          "validated": null
+        }
+      ],
+      "acted_on_by": [],
+      "validated_by": [],
+      "invalidated_by": [],
+      "supersedes": null,
+      "superseded_by": null,
+      "contradicts": []
+    },
+    {
+      "id": "CTX-FB2C9785",
+      "created_at": "2026-04-28T05:30:57.217159Z",
+      "created_by": "blake_roberts",
+      "source_type": "human",
+      "workflow_id": null,
+      "week": 7,
+      "content_type": "observation",
+      "payload": "Blake Roberts shared: Blake Roberts: The 72-hour rule for Priya on staffing changes is real. Violate it once and you'll see the morale impact ripple through for two weeks. Not worth it.",
+      "structured_data": {
+        "source_event": "BEV-000015",
+        "behavior_type": "knowledge_exchange",
+        "application": "slack",
+        "staff_tenure_years": 11.3
+      },
+      "valid_from": "2026-04-28T05:30:57.217160Z",
+      "decay_function": "exponential",
+      "decay_rate": 0.15,
+      "confidence_at_creation": 0.75,
+      "current_confidence": 0.332778984375,
+      "context_grade": "compliance_scaffolding",
+      "context_grade_confidence": 0.4,
+      "org_lineage": "failure_recovery",
+      "org_lineage_confidence": 0.4,
+      "derivation_chain": [],
+      "raw_evidence": [],
+      "read_by": [],
+      "acted_on_by": [],
+      "validated_by": [],
+      "invalidated_by": [],
+      "supersedes": null,
+      "superseded_by": null,
+      "contradicts": []
+    },
+    {
+      "id": "CTX-59397512",
+      "created_at": "2026-04-28T05:30:57.217188Z",
+      "created_by": "parker_walker",
+      "source_type": "human",
+      "workflow_id": null,
+      "week": 7,
+      "content_type": "observation",
+      "payload": "Parker Walker shared: Parker Walker: Brightline Consulting requires secondary approval from David Okafor before any SOW issuance. This isn't in the system but it's mandatory. The 2022 invoice dispute was brutal - they overbilled us 40% and it took months to resolve.",
+      "structured_data": {
+        "source_event": "BEV-000018",
+        "behavior_type": "knowledge_exchange",
+        "application": "email",
+        "staff_tenure_years": 5.8
+      },
+      "valid_from": "2026-04-28T05:30:57.217189Z",
+      "decay_function": "exponential",
+      "decay_rate": 0.15,
+      "confidence_at_creation": 0.75,
+      "current_confidence": 0.332778984375,
+      "context_grade": "compliance_scaffolding",
+      "context_grade_confidence": 0.4,
+      "org_lineage": "failure_recovery",
+      "org_lineage_confidence": 0.55,
+      "derivation_chain": [],
+      "raw_evidence": [],
+      "read_by": [],
+      "acted_on_by": [],
+      "validated_by": [],
+      "invalidated_by": [],
+      "supersedes": null,
+      "superseded_by": null,
+      "contradicts": []
+    },
+    {
+      "id": "CTX-241B33DD",
+      "created_at": "2026-04-28T05:30:57.217216Z",
+      "created_by": "taylor_clark",
+      "source_type": "human",
+      "workflow_id": null,
+      "week": 7,
+      "content_type": "observation",
+      "payload": "Taylor Clark shared: Taylor Clark: The policy says one thing but Marcus Webb makes the actual call on Hartwell Group. Run it by him first before going through the formal go/no-go process. He'll override anyway if it's Hartwell - historical relationship trumps margin analysis.",
+      "structured_data": {
+        "source_event": "BEV-000017",
+        "behavior_type": "knowledge_exchange",
+        "application": "slack",
+        "staff_tenure_years": 6.1
+      },
+      "valid_from": "2026-04-28T05:30:57.217217Z",
+      "decay_function": "exponential",
+      "decay_rate": 0.15,
+      "confidence_at_creation": 0.75,
+      "current_confidence": 0.332778984375,
+      "context_grade": "compliance_scaffolding",
+      "context_grade_confidence": 0.55,
+      "org_lineage": "political_settlement",
+      "org_lineage_confidence": 0.7,
+      "derivation_chain": [],
+      "raw_evidence": [],
+      "read_by": [],
+      "acted_on_by": [],
+      "validated_by": [],
+      "invalidated_by": [],
+      "supersedes": null,
+      "superseded_by": null,
+      "contradicts": []
+    },
+    {
+      "id": "CTX-4A58D801",
+      "created_at": "2026-04-28T05:30:57.221289Z",
+      "created_by": "proposal_agent",
+      "source_type": "agent",
+      "workflow_id": "W2",
+      "week": 8,
+      "content_type": "observation",
+      "payload": "Agent Proposal Agent decision on go_no_go: Context CTX-003 indicates Marcus Webb will override go/no-go for any Hartwell opportunity regardless of margin. Historical relationship.",
+      "structured_data": {
+        "scenario_type": "go_no_go",
+        "decision_id": "DEC-WB-000006",
+        "action_taken": "Proceed with go decision. Marcus Webb override applies to Hartwell Group.",
+        "concerns": [
+          "Partner override, document rationale"
+        ],
+        "entities": {
+          "client": "hartwell_group",
+          "client_name": "Hartwell Group",
+          "opportunity_value": "$400,000",
+          "calculated_margin": "18%",
+          "standard_threshold": "25%"
+        }
+      },
+      "valid_from": "2026-04-28T05:30:57.221293Z",
+      "decay_function": "exponential",
+      "decay_rate": 0.15,
+      "confidence_at_creation": 0.68,
+      "current_confidence": 0.3549642499999999,
+      "context_grade": null,
+      "context_grade_confidence": null,
+      "org_lineage": null,
+      "org_lineage_confidence": null,
+      "derivation_chain": [],
+      "raw_evidence": [],
+      "read_by": [],
+      "acted_on_by": [],
+      "validated_by": [],
+      "invalidated_by": [],
+      "supersedes": null,
+      "superseded_by": null,
+      "contradicts": []
+    },
+    {
+      "id": "CTX-384ACDF9",
+      "created_at": "2026-04-28T05:30:57.221471Z",
+      "created_by": "river_clark",
+      "source_type": "human",
+      "workflow_id": null,
+      "week": 8,
+      "content_type": "observation",
+      "payload": "River Clark shared: River Clark: With Vance, the list rate isn't the real rate. On $500K+ engagements, 15% discount is on the table but you have to negotiate for it. Key thing: don't reveal you know this in the initial conversation.",
+      "structured_data": {
+        "source_event": "BEV-000001",
+        "behavior_type": "knowledge_exchange",
+        "application": "teams",
+        "staff_tenure_years": 4.7
+      },
+      "valid_from": "2026-04-28T05:30:57.221473Z",
+      "decay_function": "exponential",
+      "decay_rate": 0.15,
+      "confidence_at_creation": 0.75,
+      "current_confidence": 0.3915046874999999,
+      "context_grade": "compliance_scaffolding",
+      "context_grade_confidence": 0.4,
+      "org_lineage": "failure_recovery",
+      "org_lineage_confidence": 0.4,
+      "derivation_chain": [],
+      "raw_evidence": [],
+      "read_by": [],
+      "acted_on_by": [],
+      "validated_by": [],
+      "invalidated_by": [],
+      "supersedes": null,
+      "superseded_by": null,
+      "contradicts": []
+    },
+    {
+      "id": "CTX-B8A259F8",
+      "created_at": "2026-04-28T05:30:57.221510Z",
+      "created_by": "harper_walker",
+      "source_type": "human",
+      "workflow_id": null,
+      "week": 8,
+      "content_type": "observation",
+      "payload": "Harper Walker shared: Harper Walker: The relationship with apex_manufacturing is good but they're demanding. Make sure the engagement manager sets expectations early.",
+      "structured_data": {
+        "source_event": "BEV-000017",
+        "behavior_type": "knowledge_exchange",
+        "application": "teams",
+        "staff_tenure_years": 6.5
+      },
+      "valid_from": "2026-04-28T05:30:57.221510Z",
+      "decay_function": "exponential",
+      "decay_rate": 0.15,
+      "confidence_at_creation": 0.75,
+      "current_confidence": 0.3915046874999999,
+      "context_grade": "institutional_memory",
+      "context_grade_confidence": 0.55,
+      "org_lineage": "political_settlement",
+      "org_lineage_confidence": 0.55,
+      "derivation_chain": [],
+      "raw_evidence": [],
+      "read_by": [],
+      "acted_on_by": [],
+      "validated_by": [],
+      "invalidated_by": [],
+      "supersedes": null,
+      "superseded_by": null,
+      "contradicts": []
+    },
+    {
+      "id": "CTX-6C41F366",
+      "created_at": "2026-04-28T05:30:57.221535Z",
+      "created_by": "parker_walker",
+      "source_type": "human",
+      "workflow_id": null,
+      "week": 8,
+      "content_type": "observation",
+      "payload": "Parker Walker shared: Parker Walker: The 72-hour rule for Priya on staffing changes is real. Violate it once and you'll see the morale impact ripple through for two weeks. Not worth it.",
+      "structured_data": {
+        "source_event": "BEV-000012",
+        "behavior_type": "knowledge_exchange",
+        "application": "teams",
+        "staff_tenure_years": 5.8
+      },
+      "valid_from": "2026-04-28T05:30:57.221536Z",
+      "decay_function": "exponential",
+      "decay_rate": 0.15,
+      "confidence_at_creation": 0.75,
+      "current_confidence": 0.3915046874999999,
+      "context_grade": "compliance_scaffolding",
+      "context_grade_confidence": 0.4,
+      "org_lineage": "failure_recovery",
+      "org_lineage_confidence": 0.4,
+      "derivation_chain": [],
+      "raw_evidence": [],
+      "read_by": [],
+      "acted_on_by": [],
+      "validated_by": [],
+      "invalidated_by": [],
+      "supersedes": null,
+      "superseded_by": null,
+      "contradicts": []
+    },
+    {
+      "id": "CTX-2B5CEE19",
+      "created_at": "2026-04-28T05:30:57.225221Z",
+      "created_by": "sarah_chen",
+      "source_type": "human",
+      "workflow_id": null,
+      "week": 9,
+      "content_type": "observation",
+      "payload": "Sarah Chen shared: Sarah Chen: For any Hartwell opportunity, Marcus Webb will override the go/no-go regardless of margin. It's a relationship thing going back years. The 25% threshold? Doesn't apply to them.",
+      "structured_data": {
+        "source_event": "BEV-000015",
+        "behavior_type": "knowledge_exchange",
+        "application": "email",
+        "staff_tenure_years": 8.5
+      },
+      "valid_from": "2026-04-28T05:30:57.225223Z",
+      "decay_function": "exponential",
+      "decay_rate": 0.15,
+      "confidence_at_creation": 0.75,
+      "current_confidence": 0.4605937499999999,
+      "context_grade": "institutional_memory",
+      "context_grade_confidence": 0.55,
+      "org_lineage": "political_settlement",
+      "org_lineage_confidence": 0.85,
+      "derivation_chain": [],
+      "raw_evidence": [],
+      "read_by": [],
+      "acted_on_by": [],
+      "validated_by": [],
+      "invalidated_by": [],
+      "supersedes": null,
+      "superseded_by": null,
+      "contradicts": []
+    },
+    {
+      "id": "CTX-36A3FAF5",
+      "created_at": "2026-04-28T05:30:57.225251Z",
+      "created_by": "taylor_clark",
+      "source_type": "human",
+      "workflow_id": null,
+      "week": 9,
+      "content_type": "observation",
+      "payload": "Taylor Clark shared: Taylor Clark: Former Acme staff at client companies = manual COI check required. The system doesn't catch this automatically. I've seen it burn people who assumed the automated screening was comprehensive.",
+      "structured_data": {
+        "source_event": "BEV-000011",
+        "behavior_type": "knowledge_exchange",
+        "application": "email",
+        "staff_tenure_years": 6.1
+      },
+      "valid_from": "2026-04-28T05:30:57.225252Z",
+      "decay_function": "exponential",
+      "decay_rate": 0.15,
+      "confidence_at_creation": 0.74,
+      "current_confidence": 0.4544524999999999,
+      "context_grade": "compliance_scaffolding",
+      "context_grade_confidence": 0.7,
+      "org_lineage": "failure_recovery",
+      "org_lineage_confidence": 0.4,
+      "derivation_chain": [],
+      "raw_evidence": [],
+      "read_by": [],
+      "acted_on_by": [],
+      "validated_by": [],
+      "invalidated_by": [],
+      "supersedes": null,
+      "superseded_by": null,
+      "contradicts": []
+    },
+    {
+      "id": "CTX-3E9F73C9",
+      "created_at": "2026-04-28T05:30:57.225280Z",
+      "created_by": "alex_roberts",
+      "source_type": "human",
+      "workflow_id": null,
+      "week": 9,
+      "content_type": "observation",
+      "payload": "Alex Roberts shared: Alex Roberts: For any Hartwell opportunity, Marcus Webb will override the go/no-go regardless of margin. It's a relationship thing going back years. The 25% threshold? Doesn't apply to them.",
+      "structured_data": {
+        "source_event": "BEV-000004",
+        "behavior_type": "knowledge_exchange",
+        "application": "email",
+        "staff_tenure_years": 6.9
+      },
+      "valid_from": "2026-04-28T05:30:57.225281Z",
+      "decay_function": "exponential",
+      "decay_rate": 0.15,
+      "confidence_at_creation": 0.75,
+      "current_confidence": 0.4605937499999999,
+      "context_grade": "institutional_memory",
+      "context_grade_confidence": 0.55,
+      "org_lineage": "political_settlement",
+      "org_lineage_confidence": 0.85,
+      "derivation_chain": [],
+      "raw_evidence": [],
+      "read_by": [],
+      "acted_on_by": [],
+      "validated_by": [],
+      "invalidated_by": [],
+      "supersedes": null,
+      "superseded_by": null,
+      "contradicts": []
+    },
+    {
+      "id": "CTX-5BEE2419",
+      "created_at": "2026-04-28T05:30:57.227164Z",
+      "created_by": "synthesis_engine",
+      "source_type": "derived",
+      "workflow_id": null,
+      "week": 9,
+      "content_type": "inference",
+      "payload": "Vance Analytics pricing is negotiable up to 15% below list rate for large engagements. This discount is not publicly listed and requires direct negotiation. Do not disclose the negotiable threshold to the vendor during initial discussions.",
+      "structured_data": {
+        "crystallized_from": "vance",
+        "pattern_type": "vendor_caution",
+        "source_count": 3,
+        "source_ids": [
+          "CTX-005",
+          "CTX-8CF6018C",
+          "CTX-384ACDF9"
+        ],
+        "api_synthesized": false
+      },
+      "valid_from": "2026-04-28T05:30:57.227165Z",
+      "decay_function": "permanent",
+      "decay_rate": 0.0,
+      "confidence_at_creation": 0.6057107074005051,
+      "current_confidence": 0.6057107074005051,
+      "context_grade": "institutional_memory",
+      "context_grade_confidence": 0.85,
+      "org_lineage": null,
+      "org_lineage_confidence": null,
+      "derivation_chain": [
+        {
+          "source_id": "CTX-005",
+          "relationship": "derived_from"
+        },
+        {
+          "source_id": "CTX-8CF6018C",
+          "relationship": "derived_from"
+        },
+        {
+          "source_id": "CTX-384ACDF9",
+          "relationship": "derived_from"
+        },
+        {
+          "source_id": "CTX-005",
+          "relationship": "validates"
+        },
+        {
+          "source_id": "CTX-8CF6018C",
+          "relationship": "validates"
+        },
+        {
+          "source_id": "CTX-384ACDF9",
+          "relationship": "validates"
+        }
+      ],
+      "raw_evidence": [],
+      "read_by": [],
+      "acted_on_by": [],
+      "validated_by": [],
+      "invalidated_by": [],
+      "supersedes": null,
+      "superseded_by": null,
+      "contradicts": []
+    },
+    {
+      "id": "CTX-E3ACC625",
+      "created_at": "2026-04-28T05:30:57.231613Z",
+      "created_by": "billing_agent",
+      "source_type": "agent",
+      "workflow_id": "W5",
+      "week": 10,
+      "content_type": "observation",
+      "payload": "Agent Billing Agent decision on payment_escalation: Context CTX-006 indicates TerraLogic operates on 60-day cycles regardless of contract terms. Premature escalation previously caused account loss.",
+      "structured_data": {
+        "scenario_type": "payment_escalation",
+        "decision_id": "DEC-WB-000007",
+        "action_taken": "Do not escalate until day 65. TerraLogic has 60-day actual payment cycle.",
+        "concerns": [
+          "Wait until day 65 before escalation"
+        ],
+        "entities": {
+          "client": "terralogic",
+          "client_name": "TerraLogic",
+          "invoice_number": "4523",
+          "days_overdue": "48",
+          "amount": "$75,000"
+        }
+      },
+      "valid_from": "2026-04-28T05:30:57.231615Z",
+      "decay_function": "exponential",
+      "decay_rate": 0.15,
+      "confidence_at_creation": 0.7040000000000001,
+      "current_confidence": 0.50864,
+      "context_grade": null,
+      "context_grade_confidence": null,
+      "org_lineage": null,
+      "org_lineage_confidence": null,
+      "derivation_chain": [],
+      "raw_evidence": [],
+      "read_by": [],
+      "acted_on_by": [],
+      "validated_by": [],
+      "invalidated_by": [],
+      "supersedes": null,
+      "superseded_by": null,
+      "contradicts": []
+    },
+    {
+      "id": "CTX-74D733B6",
+      "created_at": "2026-04-28T05:30:57.231700Z",
+      "created_by": "riley_phillips",
+      "source_type": "human",
+      "workflow_id": null,
+      "week": 10,
+      "content_type": "observation",
+      "payload": "Riley Phillips shared: Riley Phillips: Priya Nair needs 72 hours notice on senior resource reallocation. The system won't stop you from reassigning people same-day, but the morale fallout lasts two weeks. She's documented this requirement but it's not automated.",
+      "structured_data": {
+        "source_event": "BEV-000001",
+        "behavior_type": "knowledge_exchange",
+        "application": "teams",
+        "staff_tenure_years": 5.7
+      },
+      "valid_from": "2026-04-28T05:30:57.231701Z",
+      "decay_function": "exponential",
+      "decay_rate": 0.15,
+      "confidence_at_creation": 0.75,
+      "current_confidence": 0.5418749999999999,
+      "context_grade": "compliance_scaffolding",
+      "context_grade_confidence": 0.4,
+      "org_lineage": "documented_policy",
+      "org_lineage_confidence": 0.55,
+      "derivation_chain": [],
+      "raw_evidence": [],
+      "read_by": [],
+      "acted_on_by": [],
+      "validated_by": [],
+      "invalidated_by": [],
+      "supersedes": null,
+      "superseded_by": null,
+      "contradicts": []
+    },
+    {
+      "id": "CTX-704F9856",
+      "created_at": "2026-04-28T05:30:57.231740Z",
+      "created_by": "rowan_jones",
+      "source_type": "human",
+      "workflow_id": null,
+      "week": 10,
+      "content_type": "observation",
+      "payload": "Rowan Jones shared: Rowan Jones: summit_research has been reliable but watch the invoicing carefully. Cross-check everything against the SOW.",
+      "structured_data": {
+        "source_event": "BEV-000016",
+        "behavior_type": "knowledge_exchange",
+        "application": "email",
+        "staff_tenure_years": 6.8
+      },
+      "valid_from": "2026-04-28T05:30:57.231741Z",
+      "decay_function": "exponential",
+      "decay_rate": 0.15,
+      "confidence_at_creation": 0.75,
+      "current_confidence": 0.5418749999999999,
+      "context_grade": "compliance_scaffolding",
+      "context_grade_confidence": 0.4,
+      "org_lineage": "failure_recovery",
+      "org_lineage_confidence": 0.4,
+      "derivation_chain": [],
+      "raw_evidence": [],
+      "read_by": [],
+      "acted_on_by": [],
+      "validated_by": [],
+      "invalidated_by": [],
+      "supersedes": null,
+      "superseded_by": null,
+      "contradicts": []
+    },
+    {
+      "id": "CTX-6DA468ED",
+      "created_at": "2026-04-28T05:30:57.231763Z",
+      "created_by": "elena_vasquez",
+      "source_type": "human",
+      "workflow_id": null,
+      "week": 10,
+      "content_type": "observation",
+      "payload": "Elena Vasquez shared: Elena Vasquez: Priya Nair needs 72 hours notice on senior resource reallocation. The system won't stop you from reassigning people same-day, but the morale fallout lasts two weeks. She's documented this requirement but it's not automated.",
+      "structured_data": {
+        "source_event": "BEV-000008",
+        "behavior_type": "knowledge_exchange",
+        "application": "teams",
+        "staff_tenure_years": 4.5
+      },
+      "valid_from": "2026-04-28T05:30:57.231764Z",
+      "decay_function": "exponential",
+      "decay_rate": 0.15,
+      "confidence_at_creation": 0.75,
+      "current_confidence": 0.5418749999999999,
+      "context_grade": "compliance_scaffolding",
+      "context_grade_confidence": 0.4,
+      "org_lineage": "documented_policy",
+      "org_lineage_confidence": 0.55,
+      "derivation_chain": [],
+      "raw_evidence": [],
+      "read_by": [],
+      "acted_on_by": [],
+      "validated_by": [],
+      "invalidated_by": [],
+      "supersedes": null,
+      "superseded_by": null,
+      "contradicts": []
+    },
+    {
+      "id": "CTX-1903D1CC",
+      "created_at": "2026-04-28T05:30:57.235660Z",
+      "created_by": "vendor_agent",
+      "source_type": "agent",
+      "workflow_id": "W4",
+      "week": 11,
+      "content_type": "observation",
+      "payload": "Agent Vendor Agent decision on vendor_sow: Based on organizational context CTX-001, Brightline Consulting requires secondary approval due to historical pricing disputes. I will route this SOW through David Okafor before proceeding.",
+      "structured_data": {
+        "scenario_type": "vendor_sow",
+        "decision_id": "DEC-WB-000008",
+        "action_taken": "Route SOW through secondary approval from David Okafor before issuance",
+        "concerns": [
+          "Historical pricing dispute from 2022"
+        ],
+        "entities": {
+          "vendor": "brightline_consulting",
+          "vendor_name": "Brightline Consulting",
+          "engagement_type": "financial_services",
+          "sow_value": "$150,000",
+          "requestor": "engagement_manager"
+        }
+      },
+      "valid_from": "2026-04-28T05:30:57.235662Z",
+      "decay_function": "exponential",
+      "decay_rate": 0.15,
+      "confidence_at_creation": 0.7360000000000001,
+      "current_confidence": 0.6256,
+      "context_grade": null,
+      "context_grade_confidence": null,
+      "org_lineage": null,
+      "org_lineage_confidence": null,
+      "derivation_chain": [],
+      "raw_evidence": [],
+      "read_by": [],
+      "acted_on_by": [],
+      "validated_by": [],
+      "invalidated_by": [],
+      "supersedes": null,
+      "superseded_by": null,
+      "contradicts": []
+    },
+    {
+      "id": "CTX-7D20B128",
+      "created_at": "2026-04-28T05:30:57.235858Z",
+      "created_by": "staffing_agent",
+      "source_type": "agent",
+      "workflow_id": "W3",
+      "week": 11,
+      "content_type": "inference",
+      "payload": "Agent Staffing Agent decision on staffing_assignment: Jordan Park has the required skills and availability. Proceeding with assignment.",
+      "structured_data": {
+        "scenario_type": "staffing_assignment",
+        "decision_id": "DEC-WB-000009",
+        "action_taken": "Assign Jordan Park to Nexum Partners engagement based on skills match",
+        "concerns": [],
+        "entities": {
+          "client": "nexum_partners",
+          "client_name": "Nexum Partners",
+          "candidate": "jordan_park",
+          "candidate_name": "Jordan Park",
+          "skills_match": "high",
+          "availability": "available"
+        }
+      },
+      "valid_from": "2026-04-28T05:30:57.235861Z",
+      "decay_function": "exponential",
+      "decay_rate": 0.15,
+      "confidence_at_creation": 0.6400000000000001,
+      "current_confidence": 0.544,
+      "context_grade": null,
+      "context_grade_confidence": null,
+      "org_lineage": null,
+      "org_lineage_confidence": null,
+      "derivation_chain": [],
+      "raw_evidence": [],
+      "read_by": [],
+      "acted_on_by": [],
+      "validated_by": [],
+      "invalidated_by": [],
+      "supersedes": null,
+      "superseded_by": null,
+      "contradicts": []
+    },
+    {
+      "id": "CTX-0272BCF0",
+      "created_at": "2026-04-28T05:30:57.235944Z",
+      "created_by": "jordan_martin",
+      "source_type": "human",
+      "workflow_id": null,
+      "week": 11,
+      "content_type": "observation",
+      "payload": "Jordan Martin shared: Jordan Martin: Former Acme staff at client companies = manual COI check required. The system doesn't catch this automatically. I've seen it burn people who assumed the automated screening was comprehensive.",
+      "structured_data": {
+        "source_event": "BEV-000012",
+        "behavior_type": "knowledge_exchange",
+        "application": "slack",
+        "staff_tenure_years": 6.3
+      },
+      "valid_from": "2026-04-28T05:30:57.235945Z",
+      "decay_function": "exponential",
+      "decay_rate": 0.15,
+      "confidence_at_creation": 0.75,
+      "current_confidence": 0.6375,
+      "context_grade": "compliance_scaffolding",
+      "context_grade_confidence": 0.7,
+      "org_lineage": "failure_recovery",
+      "org_lineage_confidence": 0.4,
+      "derivation_chain": [],
+      "raw_evidence": [],
+      "read_by": [],
+      "acted_on_by": [],
+      "validated_by": [],
+      "invalidated_by": [],
+      "supersedes": null,
+      "superseded_by": null,
+      "contradicts": []
+    },
+    {
+      "id": "CTX-7546A857",
+      "created_at": "2026-04-28T05:30:57.235976Z",
+      "created_by": "james_holloway",
+      "source_type": "human",
+      "workflow_id": null,
+      "week": 11,
+      "content_type": "observation",
+      "payload": "James Holloway shared: James Holloway: summit_research has been reliable but watch the invoicing carefully. Cross-check everything against the SOW.",
+      "structured_data": {
+        "source_event": "BEV-000009",
+        "behavior_type": "knowledge_exchange",
+        "application": "teams",
+        "staff_tenure_years": 12.0
+      },
+      "valid_from": "2026-04-28T05:30:57.235981Z",
+      "decay_function": "exponential",
+      "decay_rate": 0.15,
+      "confidence_at_creation": 0.75,
+      "current_confidence": 0.6375,
+      "context_grade": "compliance_scaffolding",
+      "context_grade_confidence": 0.4,
+      "org_lineage": "failure_recovery",
+      "org_lineage_confidence": 0.4,
+      "derivation_chain": [],
+      "raw_evidence": [],
+      "read_by": [],
+      "acted_on_by": [],
+      "validated_by": [],
+      "invalidated_by": [],
+      "supersedes": null,
+      "superseded_by": null,
+      "contradicts": []
+    },
+    {
+      "id": "CTX-FB490B5A",
+      "created_at": "2026-04-28T05:30:57.236004Z",
+      "created_by": "taylor_clark",
+      "source_type": "human",
+      "workflow_id": null,
+      "week": 11,
+      "content_type": "observation",
+      "payload": "Taylor Clark shared: Taylor Clark: terralogic tends to push on timelines. Build in buffer and document any scope changes immediately.",
+      "structured_data": {
+        "source_event": "BEV-000020",
+        "behavior_type": "knowledge_exchange",
+        "application": "teams",
+        "staff_tenure_years": 6.1
+      },
+      "valid_from": "2026-04-28T05:30:57.236006Z",
+      "decay_function": "exponential",
+      "decay_rate": 0.15,
+      "confidence_at_creation": 0.74,
+      "current_confidence": 0.629,
+      "context_grade": "compliance_scaffolding",
+      "context_grade_confidence": 0.4,
+      "org_lineage": "direct_observation",
+      "org_lineage_confidence": 0.55,
+      "derivation_chain": [],
+      "raw_evidence": [],
+      "read_by": [],
+      "acted_on_by": [],
+      "validated_by": [],
+      "invalidated_by": [],
+      "supersedes": null,
+      "superseded_by": null,
+      "contradicts": []
+    },
+    {
+      "id": "CTX-52833728",
+      "created_at": "2026-04-28T05:30:57.240144Z",
+      "created_by": "harper_young",
+      "source_type": "human",
+      "workflow_id": null,
+      "week": 12,
+      "content_type": "observation",
+      "payload": "Harper Young shared: Harper Young: The write-off threshold changed - anything over $15K goes to James Holloway regardless of what the approval matrix says. This was a verbal update from Q3 2024. Not documented anywhere official.",
+      "structured_data": {
+        "source_event": "BEV-000003",
+        "behavior_type": "knowledge_exchange",
+        "application": "email",
+        "staff_tenure_years": 5.1
+      },
+      "valid_from": "2026-04-28T05:30:57.240147Z",
+      "decay_function": "exponential",
+      "decay_rate": 0.15,
+      "confidence_at_creation": 0.75,
+      "current_confidence": 0.75,
+      "context_grade": "compliance_scaffolding",
+      "context_grade_confidence": 0.4,
+      "org_lineage": "documented_policy",
+      "org_lineage_confidence": 0.7,
+      "derivation_chain": [],
+      "raw_evidence": [],
+      "read_by": [],
+      "acted_on_by": [],
+      "validated_by": [],
+      "invalidated_by": [],
+      "supersedes": null,
+      "superseded_by": null,
+      "contradicts": []
+    },
+    {
+      "id": "CTX-16CB2E1C",
+      "created_at": "2026-04-28T05:30:57.240206Z",
+      "created_by": "dakota_rodriguez",
+      "source_type": "human",
+      "workflow_id": null,
+      "week": 12,
+      "content_type": "observation",
+      "payload": "Dakota Rodriguez shared: Dakota Rodriguez: Heads up on Brightline - never issue a SOW without David Okafor reviewing it first. There's a documented pricing dispute from 2022 where they charged 40% above the agreed rate. Finance put in the secondary approval requirement after that.",
+      "structured_data": {
+        "source_event": "BEV-000006",
+        "behavior_type": "knowledge_exchange",
+        "application": "slack",
+        "staff_tenure_years": 4.3
+      },
+      "valid_from": "2026-04-28T05:30:57.240207Z",
+      "decay_function": "exponential",
+      "decay_rate": 0.15,
+      "confidence_at_creation": 0.75,
+      "current_confidence": 0.75,
+      "context_grade": "compliance_scaffolding",
+      "context_grade_confidence": 0.55,
+      "org_lineage": "failure_recovery",
+      "org_lineage_confidence": 0.7,
+      "derivation_chain": [],
+      "raw_evidence": [],
+      "read_by": [],
+      "acted_on_by": [],
+      "validated_by": [],
+      "invalidated_by": [],
+      "supersedes": null,
+      "superseded_by": null,
+      "contradicts": []
+    },
+    {
+      "id": "CTX-F388CC19",
+      "created_at": "2026-04-28T05:30:57.240236Z",
+      "created_by": "harper_walker",
+      "source_type": "human",
+      "workflow_id": null,
+      "week": 12,
+      "content_type": "observation",
+      "payload": "Harper Walker shared: Harper Walker: Elena Vasquez holds the master methodology for financial services engagements. It's not in the knowledge base - you have to consult her directly for FS projects. Don't waste time searching, just schedule 30 minutes with her.",
+      "structured_data": {
+        "source_event": "BEV-000008",
+        "behavior_type": "knowledge_exchange",
+        "application": "email",
+        "staff_tenure_years": 6.5
+      },
+      "valid_from": "2026-04-28T05:30:57.240237Z",
+      "decay_function": "exponential",
+      "decay_rate": 0.15,
+      "confidence_at_creation": 0.75,
+      "current_confidence": 0.75,
+      "context_grade": "pure_inefficiency",
+      "context_grade_confidence": 0.55,
+      "org_lineage": "failure_recovery",
+      "org_lineage_confidence": 0.4,
+      "derivation_chain": [],
+      "raw_evidence": [],
+      "read_by": [],
+      "acted_on_by": [],
+      "validated_by": [],
+      "invalidated_by": [],
+      "supersedes": null,
+      "superseded_by": null,
+      "contradicts": []
+    },
+    {
+      "id": "CTX-4B47C442",
+      "created_at": "2026-04-28T05:30:57.242326Z",
+      "created_by": "synthesis_engine",
+      "source_type": "derived",
+      "workflow_id": null,
+      "week": 12,
+      "content_type": "inference",
+      "payload": "Nair has specific organizational context documented across 4 sources. Consult institutional memory before making decisions involving this stakeholder. Their preferences and constraints may not be visible in standard systems.",
+      "structured_data": {
+        "crystallized_from": "nair",
+        "pattern_type": "stakeholder_preference",
+        "source_count": 4,
+        "source_ids": [
+          "CTX-004",
+          "CTX-F315F748",
+          "CTX-74D733B6",
+          "CTX-6DA468ED"
+        ],
+        "api_synthesized": false
+      },
+      "valid_from": "2026-04-28T05:30:57.242329Z",
+      "decay_function": "permanent",
+      "decay_rate": 0.0,
+      "confidence_at_creation": 0.5022957040527343,
+      "current_confidence": 0.5022957040527343,
+      "context_grade": "institutional_memory",
+      "context_grade_confidence": 0.85,
+      "org_lineage": null,
+      "org_lineage_confidence": null,
+      "derivation_chain": [
+        {
+          "source_id": "CTX-004",
+          "relationship": "derived_from"
+        },
+        {
+          "source_id": "CTX-F315F748",
+          "relationship": "derived_from"
+        },
+        {
+          "source_id": "CTX-74D733B6",
+          "relationship": "derived_from"
+        },
+        {
+          "source_id": "CTX-6DA468ED",
+          "relationship": "derived_from"
+        }
+      ],
+      "raw_evidence": [],
+      "read_by": [],
+      "acted_on_by": [],
+      "validated_by": [],
+      "invalidated_by": [],
+      "supersedes": null,
+      "superseded_by": null,
+      "contradicts": []
+    }
+  ],
+  "contradictions": [
+    {
+      "new_object_id": "CTX-A26614B8",
+      "existing_object_id": "CTX-001",
+      "contradiction_type": "direct_opposition",
+      "description": "Opposing claims about 'brightline'",
+      "confidence": 0.75
+    },
+    {
+      "new_object_id": "CTX-22C64E1A",
+      "existing_object_id": "CTX-D43B71FE",
+      "contradiction_type": "direct_opposition",
+      "description": "Opposing claims about 'nexum'",
+      "confidence": 0.75
+    }
+  ]
+}

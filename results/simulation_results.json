@@ -1,0 +1,438 @@
+{
+  "metadata": {
+    "timestamp": "2026-04-28T05:30:57.243706+00:00",
+    "weeks_simulated": 12,
+    "random_seed": 42
+  },
+  "without_bank_summary": {
+    "condition": "WITHOUT_BANK",
+    "weeks_run": 12,
+    "total_decisions": 9,
+    "correct_decisions": 4,
+    "incorrect_decisions": 4,
+    "overall_accuracy": 44.44444444444444,
+    "final_bank_size": 0,
+    "final_avg_confidence": 0,
+    "total_workflow_events": 1560,
+    "total_behavioral_events": 1800
+  },
+  "with_bank_summary": {
+    "condition": "WITH_BANK",
+    "weeks_run": 12,
+    "total_decisions": 9,
+    "correct_decisions": 7,
+    "incorrect_decisions": 1,
+    "overall_accuracy": 77.77777777777779,
+    "final_bank_size": 68,
+    "final_avg_confidence": 0.44570095625525036,
+    "total_workflow_events": 1560,
+    "total_behavioral_events": 1800
+  },
+  "comparison": {
+    "without_bank": {
+      "primary_metrics": {
+        "decision_quality_scores": {
+          "vendor_agent": [
+            0.0,
+            0.0,
+            100.0
+          ],
+          "proposal_agent": [
+            100.0,
+            0.0
+          ],
+          "billing_agent": [
+            100.0,
+            0.0
+          ],
+          "staffing_agent": [
+            100.0,
+            0.0
+          ]
+        },
+        "weekly_dqs": [
+          0.0,
+          0.0,
+          0.0,
+          100.0,
+          100.0,
+          100.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          50.0,
+          0.0
+        ],
+        "overall_dqs": 44.44444444444444,
+        "exception_handling_rates": [
+          0.0,
+          0.0,
+          0.0,
+          100.0,
+          100.0,
+          100.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          50.0,
+          0.0
+        ],
+        "overall_ehr": 29.166666666666668,
+        "institutional_memory_utilization": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "overall_imu": 0,
+        "organizational_error_rates": [
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          1,
+          1,
+          0,
+          0,
+          1,
+          0
+        ],
+        "total_oer": 4
+      },
+      "secondary_metrics": {
+        "context_object_growth": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "avg_confidence_history": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "contradiction_counts": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "synthesis_metrics": {
+        "synthesis_results": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "intelligence_scores": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "total_patterns_crystallized": 0,
+        "total_validations_propagated": 0,
+        "total_decay_adjustments": 0
+      },
+      "summary": {
+        "total_decisions": 9,
+        "correct_decisions": 4,
+        "incorrect_decisions": 4,
+        "accuracy": 44.44444444444444,
+        "final_bank_size": 0,
+        "final_avg_confidence": 0.0
+      }
+    },
+    "with_bank": {
+      "primary_metrics": {
+        "decision_quality_scores": {
+          "vendor_agent": [
+            100.0,
+            100.0,
+            100.0
+          ],
+          "proposal_agent": [
+            100.0,
+            100.0
+          ],
+          "billing_agent": [
+            0.0,
+            100.0
+          ],
+          "staffing_agent": [
+            100.0,
+            0.0
+          ]
+        },
+        "weekly_dqs": [
+          0.0,
+          0.0,
+          100.0,
+          100.0,
+          0.0,
+          100.0,
+          100.0,
+          100.0,
+          0.0,
+          100.0,
+          50.0,
+          0.0
+        ],
+        "overall_dqs": 77.77777777777777,
+        "exception_handling_rates": [
+          0.0,
+          0.0,
+          100.0,
+          100.0,
+          0.0,
+          100.0,
+          100.0,
+          100.0,
+          0.0,
+          100.0,
+          50.0,
+          0.0
+        ],
+        "overall_ehr": 54.166666666666664,
+        "institutional_memory_utilization": [
+          0,
+          0,
+          100.0,
+          100.0,
+          100.0,
+          100.0,
+          200.0,
+          200.0,
+          0,
+          100.0,
+          200.0,
+          0
+        ],
+        "overall_imu": 91.66666666666667,
+        "organizational_error_rates": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0
+        ],
+        "total_oer": 1
+      },
+      "secondary_metrics": {
+        "context_object_growth": [
+          15,
+          18,
+          25,
+          29,
+          33,
+          43,
+          47,
+          51,
+          55,
+          59,
+          64,
+          68
+        ],
+        "avg_confidence_history": [
+          0.7499533333333334,
+          0.7111041666666664,
+          0.6911174687999998,
+          0.6541493342586204,
+          0.6177129382094845,
+          0.6181557595604741,
+          0.5887888903214651,
+          0.5597414690694316,
+          0.5427300516066003,
+          0.5188055482711478,
+          0.4987200237177671,
+          0.44570095625525036
+        ],
+        "contradiction_counts": [
+          0,
+          0,
+          1,
+          1,
+          1,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2
+        ]
+      },
+      "synthesis_metrics": {
+        "synthesis_results": [
+          null,
+          null,
+          {
+            "patterns_crystallized": 3,
+            "validations_propagated": 1,
+            "decay_rates_adjusted": 0,
+            "new_objects_created": [
+              "CTX-C58C3B20",
+              "CTX-88D93662",
+              "CTX-380FB19E"
+            ],
+            "objects_updated": [
+              "CTX-001"
+            ],
+            "confidence_boosts": {
+              "CTX-001": 0.95
+            }
+          },
+          null,
+          null,
+          {
+            "patterns_crystallized": 6,
+            "validations_propagated": 1,
+            "decay_rates_adjusted": 0,
+            "new_objects_created": [
+              "CTX-A3106F3D",
+              "CTX-498B3554",
+              "CTX-75B3D061",
+              "CTX-91269F8E",
+              "CTX-296F06F0",
+              "CTX-A49991B3"
+            ],
+            "objects_updated": [
+              "CTX-003"
+            ],
+            "confidence_boosts": {
+              "CTX-003": 0.9299999999999999
+            }
+          },
+          null,
+          null,
+          {
+            "patterns_crystallized": 1,
+            "validations_propagated": 1,
+            "decay_rates_adjusted": 1,
+            "new_objects_created": [
+              "CTX-5BEE2419"
+            ],
+            "objects_updated": [
+              "CTX-003",
+              "CTX-001"
+            ],
+            "confidence_boosts": {
+              "CTX-003": 0.95
+            }
+          },
+          null,
+          null,
+          {
+            "patterns_crystallized": 1,
+            "validations_propagated": 1,
+            "decay_rates_adjusted": 2,
+            "new_objects_created": [
+              "CTX-4B47C442"
+            ],
+            "objects_updated": [
+              "CTX-006",
+              "CTX-001",
+              "CTX-006"
+            ],
+            "confidence_boosts": {
+              "CTX-006": 0.95
+            }
+          }
+        ],
+        "intelligence_scores": [
+          0.0,
+          0.0,
+          0.455,
+          0.0,
+          0.0,
+          0.575,
+          0.0,
+          0.0,
+          0.375,
+          0.0,
+          0.0,
+          0.415
+        ],
+        "total_patterns_crystallized": 11,
+        "total_validations_propagated": 4,
+        "total_decay_adjustments": 3
+      },
+      "summary": {
+        "total_decisions": 9,
+        "correct_decisions": 7,
+        "incorrect_decisions": 1,
+        "accuracy": 77.77777777777779,
+        "final_bank_size": 68,
+        "final_avg_confidence": 0.44570095625525036
+      }
+    },
+    "comparison": {
+      "dqs_improvement": 33.33333333333333,
+      "ehr_improvement": 24.999999999999996,
+      "imu_improvement": 91.66666666666667,
+      "errors_avoided": 3,
+      "accuracy_improvement": 33.33333333333334
+    }
+  }
+}
