@@ -3,6 +3,8 @@ Metrics Calculation for Simulation Results.
 
 Implements the four primary metrics (DQS, EHR, IMU, OER) and
 secondary technical metrics for the simulation.
+
+v3.0: Added ChaosImpactMetrics for realism tracking.
 """
 
 from dataclasses import dataclass, field
@@ -15,6 +17,57 @@ from generators.agent_exhaust import AgentDecision, DecisionOutcome
 from bank.context_bank import BankSnapshot
 from bank.synthesis import SynthesisResult, compute_synthesis_intelligence_score
 from simulation.clock import WeeklySnapshot
+
+
+@dataclass
+class ChaosImpactMetrics:
+    """Metrics tracking chaos event impacts (v3.0)."""
+    # Event counts by type
+    knowledge_departures: int = 0
+    policy_contradictions: int = 0
+    agent_drifts: int = 0
+    workload_surges: int = 0
+
+    # Impact tracking
+    total_objects_degraded: int = 0
+    total_objects_contradicted: int = 0
+    total_chaos_objects_created: int = 0
+
+    # Week-by-week chaos impact
+    chaos_events_by_week: Dict[int, List[str]] = field(default_factory=dict)
+
+    # Resilience metrics (how well bank handles chaos)
+    accuracy_during_chaos_weeks: float = 0.0
+    accuracy_during_normal_weeks: float = 0.0
+    resilience_score: float = 0.0  # accuracy_chaos / accuracy_normal
+
+    def to_dict(self) -> Dict[str, Any]:
+        """Convert to dictionary for serialization."""
+        return {
+            "event_counts": {
+                "knowledge_departures": self.knowledge_departures,
+                "policy_contradictions": self.policy_contradictions,
+                "agent_drifts": self.agent_drifts,
+                "workload_surges": self.workload_surges,
+                "total": (
+                    self.knowledge_departures +
+                    self.policy_contradictions +
+                    self.agent_drifts +
+                    self.workload_surges
+                ),
+            },
+            "impact": {
+                "objects_degraded": self.total_objects_degraded,
+                "objects_contradicted": self.total_objects_contradicted,
+                "chaos_objects_created": self.total_chaos_objects_created,
+            },
+            "events_by_week": self.chaos_events_by_week,
+            "resilience": {
+                "accuracy_during_chaos": self.accuracy_during_chaos_weeks,
+                "accuracy_during_normal": self.accuracy_during_normal_weeks,
+                "resilience_score": self.resilience_score,
+            },
+        }
 
 
 @dataclass
@@ -39,6 +92,9 @@ class SimulationMetrics:
     total_patterns_crystallized: int = 0
     total_validations_propagated: int = 0
     total_decay_adjustments: int = 0
+
+    # Chaos metrics (v3.0)
+    chaos_metrics: Optional[ChaosImpactMetrics] = None
 
     # Summary statistics
     total_decisions: int = 0
@@ -103,6 +159,7 @@ class SimulationMetrics:
                 "total_validations_propagated": self.total_validations_propagated,
                 "total_decay_adjustments": self.total_decay_adjustments,
             },
+            "chaos_metrics": self.chaos_metrics.to_dict() if self.chaos_metrics else None,
             "summary": {
                 "total_decisions": self.total_decisions,
                 "correct_decisions": self.correct_decisions,
@@ -255,6 +312,11 @@ class MetricsCalculator:
         total_validations = 0
         total_decay_adj = 0
 
+        # Chaos tracking (v3.0)
+        chaos_metrics = ChaosImpactMetrics()
+        chaos_week_decisions = []  # decisions made during chaos weeks
+        normal_week_decisions = []  # decisions made during normal weeks
+
         all_decisions = []
 
         for snapshot in snapshots:
@@ -306,6 +368,34 @@ class MetricsCalculator:
                 synthesis_results.append(None)
                 synthesis_scores.append(0.0)
 
+            # Chaos tracking (v3.0)
+            if snapshot.chaos_impacts:
+                week = snapshot.week
+                chaos_metrics.chaos_events_by_week[week] = []
+
+                for impact in snapshot.chaos_impacts:
+                    chaos_type = impact.event.chaos_type.value
+                    chaos_metrics.chaos_events_by_week[week].append(chaos_type)
+
+                    if chaos_type == "knowledge_departure":
+                        chaos_metrics.knowledge_departures += 1
+                    elif chaos_type == "policy_contradiction":
+                        chaos_metrics.policy_contradictions += 1
+                    elif chaos_type == "agent_drift":
+                        chaos_metrics.agent_drifts += 1
+                    elif chaos_type == "workload_surge":
+                        chaos_metrics.workload_surges += 1
+
+                    chaos_metrics.total_objects_degraded += len(impact.objects_degraded)
+                    chaos_metrics.total_objects_contradicted += len(impact.objects_contradicted)
+                    chaos_metrics.total_chaos_objects_created += len(impact.objects_created)
+
+                # Track decisions during chaos weeks
+                chaos_week_decisions.extend(snapshot.agent_decisions)
+            else:
+                # Track decisions during normal weeks
+                normal_week_decisions.extend(snapshot.agent_decisions)
+
         # Calculate summary statistics
         total_decisions = len(all_decisions)
         correct_decisions = len([d for d in all_decisions if d.outcome == DecisionOutcome.CORRECT])
@@ -314,6 +404,23 @@ class MetricsCalculator:
         final_snapshot = snapshots[-1] if snapshots else None
         final_bank_size = final_snapshot.bank_snapshot.total_objects if final_snapshot and final_snapshot.bank_snapshot else 0
         final_avg_confidence = final_snapshot.bank_snapshot.avg_confidence if final_snapshot and final_snapshot.bank_snapshot else 0.0
+
+        # Calculate chaos resilience metrics (v3.0)
+        if chaos_week_decisions:
+            chaos_correct = len([d for d in chaos_week_decisions if d.outcome == DecisionOutcome.CORRECT])
+            chaos_metrics.accuracy_during_chaos_weeks = (
+                chaos_correct / len(chaos_week_decisions) * 100
+            )
+        if normal_week_decisions:
+            normal_correct = len([d for d in normal_week_decisions if d.outcome == DecisionOutcome.CORRECT])
+            chaos_metrics.accuracy_during_normal_weeks = (
+                normal_correct / len(normal_week_decisions) * 100
+            )
+        if chaos_metrics.accuracy_during_normal_weeks > 0:
+            chaos_metrics.resilience_score = (
+                chaos_metrics.accuracy_during_chaos_weeks /
+                chaos_metrics.accuracy_during_normal_weeks
+            )
 
         return SimulationMetrics(
             decision_quality_scores=dqs_by_agent,
@@ -330,6 +437,7 @@ class MetricsCalculator:
             total_patterns_crystallized=total_crystals,
             total_validations_propagated=total_validations,
             total_decay_adjustments=total_decay_adj,
+            chaos_metrics=chaos_metrics,
             total_decisions=total_decisions,
             correct_decisions=correct_decisions,
             incorrect_decisions=incorrect_decisions,

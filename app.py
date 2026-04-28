@@ -89,6 +89,7 @@ tabs = st.tabs([
     "🔍 Decision Trace Viewer",
     "📊 Comparative Dashboard",
     "🧠 Synthesis Engine",
+    "⚡ Realism & Chaos",
 ])
 
 
@@ -663,6 +664,207 @@ with tabs[4]:
             - May be upgraded from linear to step-function decay
             - Effectively become "evergreen" institutional memory
             """)
+
+
+# =============================================================================
+# TAB 6: REALISM & CHAOS
+# =============================================================================
+with tabs[5]:
+    st.header("Realism & Chaos Engine")
+    st.markdown("""
+    The v3.0 Realism Enhancement introduces empirically-calibrated parameters and chaos mechanisms
+    that test the Context Bank's resilience under realistic organizational disruptions.
+    """)
+
+    # Check for realism data
+    realism_mode = results.get("metadata", {}).get("realism_mode", "Standard") if results else "Standard"
+    realism_config = results.get("metadata", {}).get("realism_config") if results else None
+
+    col1, col2 = st.columns([1, 2])
+
+    with col1:
+        st.subheader("Current Mode")
+        if realism_mode == "Standard":
+            st.info(f"**Mode:** {realism_mode}")
+            st.caption("Run with `--chaos` or `--bpi` flags to enable realism features")
+        else:
+            st.success(f"**Mode:** {realism_mode}")
+
+    with col2:
+        st.subheader("Available Modes")
+        st.markdown("""
+        | Command | Description |
+        |---------|-------------|
+        | `python main.py` | Standard simulation |
+        | `python main.py --chaos` | Chaos injection enabled |
+        | `python main.py --bpi` | BPI timing calibration |
+        | `python main.py --full-realism` | Both chaos and BPI |
+        """)
+
+    st.divider()
+
+    # BPI Calibration Section
+    st.subheader("BPI Challenge Calibration")
+    st.markdown("""
+    Event timing distributions calibrated from real process mining data:
+    - **BPI Challenge 2012**: Loan application process (13,087 cases, 262,200 events)
+    - **BPI Challenge 2017**: Extended loan process (31,509 cases, 1.2M events)
+    """)
+
+    col1, col2 = st.columns(2)
+
+    with col1:
+        st.markdown("**Hourly Distribution**")
+        st.markdown("Peak activity: 10-11 AM")
+
+        # Create sample hourly distribution chart
+        hours = list(range(24))
+        weights = [
+            0.01, 0.01, 0.01, 0.01, 0.01, 0.01,  # 0-5
+            0.02, 0.04, 0.07, 0.09, 0.10, 0.10,  # 6-11
+            0.08, 0.09, 0.09, 0.08, 0.06, 0.05,  # 12-17
+            0.03, 0.02, 0.01, 0.01, 0.01, 0.01,  # 18-23
+        ]
+        fig = px.bar(x=hours, y=weights, title="Event Distribution by Hour")
+        fig.update_layout(xaxis_title="Hour", yaxis_title="Probability")
+        st.plotly_chart(fig, use_container_width=True)
+
+    with col2:
+        st.markdown("**Daily Distribution**")
+        st.markdown("Weekday-weighted, minimal weekend activity")
+
+        days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+        day_weights = [0.18, 0.20, 0.20, 0.20, 0.18, 0.03, 0.01]
+        fig = px.bar(x=days, y=day_weights, title="Event Distribution by Day")
+        fig.update_layout(xaxis_title="Day", yaxis_title="Probability")
+        st.plotly_chart(fig, use_container_width=True)
+
+    st.divider()
+
+    # Chaos Engine Section
+    st.subheader("Chaos Mechanisms")
+    st.markdown("""
+    Chaos events test the Context Bank's resilience under realistic organizational disruptions.
+    """)
+
+    col1, col2 = st.columns(2)
+
+    with col1:
+        st.markdown("#### Knowledge Departure")
+        st.markdown("""
+        **What:** Senior staff leave the organization, taking undocumented knowledge.
+
+        **Impact:**
+        - Context objects created by departed staff have accelerated decay
+        - Tacit knowledge not deposited in bank is lost forever
+        - Tests whether the bank captures institutional memory effectively
+        """)
+
+        st.markdown("#### Agent Drift")
+        st.markdown("""
+        **What:** Agents begin making suboptimal decisions due to "model drift".
+
+        **Impact:**
+        - Higher error rate for affected agents
+        - May ignore retrieved context with some probability
+        - Tests whether context retrieval can correct drifting behavior
+        """)
+
+    with col2:
+        st.markdown("#### Policy Contradiction")
+        st.markdown("""
+        **What:** New policies are introduced that contradict existing context.
+
+        **Impact:**
+        - Contradicting context objects deposited into bank
+        - Tests contradiction detection system
+        - Simulates organizational policy conflicts
+        """)
+
+        st.markdown("#### Workload Surge")
+        st.markdown("""
+        **What:** Sudden spike in event volume (2-3x normal).
+
+        **Impact:**
+        - Event count multiplied during surge weeks
+        - May cause "overload errors" as agents process more decisions
+        - Tests bank performance under load
+        """)
+
+    st.divider()
+
+    # Chaos impact display (if chaos was enabled)
+    if realism_config and realism_config.get("chaos", {}).get("enabled"):
+        st.subheader("Chaos Impact Summary")
+
+        with_bank_summary = results.get("with_bank_summary", {})
+        chaos_summary = with_bank_summary.get("chaos_summary", {})
+
+        if chaos_summary:
+            col1, col2, col3, col4 = st.columns(4)
+
+            with col1:
+                st.metric("Total Chaos Events", chaos_summary.get("total_events", 0))
+
+            with col2:
+                st.metric("Knowledge Departures", chaos_summary.get("knowledge_departures", 0))
+
+            with col3:
+                st.metric("Agent Drifts", chaos_summary.get("agent_drifts", 0))
+
+            with col4:
+                st.metric("Objects Degraded", chaos_summary.get("total_objects_degraded", 0))
+
+            # Show detailed impacts
+            impacts = chaos_summary.get("impacts", [])
+            if impacts:
+                st.markdown("#### Chaos Event Timeline")
+                for impact in impacts:
+                    event = impact.get("event", {})
+                    week = event.get("week", "?")
+                    chaos_type = event.get("chaos_type", "unknown")
+                    description = impact.get("impact_description", "")
+
+                    st.markdown(f"- **Week {week}** - `{chaos_type}`: {description}")
+    else:
+        st.info("Chaos was not enabled for this simulation run. Use `--chaos` flag to enable.")
+
+    st.divider()
+
+    # Configuration details
+    st.subheader("Configuration Reference")
+
+    with st.expander("Chaos Event Schedule (Default)"):
+        st.markdown("""
+        | Week | Event Type | Target |
+        |------|------------|--------|
+        | 4 | Knowledge Departure | david_okafor |
+        | 5 | Policy Contradiction | CTX-001 (Brightline) |
+        | 6 | Agent Drift | vendor_agent |
+        | 7 | Workload Surge | All |
+        | 8 | Knowledge Departure | marcus_webb |
+        | 9 | Policy Contradiction | CTX-006 (TerraLogic) |
+        | 10 | Agent Drift | billing_agent |
+        """)
+
+    with st.expander("BPI Dataset Statistics"):
+        st.markdown("""
+        **BPI Challenge 2012**
+        - Total cases: 13,087
+        - Total events: 262,200
+        - Average events/case: 20.04
+        - Average case duration: 8.62 days
+        - Number of activities: 24
+        - Number of resources: 69
+
+        **BPI Challenge 2017**
+        - Total cases: 31,509
+        - Total events: 1,202,267
+        - Average events/case: 38.15
+        - Average case duration: 22.27 days
+        - Number of activities: 26
+        - Number of resources: 145
+        """)
 
 
 # Footer

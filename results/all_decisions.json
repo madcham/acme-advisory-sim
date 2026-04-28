@@ -125,12 +125,14 @@
       "week": 5,
       "agent_id": "billing_agent",
       "scenario_type": "payment_escalation",
-      "decision_taken": "Escalate to collections given payment is past 45 days",
-      "outcome": "escalated",
+      "decision_taken": "Do not escalate until day 65. TerraLogic has 60-day actual payment cycle.",
+      "outcome": "correct",
       "context_retrieved": [
         "CTX-006"
       ],
-      "context_used": []
+      "context_used": [
+        "CTX-006"
+      ]
     },
     {
       "decision_id": "DEC-WB-000004",
@@ -155,7 +157,7 @@
       "outcome": "correct",
       "context_retrieved": [
         "CTX-001",
-        "CTX-1E9F2679"
+        "CTX-F1F9DB97"
       ],
       "context_used": [
         "CTX-001"
@@ -170,7 +172,7 @@
       "outcome": "correct",
       "context_retrieved": [
         "CTX-003",
-        "CTX-79832B7C"
+        "CTX-58DCB9A8"
       ],
       "context_used": [
         "CTX-003"
@@ -181,42 +183,41 @@
       "week": 10,
       "agent_id": "billing_agent",
       "scenario_type": "payment_escalation",
-      "decision_taken": "Do not escalate until day 65. TerraLogic has 60-day actual payment cycle.",
-      "outcome": "correct",
+      "decision_taken": "Escalate to collections given payment is past 45 days",
+      "outcome": "escalated",
       "context_retrieved": [
-        "CTX-006"
+        "CTX-006",
+        "CTX-46B62E71"
       ],
-      "context_used": [
-        "CTX-006"
-      ]
+      "context_used": []
     },
     {
       "decision_id": "DEC-WB-000008",
       "week": 11,
       "agent_id": "vendor_agent",
       "scenario_type": "vendor_sow",
-      "decision_taken": "Route SOW through secondary approval from David Okafor before issuance",
-      "outcome": "correct",
+      "decision_taken": "Issue SOW to Brightline Consulting as requested",
+      "outcome": "incorrect",
       "context_retrieved": [
         "CTX-001",
-        "CTX-B67CE8EE"
+        "CTX-A77100DE"
       ],
-      "context_used": [
-        "CTX-001"
-      ]
+      "context_used": []
     },
     {
       "decision_id": "DEC-WB-000009",
       "week": 11,
       "agent_id": "staffing_agent",
       "scenario_type": "staffing_assignment",
-      "decision_taken": "Assign Jordan Park to Nexum Partners engagement based on skills match",
-      "outcome": "incorrect",
+      "decision_taken": "Do not assign Jordan Park to Nexum Partners work. Find alternative staffing.",
+      "outcome": "correct",
       "context_retrieved": [
         "CTX-010",
-        "CTX-22C64E1A"
+        "CTX-EB009BE8"
       ],
-      "context_used": []
+      "context_used": [
+        "CTX-010"
+      ]
     }
   ]
 }

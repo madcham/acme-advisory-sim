@@ -275,10 +275,20 @@ Format your response as JSON:
         Determine if this decision should succeed based on calibration.
 
         Uses performance calibration to introduce realistic noise.
+        Applies chaos accuracy modifier (v3.0) if set.
         """
         expected_accuracy = self.performance_calibration.get_accuracy_for_week(
             self.condition, week
         )
+
+        # Apply chaos modifier (v3.0): higher modifier = more errors
+        accuracy_modifier = getattr(self, '_current_accuracy_modifier', 1.0)
+        if accuracy_modifier > 1.0:
+            # Convert accuracy to error rate, multiply, convert back
+            error_rate = 1.0 - expected_accuracy
+            modified_error_rate = min(0.9, error_rate * accuracy_modifier)
+            expected_accuracy = 1.0 - modified_error_rate
+
         return self._rng.random() < expected_accuracy
 
     def _should_retrieve_succeed(self) -> bool:
@@ -286,9 +296,16 @@ Format your response as JSON:
         Determine if context retrieval should succeed.
 
         Uses retrieval noise config for WITH_BANK decisions.
+        Applies chaos context ignore probability (v3.0) if set.
         """
         if not self.use_context_bank:
             return False
+
+        # Check chaos-based context ignore (v3.0)
+        context_ignore_prob = getattr(self, '_current_context_ignore_prob', 0.0)
+        if context_ignore_prob > 0 and self._rng.random() < context_ignore_prob:
+            return False  # Agent ignores context due to drift
+
         return self._rng.random() < self.retrieval_noise.retrieval_success_rate
 
     def _should_interpret_correctly(self) -> bool:
@@ -511,6 +528,8 @@ Format your response as JSON:
         scenario: AgentScenario,
         week: int,
         context_bank=None,  # Optional ContextBank
+        accuracy_modifier: float = 1.0,  # v3.0: Chaos-based accuracy modifier
+        context_ignore_probability: float = 0.0,  # v3.0: Probability of ignoring context
     ) -> AgentDecision:
         """
         Generate an agent decision for a scenario.
@@ -520,12 +539,18 @@ Format your response as JSON:
             scenario: The scenario to process
             week: Current simulation week
             context_bank: Optional context bank for retrieval
+            accuracy_modifier: Multiplier on error rate (v3.0 chaos)
+            context_ignore_probability: Probability of ignoring retrieved context (v3.0 chaos)
 
         Returns:
             AgentDecision with the agent's response
         """
         if agent_id not in AGENTS:
             raise ValueError(f"Unknown agent: {agent_id}")
+
+        # Store chaos modifiers for this decision (v3.0)
+        self._current_accuracy_modifier = accuracy_modifier
+        self._current_context_ignore_prob = context_ignore_probability
 
         agent_config = AGENTS[agent_id]
 

@@ -3,6 +3,8 @@ Simulation Clock and Weekly Loop.
 
 Orchestrates the weekly simulation cycle: generate events, run agents,
 deposit context, and capture metrics.
+
+v3.0: Added chaos engine integration and BPI calibration support.
 """
 
 from dataclasses import dataclass, field
@@ -26,6 +28,9 @@ from generators.agent_exhaust import (
     TERRALOGIC_PAYMENT_SCENARIO, HARTWELL_PROPOSAL_SCENARIO,
 )
 from inference.classifier import classify_context_object, ContextClassifier
+from calibration.realism_config import RealismConfig, ChaosConfig
+from calibration.chaos_engine import ChaosEngine, ChaosImpact
+from calibration.bpi_calibrator import BPICalibrator
 
 
 def utc_now() -> datetime:
@@ -56,6 +61,9 @@ class WeeklySnapshot:
     # Synthesis results
     synthesis_result: Optional[SynthesisResult] = None
 
+    # Chaos impacts (v3.0)
+    chaos_impacts: List[ChaosImpact] = field(default_factory=list)
+
     # Metrics
     decision_quality_scores: Dict[str, float] = field(default_factory=dict)
     exception_handling_rate: float = 0.0
@@ -79,6 +87,7 @@ class WeeklySnapshot:
             },
             "agent_decisions": len(self.agent_decisions),
             "new_context_objects": len(self.new_context_objects),
+            "chaos_impacts": [c.to_dict() for c in self.chaos_impacts],
             "metrics": {
                 "decision_quality_scores": self.decision_quality_scores,
                 "exception_handling_rate": self.exception_handling_rate,
@@ -94,12 +103,15 @@ class SimulationClock:
 
     Manages the simulation state, event generation, agent execution,
     and metric collection.
+
+    v3.0: Added realism_config for chaos injection and BPI calibration.
     """
 
     def __init__(
         self,
         condition: RunCondition,
         seed: Optional[int] = None,
+        realism_config: Optional[RealismConfig] = None,
     ):
         """
         Initialize simulation clock.
@@ -107,10 +119,12 @@ class SimulationClock:
         Args:
             condition: WITHOUT_BANK or WITH_BANK
             seed: Random seed (defaults to config)
+            realism_config: Optional realism configuration for chaos and BPI calibration
         """
         self.condition = condition
         self.seed = seed or SIMULATION_CONFIG.random_seed
         self.use_bank = condition == RunCondition.WITH_BANK
+        self.realism_config = realism_config
 
         # Initialize bank
         self.bank = ContextBank() if self.use_bank else None
@@ -125,6 +139,19 @@ class SimulationClock:
             use_context_bank=self.use_bank,
         )
         self.classifier = ContextClassifier(use_api=False)
+
+        # Initialize chaos engine (v3.0)
+        self.chaos_engine: Optional[ChaosEngine] = None
+        if realism_config and realism_config.chaos.enabled:
+            self.chaos_engine = ChaosEngine(
+                config=realism_config.chaos,
+                seed=self.seed,
+            )
+
+        # Initialize BPI calibrator (v3.0)
+        self.bpi_calibrator: Optional[BPICalibrator] = None
+        if realism_config and realism_config.bpi_calibration.enabled:
+            self.bpi_calibrator = BPICalibrator()
 
         # State tracking
         self.current_week = 0
@@ -251,14 +278,34 @@ class SimulationClock:
         # conditions. This would allow true controlled comparison rather than
         # approximately matched comparison.
 
+        # Process chaos events (v3.0)
+        chaos_impacts = []
+        if self.chaos_engine and self.use_bank:
+            chaos_events = self.chaos_engine.get_events_for_week(week)
+            if chaos_events and self.bank:
+                chaos_impacts, chaos_objects = self.chaos_engine.apply_events(
+                    chaos_events,
+                    self.bank.get_all(),
+                    week,
+                )
+                # Deposit chaos-generated objects (e.g., contradicting policies)
+                for obj in chaos_objects:
+                    self.bank.deposit(obj, check_contradictions=True)
+
+        # Get event multiplier from chaos (workload surge)
+        event_multiplier = 1.0
+        if self.chaos_engine:
+            event_multiplier = self.chaos_engine.get_event_multiplier()
+
         # Generate structured events
         cases, events = generate_weekly_events(week, seed=self.seed + week)
 
-        # Generate behavioral events
+        # Generate behavioral events (scaled by chaos multiplier)
+        behavioral_count = int(SIMULATION_CONFIG.events_per_week.behavioral_events * event_multiplier)
         behavioral = generate_behavioral_events(
             week,
             seed=self.seed + week + 1000,
-            total_events=SIMULATION_CONFIG.events_per_week.behavioral_events,
+            total_events=behavioral_count,
         )
 
         # Get scenarios for this week
@@ -268,11 +315,21 @@ class SimulationClock:
         decisions = []
         for scenario in scenarios:
             agent_id = self._get_agent_for_scenario(scenario)
+
+            # Apply chaos modifiers to agent (v3.0)
+            accuracy_modifier = 1.0
+            context_ignore_prob = 0.0
+            if self.chaos_engine:
+                accuracy_modifier = self.chaos_engine.get_agent_accuracy_modifier(agent_id)
+                context_ignore_prob = self.chaos_engine.get_context_ignore_probability(agent_id)
+
             decision = self.agent_generator.generate_decision(
                 agent_id=agent_id,
                 scenario=scenario,
                 week=week,
                 context_bank=self.bank,
+                accuracy_modifier=accuracy_modifier,
+                context_ignore_probability=context_ignore_prob,
             )
             decisions.append(decision)
             self.all_decisions.append(decision)
@@ -312,6 +369,7 @@ class SimulationClock:
             agent_decisions=decisions,
             new_context_objects=new_context,
             synthesis_result=synthesis_result,
+            chaos_impacts=chaos_impacts,
             decision_quality_scores=dqs,
             exception_handling_rate=ehr,
             institutional_memory_utilization=imu,
@@ -385,7 +443,12 @@ class SimulationClock:
 
         final_snapshot = self.snapshots[-1]
 
-        return {
+        # Collect chaos summary (v3.0)
+        chaos_summary = None
+        if self.chaos_engine:
+            chaos_summary = self.chaos_engine.get_impact_summary()
+
+        summary = {
             "condition": self.condition.value,
             "weeks_run": len(self.snapshots),
             "total_decisions": total_decisions,
@@ -397,6 +460,11 @@ class SimulationClock:
             "total_workflow_events": sum(len(s.workflow_events) for s in self.snapshots),
             "total_behavioral_events": sum(len(s.behavioral_events) for s in self.snapshots),
         }
+
+        if chaos_summary:
+            summary["chaos_summary"] = chaos_summary
+
+        return summary
 
 
 def run_week(

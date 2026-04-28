@@ -1,7 +1,7 @@
 # Acme Advisory: Twelve Weeks with the Context Bank
 
 *Simulation Results Summary*
-*Generated: 2026-04-28 05:30 UTC*
+*Generated: 2026-04-28 07:13 UTC*
 
 ---
 
@@ -17,7 +17,7 @@ Over twelve simulated weeks, Acme Advisory—a 90-person management consulting f
 | Organizational Errors | 4 | 1 | 3 avoided |
 | Correct Decisions | 4 | 7 | +3 |
 
-The Context Bank accumulated **68 context objects** by week 12, representing institutional knowledge that compounded value with each decision.
+The Context Bank accumulated **70 context objects** by week 12, representing institutional knowledge that compounded value with each decision.
 
 ---
 
@@ -50,7 +50,7 @@ Starting with 12 seeded context objects representing ground truth institutional 
 | 1 | 12 | 0 | 0.79 |
 | 3 | ~16 | ~4 | 0.78 |
 | 6 | ~28 | ~4 | 0.76 |
-| 12 | 68 | ~4 | 0.45 |
+| 12 | 70 | ~4 | 0.44 |
 
 The confidence scores show natural decay—older knowledge becomes less reliable unless validated by new decisions. This is by design. The bank isn't a static database; it's a living memory that ages and refreshes.
 
@@ -101,12 +101,11 @@ The simulation shows graduated improvement over time, not a binary switch:
 |------|--------------|-----------|-----------|
 | 3 | 0% | 100% | 25 |
 | 4 | 100% | 100% | 29 |
-| 5 | 100% | 0% | 33 |
-| 6 | 100% | 100% | 43 |
-| 7 | 0% | 100% | 47 |
-| 8 | 0% | 100% | 51 |
-| 10 | 0% | 100% | 59 |
-| 11 | 50% | 50% | 64 |
+| 5 | 100% | 100% | 34 |
+| 6 | 100% | 100% | 44 |
+| 7 | 0% | 100% | 48 |
+| 8 | 0% | 100% | 52 |
+| 11 | 50% | 50% | 66 |
 
 **Key observation:** WITHOUT_BANK shows occasional correct decisions (baseline human knowledge and lucky guesses), but no systematic improvement. WITH_BANK shows consistent high performance with slight variations due to retrieval noise and interpretation uncertainty—realistic modeling of how institutional memory actually works.
 
