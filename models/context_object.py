@@ -111,10 +111,12 @@ class ContextObject(BaseModel):
 
     # Identity
     id: str = Field(default_factory=generate_context_id)
+    display_name: Optional[str] = None  # Human-readable title (e.g., "Overbilling Vendor: Secondary Approval Required")
     created_at: datetime = Field(default_factory=utc_now)
     created_by: str  # human_id or agent_id
     source_type: SourceType
     workflow_id: Optional[str] = None
+    department: Optional[str] = None  # Human-readable department (e.g., "Vendor & Procurement")
     week: int  # simulation week when created
 
     # Content

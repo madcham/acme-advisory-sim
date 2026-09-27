@@ -26,6 +26,9 @@ from generators.agent_exhaust import (
     AgentExhaustGenerator, AgentDecision, AgentScenario,
     BRIGHTLINE_SOW_SCENARIO, JORDAN_PARK_STAFFING_SCENARIO,
     TERRALOGIC_PAYMENT_SCENARIO, HARTWELL_PROPOSAL_SCENARIO,
+    # Cross-domain scenarios
+    MERIDIAN_BILLING_SCENARIO, BRIGHTLINE_STAFFING_SCENARIO,
+    HARTWELL_COLLECTION_SCENARIO,
 )
 from inference.classifier import classify_context_object, ContextClassifier
 from calibration.realism_config import RealismConfig, ChaosConfig
@@ -117,16 +120,30 @@ class SimulationClock:
         Initialize simulation clock.
 
         Args:
-            condition: WITHOUT_BANK or WITH_BANK
+            condition: One of the 4 experimental conditions:
+                - SILOED_TYPICAL: Department-only context visibility
+                - SILOED_ADVANCED: Department + adjacent departments
+                - GLOBAL_RAG: All context visible, no sophistication
+                - CONTEXT_BANK: Full visibility + full sophistication
+                - WITHOUT_BANK: Legacy alias for SILOED_TYPICAL
+                - WITH_BANK: Legacy alias for CONTEXT_BANK
             seed: Random seed (defaults to config)
             realism_config: Optional realism configuration for chaos and BPI calibration
         """
         self.condition = condition
         self.seed = seed or SIMULATION_CONFIG.random_seed
-        self.use_bank = condition == RunCondition.WITH_BANK
         self.realism_config = realism_config
 
-        # Initialize bank
+        # Determine if this condition uses a context bank
+        # All conditions except SILOED_TYPICAL have some form of context access
+        self.use_bank = condition in [
+            RunCondition.SILOED_ADVANCED,
+            RunCondition.GLOBAL_RAG,
+            RunCondition.CONTEXT_BANK,
+            RunCondition.WITH_BANK,
+        ]
+
+        # Initialize bank (most conditions use one, with different visibility)
         self.bank = ContextBank() if self.use_bank else None
 
         # Load seeded context if using bank
@@ -134,9 +151,9 @@ class SimulationClock:
             for obj in SEEDED_CONTEXT_OBJECTS:
                 self.bank.deposit(copy.deepcopy(obj), check_contradictions=False)
 
-        # Initialize generators
+        # Initialize generators with the specific condition (not just boolean)
         self.agent_generator = AgentExhaustGenerator(
-            use_context_bank=self.use_bank,
+            condition=condition,
         )
         self.classifier = ContextClassifier(use_api=False)
 
@@ -166,7 +183,7 @@ class SimulationClock:
         injection = SIMULATION_CONFIG.exception_injection
         schedule = {}
 
-        # Map injection weeks to scenarios
+        # Map injection weeks to scenarios (within-department)
         for week in injection.brightline_sow:
             if week not in schedule:
                 schedule[week] = []
@@ -187,15 +204,32 @@ class SimulationClock:
                 schedule[week] = []
             schedule[week].append(HARTWELL_PROPOSAL_SCENARIO)
 
+        # Cross-domain scenarios (agent needs knowledge from another department)
+        for week in injection.meridian_billing_cross:
+            if week not in schedule:
+                schedule[week] = []
+            schedule[week].append(MERIDIAN_BILLING_SCENARIO)
+
+        for week in injection.brightline_staffing_cross:
+            if week not in schedule:
+                schedule[week] = []
+            schedule[week].append(BRIGHTLINE_STAFFING_SCENARIO)
+
+        for week in injection.hartwell_collection_cross:
+            if week not in schedule:
+                schedule[week] = []
+            schedule[week].append(HARTWELL_COLLECTION_SCENARIO)
+
         return schedule
 
     def _get_agent_for_scenario(self, scenario: AgentScenario) -> str:
         """Get the appropriate agent for a scenario."""
+        # Map workflow IDs to agents
         workflow_to_agent = {
-            "W2": "proposal_agent",
-            "W3": "staffing_agent",
-            "W4": "vendor_agent",
-            "W5": "billing_agent",
+            "W2": "proposal_agent",    # Business Development
+            "W3": "staffing_agent",    # Resource Management
+            "W4": "vendor_agent",      # Vendor & Procurement
+            "W5": "billing_agent",     # Finance & Billing
         }
         return workflow_to_agent.get(scenario.workflow_id, "vendor_agent")
 

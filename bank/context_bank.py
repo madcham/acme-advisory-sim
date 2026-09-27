@@ -21,6 +21,13 @@ from models.context_object import (
     ProvenanceLink,
 )
 from .contradiction import ContradictionDetector, Contradiction
+from .validation import (
+    ExhaustValidator,
+    ValidationResult,
+    ValidationStatus,
+    validate_before_deposit,
+    create_validator_suite,
+)
 
 
 def utc_now() -> datetime:
@@ -36,6 +43,9 @@ class DepositResult:
     contradictions_detected: List[Contradiction] = field(default_factory=list)
     superseded_objects: List[str] = field(default_factory=list)
     error: Optional[str] = None
+    validation_result: Optional[ValidationResult] = None
+    original_confidence: Optional[float] = None
+    adjusted_confidence: Optional[float] = None
 
 
 @dataclass
@@ -68,6 +78,8 @@ class ContextBank:
         self,
         contradiction_detector: Optional[ContradictionDetector] = None,
         similarity_threshold: float = 0.85,
+        validators: Optional[Dict[str, ExhaustValidator]] = None,
+        enable_validation: bool = True,
     ):
         """
         Initialize the Context Bank.
@@ -76,6 +88,9 @@ class ContextBank:
             contradiction_detector: Optional detector for finding contradictions.
                                    If None, a default detector is created.
             similarity_threshold: Threshold for semantic similarity in contradiction detection.
+            validators: Dictionary of validators by exhaust type. If None and
+                       enable_validation is True, default validators are created.
+            enable_validation: Whether to validate objects before deposit.
         """
         self._objects: Dict[str, ContextObject] = {}
         self._contradiction_detector = contradiction_detector or ContradictionDetector(
@@ -83,6 +98,13 @@ class ContextBank:
         )
         self._contradictions: List[Contradiction] = []
         self._current_week: int = 0
+
+        # Validation setup
+        self._enable_validation = enable_validation
+        if enable_validation and validators is None:
+            self._validators = create_validator_suite()
+        else:
+            self._validators = validators or {}
 
         # Tracking for weekly snapshots
         self._reads_this_week: set = set()
@@ -105,6 +127,7 @@ class ContextBank:
         self,
         context_object: ContextObject,
         check_contradictions: bool = True,
+        skip_validation: bool = False,
     ) -> DepositResult:
         """
         Deposit a context object into the bank.
@@ -112,10 +135,14 @@ class ContextBank:
         Args:
             context_object: The context object to deposit.
             check_contradictions: Whether to check for contradictions with existing objects.
+            skip_validation: If True, bypass the validation layer (useful for bulk imports).
 
         Returns:
-            DepositResult with success status and any detected contradictions.
+            DepositResult with success status, validation result, and any detected contradictions.
         """
+        original_confidence = context_object.confidence_at_creation
+        validation_result: Optional[ValidationResult] = None
+
         # Validate object
         if not context_object.id:
             return DepositResult(
@@ -131,6 +158,24 @@ class ContextBank:
                 object_id=context_object.id,
                 error=f"Object with ID {context_object.id} already exists"
             )
+
+        # Run validation layer if enabled
+        if self._enable_validation and not skip_validation and self._validators:
+            validation_result = validate_before_deposit(context_object, self._validators)
+
+            # Check if validation failed completely
+            if not validation_result.should_deposit:
+                return DepositResult(
+                    success=False,
+                    object_id=context_object.id,
+                    error=f"Validation failed: {validation_result.recommendations[0] if validation_result.recommendations else 'Unknown validation error'}",
+                    validation_result=validation_result,
+                    original_confidence=original_confidence,
+                )
+
+            # Apply confidence adjustment from validation
+            if validation_result.adjusted_confidence is not None:
+                context_object.confidence_at_creation = validation_result.adjusted_confidence
 
         # Check for contradictions
         contradictions = []
@@ -167,15 +212,44 @@ class ContextBank:
             object_id=context_object.id,
             contradictions_detected=contradictions,
             superseded_objects=superseded,
+            validation_result=validation_result,
+            original_confidence=original_confidence,
+            adjusted_confidence=context_object.confidence_at_creation if validation_result else None,
         )
 
     def deposit_many(
         self,
         objects: List[ContextObject],
         check_contradictions: bool = True,
+        skip_validation: bool = False,
     ) -> List[DepositResult]:
         """Deposit multiple context objects."""
-        return [self.deposit(obj, check_contradictions) for obj in objects]
+        return [self.deposit(obj, check_contradictions, skip_validation) for obj in objects]
+
+    def register_source_profile(self, profile: Any) -> None:
+        """
+        Register a source credibility profile with all validators.
+
+        Args:
+            profile: SourceCredibilityProfile to register
+        """
+        for validator in self._validators.values():
+            validator.register_source_profile(profile)
+
+    def register_policy(self, policy: ContextObject) -> None:
+        """
+        Register a policy for consistency checking across all validators.
+
+        Args:
+            policy: Policy ContextObject to register
+        """
+        for validator in self._validators.values():
+            validator.register_policy(policy)
+
+    @property
+    def validators(self) -> Dict[str, ExhaustValidator]:
+        """Get the validator suite."""
+        return self._validators
 
     def get(self, object_id: str) -> Optional[ContextObject]:
         """

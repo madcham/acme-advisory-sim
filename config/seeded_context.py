@@ -1,13 +1,25 @@
 """
 Seeded Institutional Memory (Ground Truth Context Objects).
 
-These 12 context objects are pre-loaded into the bank before week one.
-They encode real organizational intelligence that an agent should find and use.
-Their presence or absence in agent decision-making is a primary measurement signal.
+These 12 context objects represent the institutional knowledge that exists in every
+organization but is typically scattered across people's heads, old emails, and
+tribal knowledge. They are pre-loaded into the Context Bank before week one.
 
-Note: CTX-011 and CTX-012 are intentionally low-grade expired process objects.
-Agents that correctly ignore or deprioritize these demonstrate that context
-grade classification is working.
+The simulation tests whether agents can find and use this knowledge to make
+correct decisions — and what happens when they can't.
+
+KNOWLEDGE CATEGORIES:
+- Vendor Rules (CTX-001, CTX-005): How to handle specific vendors
+- Client Rules (CTX-002, CTX-003, CTX-006): Client-specific behaviors and exceptions
+- Staff Rules (CTX-004, CTX-008, CTX-010): People-specific policies and knowledge
+- Compliance Rules (CTX-007, CTX-009): Required approvals and checks
+- Expired Rules (CTX-011, CTX-012): Outdated knowledge that should be deprioritized
+
+Each object includes:
+- display_name: Human-readable title for the rule
+- payload: The actual institutional knowledge
+- structured_data: Machine-readable details for retrieval
+- Confidence, decay, and classification metadata
 """
 
 from datetime import datetime, timezone
@@ -29,27 +41,37 @@ def _create_seeded_objects() -> list[ContextObject]:
     base_time = datetime(2024, 1, 1, tzinfo=timezone.utc)
 
     objects = [
-        # CTX-001: Brightline Consulting secondary approval
-        # THIS IS THE KEY SCENARIO - Brightline SOW must route through David Okafor
+        # =================================================================
+        # CTX-001: OVERBILLING VENDOR - SECONDARY APPROVAL REQUIRED
+        # =================================================================
+        # Scenario: Brightline Consulting submits a new SOW
+        # Correct: Route to David Okafor (Finance Director) for secondary approval
+        # Wrong: Approve based solely on current terms
+        # Why it matters: They overbilled us 40% in 2022
         ContextObject(
             id="CTX-001",
+            display_name="Overbilling Vendor: Secondary Approval Required",
             created_at=base_time,
             created_by="system",
             source_type=SourceType.system,
             workflow_id="W4",
+            department="Vendor & Procurement",
             week=0,
             content_type=ContentType.tribal_knowledge,
             payload=(
-                "Brightline Consulting always requires secondary approval from David Okafor "
-                "before SOW issuance. Root cause: 2022 invoice dispute where Brightline billed "
-                "40% above agreed rate on a federal engagement."
+                "Brightline Consulting overbilled us 40% on a federal engagement in 2022. "
+                "RULE: Always get secondary approval from David Okafor (Finance Director) "
+                "before signing any Brightline SOW. No exceptions."
             ),
             structured_data={
-                "vendor": "brightline_consulting",
-                "required_approver": "david_okafor",
+                "vendor_name": "Brightline Consulting",
+                "vendor_id": "brightline_consulting",
+                "risk_level": "high",
+                "required_approver": "David Okafor",
+                "approver_role": "Finance Director",
                 "approval_type": "secondary",
-                "root_cause_year": 2022,
-                "incident_type": "invoice_dispute",
+                "incident_year": 2022,
+                "incident_type": "overbilling",
                 "overcharge_percent": 40,
             },
             valid_from=base_time,
@@ -61,24 +83,34 @@ def _create_seeded_objects() -> list[ContextObject]:
             org_lineage_confidence=0.92,
         ),
 
-        # CTX-002: Financial services scope creep pattern
+        # =================================================================
+        # CTX-002: FINANCIAL SERVICES SCOPE CREEP WARNING
+        # =================================================================
+        # Scenario: Working with a financial services client
+        # Correct: Document any verbal scope expansion within 24 hours
+        # Wrong: Let verbal agreements slide without documentation
+        # Why it matters: These clients always try to expand scope verbally
         ContextObject(
             id="CTX-002",
+            display_name="Financial Services Clients: Document Scope Changes Within 24 Hours",
             created_at=base_time,
             created_by="system",
             source_type=SourceType.system,
             workflow_id="W1",
+            department="Client Engagements",
             week=0,
             content_type=ContentType.tribal_knowledge,
             payload=(
-                "Financial services clients verbally expand scope in week 3-4 of engagements. "
-                "Always document verbal expansions within 24 hours or billing disputes follow."
+                "Financial services clients verbally expand scope in weeks 3-4 of engagements. "
+                "RULE: Document any verbal scope expansion within 24 hours via email confirmation. "
+                "If you don't, billing disputes will follow."
             ),
             structured_data={
-                "client_vertical": "financial_services",
-                "scope_expansion_window": "week_3_4",
-                "documentation_deadline_hours": 24,
-                "consequence": "billing_disputes",
+                "client_type": "Financial Services",
+                "risk_window": "Weeks 3-4",
+                "action_required": "Document verbal scope changes",
+                "deadline_hours": 24,
+                "consequence_if_ignored": "Billing disputes",
             },
             valid_from=base_time,
             decay_function=DecayFunction.exponential,
@@ -90,25 +122,35 @@ def _create_seeded_objects() -> list[ContextObject]:
             org_lineage_confidence=0.88,
         ),
 
-        # CTX-003: Marcus Webb Hartwell Group override
+        # =================================================================
+        # CTX-003: PARTNER OVERRIDE - HARTWELL GROUP EXCEPTION
+        # =================================================================
+        # Scenario: Hartwell Group opportunity comes in for go/no-go decision
+        # Correct: Skip detailed margin analysis - Marcus Webb will approve regardless
+        # Wrong: Spend hours on margin analysis that will be overridden anyway
+        # Why it matters: Historical relationship, decision is predetermined
         ContextObject(
             id="CTX-003",
+            display_name="Partner Override: Hartwell Group Always Approved",
             created_at=base_time,
             created_by="system",
             source_type=SourceType.system,
             workflow_id="W2",
+            department="Business Development",
             week=0,
             content_type=ContentType.tribal_knowledge,
             payload=(
-                "Marcus Webb will override go/no-go on any Hartwell Group opportunity "
-                "regardless of margin. Historical relationship, not subject to standard process."
+                "Marcus Webb (Senior Partner) will approve any Hartwell Group opportunity "
+                "regardless of margin analysis. This is a historical relationship that bypasses "
+                "the standard go/no-go process. Don't waste time on detailed analysis."
             ),
             structured_data={
-                "partner": "marcus_webb",
-                "client": "hartwell_group",
-                "override_type": "go_no_go",
-                "reason": "historical_relationship",
-                "margin_override": True,
+                "decision_maker": "Marcus Webb",
+                "decision_maker_role": "Senior Partner",
+                "client_name": "Hartwell Group",
+                "override_type": "Automatic approval",
+                "reason": "Historical relationship",
+                "standard_process_applies": False,
             },
             valid_from=base_time,
             decay_function=DecayFunction.permanent,
@@ -119,25 +161,34 @@ def _create_seeded_objects() -> list[ContextObject]:
             org_lineage_confidence=0.90,
         ),
 
-        # CTX-004: Priya Nair 72-hour notice requirement
+        # =================================================================
+        # CTX-004: SENIOR STAFF REALLOCATION - 72-HOUR NOTICE REQUIRED
+        # =================================================================
+        # Scenario: Need to move a senior consultant to a different project
+        # Correct: Give Priya Nair (HR Director) 72 hours notice first
+        # Wrong: Reallocate immediately without notice
+        # Why it matters: Surprise reassignments cause 2-week morale damage
         ContextObject(
             id="CTX-004",
+            display_name="Senior Staff Reallocation: 72-Hour Notice to HR",
             created_at=base_time,
             created_by="system",
             source_type=SourceType.system,
             workflow_id="W3",
+            department="Resource Management",
             week=0,
             content_type=ContentType.policy,
             payload=(
-                "Priya Nair requires 72-hour notice before any senior resource reallocation. "
-                "Violations create two-week morale recovery periods."
+                "Before reallocating any senior resource, notify Priya Nair (HR Director) "
+                "at least 72 hours in advance. Surprise reassignments create two-week "
+                "morale recovery periods that hurt project delivery."
             ),
             structured_data={
-                "stakeholder": "priya_nair",
-                "notice_hours": 72,
-                "resource_level": "senior",
-                "consequence": "morale_impact",
-                "recovery_weeks": 2,
+                "stakeholder": "Priya Nair",
+                "stakeholder_role": "HR Director",
+                "notice_required_hours": 72,
+                "applies_to": "Senior resources",
+                "consequence_if_ignored": "2-week morale recovery period",
             },
             valid_from=base_time,
             decay_function=DecayFunction.step_function,
@@ -148,24 +199,33 @@ def _create_seeded_objects() -> list[ContextObject]:
             org_lineage_confidence=0.94,
         ),
 
-        # CTX-005: Vance Analytics pricing negotiation
+        # =================================================================
+        # CTX-005: VENDOR DISCOUNT - VANCE ANALYTICS NEGOTIATION LEVERAGE
+        # =================================================================
+        # Scenario: Negotiating a $500K+ engagement with Vance Analytics
+        # Correct: Push for 15% discount (but don't reveal this upfront)
+        # Wrong: Accept list pricing on large engagements
+        # Why it matters: We've successfully negotiated this before
         ContextObject(
             id="CTX-005",
+            display_name="Vendor Discount: Vance Analytics 15% on Large Deals",
             created_at=base_time,
             created_by="system",
             source_type=SourceType.system,
             workflow_id="W4",
+            department="Vendor & Procurement",
             week=0,
             content_type=ContentType.tribal_knowledge,
             payload=(
-                "Vance Analytics pricing is negotiable up to 15% below list when engagement "
-                "is over $500K. Do not disclose this in initial SOW."
+                "Vance Analytics will discount up to 15% below list price on engagements "
+                "over $500K. We've done this before. Don't reveal this leverage in the "
+                "initial SOW — let them propose pricing first, then negotiate down."
             ),
             structured_data={
-                "vendor": "vance_analytics",
-                "discount_percent": 15,
-                "threshold_amount": 500000,
-                "disclosure_rule": "do_not_disclose_initially",
+                "vendor_name": "Vance Analytics",
+                "discount_available": "15%",
+                "minimum_deal_size": "$500,000",
+                "negotiation_tip": "Don't reveal leverage upfront",
             },
             valid_from=base_time,
             decay_function=DecayFunction.exponential,
@@ -177,25 +237,35 @@ def _create_seeded_objects() -> list[ContextObject]:
             org_lineage_confidence=0.75,
         ),
 
-        # CTX-006: TerraLogic payment cycle
+        # =================================================================
+        # CTX-006: CLIENT PAYMENT CYCLE - TERRALOGIC 60-DAY RULE
+        # =================================================================
+        # Scenario: TerraLogic invoice is overdue per contract terms
+        # Correct: Wait until day 65 before escalating
+        # Wrong: Escalate at day 30/45 like normal clients
+        # Why it matters: Premature escalation cost us this account in 2023
         ContextObject(
             id="CTX-006",
+            display_name="Client Payment Cycle: TerraLogic Always Pays at 60 Days",
             created_at=base_time,
             created_by="system",
             source_type=SourceType.system,
             workflow_id="W5",
+            department="Finance & Billing",
             week=0,
             content_type=ContentType.tribal_knowledge,
             payload=(
-                "Client TerraLogic has a 60-day payment cycle regardless of contract terms. "
-                "Do not escalate before day 65. Premature escalation caused account loss in 2023."
+                "TerraLogic has a 60-day payment cycle regardless of what the contract says. "
+                "DO NOT escalate before day 65. We lost this account in 2023 because someone "
+                "escalated prematurely. They always pay — just on their own schedule."
             ),
             structured_data={
-                "client": "terralogic",
-                "actual_payment_days": 60,
-                "escalation_threshold_days": 65,
+                "client_name": "TerraLogic",
+                "actual_payment_cycle_days": 60,
+                "do_not_escalate_before_day": 65,
                 "incident_year": 2023,
-                "incident_type": "account_loss",
+                "incident_consequence": "Account loss",
+                "key_insight": "They always pay, just on their schedule",
             },
             valid_from=base_time,
             decay_function=DecayFunction.step_function,
@@ -206,25 +276,34 @@ def _create_seeded_objects() -> list[ContextObject]:
             org_lineage_confidence=0.93,
         ),
 
-        # CTX-007: Conflict of interest manual check
+        # =================================================================
+        # CTX-007: COMPLIANCE - FORMER EMPLOYEE CONFLICT CHECK
+        # =================================================================
+        # Scenario: Engaging with a client where former Acme staff now work
+        # Correct: Run manual conflict of interest check before proceeding
+        # Wrong: Assume the system flags this automatically (it doesn't)
+        # Why it matters: Legal/compliance requirement, system gap
         ContextObject(
             id="CTX-007",
+            display_name="Compliance: Manual COI Check for Former Employees at Client",
             created_at=base_time,
             created_by="system",
             source_type=SourceType.system,
             workflow_id="W2",
+            department="Business Development",
             week=0,
             content_type=ContentType.policy,
             payload=(
-                "Conflict of interest check is required for any engagement where former Acme "
-                "staff now work at the client. System does not flag this automatically. "
-                "Manual check required."
+                "When engaging with any client where former Acme employees now work, "
+                "a conflict of interest check is REQUIRED. The system does NOT flag this "
+                "automatically — you must check manually before proceeding."
             ),
             structured_data={
-                "check_type": "conflict_of_interest",
-                "trigger": "former_staff_at_client",
-                "automation_status": "not_automated",
-                "action_required": "manual_check",
+                "check_type": "Conflict of Interest",
+                "trigger": "Former employee at client",
+                "system_automated": False,
+                "action_required": "Manual check before engagement",
+                "compliance_requirement": True,
             },
             valid_from=base_time,
             decay_function=DecayFunction.permanent,
@@ -235,25 +314,35 @@ def _create_seeded_objects() -> list[ContextObject]:
             org_lineage_confidence=0.92,
         ),
 
-        # CTX-008: Elena Vasquez FS methodology
+        # =================================================================
+        # CTX-008: SUBJECT MATTER EXPERT - FINANCIAL SERVICES METHODOLOGY
+        # =================================================================
+        # Scenario: Kicking off a financial services engagement
+        # Correct: Consult Elena Vasquez directly for methodology
+        # Wrong: Look for FS methodology in the knowledge base (it's not there)
+        # Why it matters: Critical undocumented expertise lives in one person's head
         ContextObject(
             id="CTX-008",
+            display_name="Expert Knowledge: Elena Vasquez Owns FS Methodology",
             created_at=base_time,
             created_by="system",
             source_type=SourceType.system,
             workflow_id="W1",
+            department="Client Engagements",
             week=0,
             content_type=ContentType.tribal_knowledge,
             payload=(
-                "Elena Vasquez holds the master methodology for financial services engagements. "
-                "Not in the knowledge base. Must be consulted directly for FS projects."
+                "Elena Vasquez (Practice Lead) holds the master methodology for all "
+                "financial services engagements. This is NOT documented in any knowledge base. "
+                "For any FS project, consult her directly before starting."
             ),
             structured_data={
-                "knowledge_holder": "elena_vasquez",
-                "domain": "financial_services",
-                "knowledge_type": "methodology",
-                "kb_status": "not_documented",
-                "access_method": "direct_consultation",
+                "expert_name": "Elena Vasquez",
+                "expert_role": "Practice Lead",
+                "domain": "Financial Services",
+                "knowledge_type": "Methodology",
+                "documented_in_kb": False,
+                "access_method": "Direct consultation required",
             },
             valid_from=base_time,
             decay_function=DecayFunction.exponential,
@@ -265,27 +354,35 @@ def _create_seeded_objects() -> list[ContextObject]:
             org_lineage_confidence=0.70,
         ),
 
-        # CTX-009: CEO write-off approval threshold
+        # =================================================================
+        # CTX-009: CEO APPROVAL REQUIRED - WRITE-OFFS ABOVE $15K
+        # =================================================================
+        # Scenario: Processing a write-off request over $15,000
+        # Correct: Route to CEO (James Holloway) regardless of approval matrix
+        # Wrong: Follow the documented approval matrix (it's outdated)
+        # Why it matters: CEO changed this rule verbally, not in official docs
         ContextObject(
             id="CTX-009",
+            display_name="CEO Approval: Write-offs Over $15K Need James Holloway",
             created_at=base_time,
             created_by="system",
             source_type=SourceType.system,
             workflow_id="W5",
+            department="Finance & Billing",
             week=0,
             content_type=ContentType.tribal_knowledge,
             payload=(
-                "Write-off requests above $15K require CEO approval regardless of what the "
-                "approval matrix says. James Holloway updated this verbally in Q3 2024. "
-                "Not in policy docs."
+                "Write-off requests above $15,000 require CEO approval from James Holloway. "
+                "This overrides the documented approval matrix. James announced this verbally "
+                "in Q3 2024 but it was never added to the policy docs."
             ),
             structured_data={
-                "threshold_amount": 15000,
-                "approver": "james_holloway",
-                "approver_role": "ceo",
-                "policy_status": "verbal_only",
-                "update_date": "Q3_2024",
-                "documented": False,
+                "threshold_amount": "$15,000",
+                "required_approver": "James Holloway",
+                "approver_role": "CEO",
+                "policy_documented": False,
+                "policy_announced": "Q3 2024 (verbal)",
+                "overrides_approval_matrix": True,
             },
             valid_from=base_time,
             decay_function=DecayFunction.step_function,
@@ -296,26 +393,35 @@ def _create_seeded_objects() -> list[ContextObject]:
             org_lineage_confidence=0.86,
         ),
 
-        # CTX-010: Jordan Park Nexum conflict
+        # =================================================================
+        # CTX-010: STAFF-CLIENT CONFLICT - JORDAN PARK / NEXUM PARTNERS
+        # =================================================================
+        # Scenario: Assigning staff to a Nexum Partners project
+        # Correct: Never assign Jordan Park to Nexum work
+        # Wrong: Assign Jordan based on skills/availability (ignoring conflict)
+        # Why it matters: Documented HR conflict, system doesn't flag it
         ContextObject(
             id="CTX-010",
+            display_name="Staff Conflict: Jordan Park Cannot Work with Nexum Partners",
             created_at=base_time,
             created_by="system",
             source_type=SourceType.system,
             workflow_id="W3",
+            department="Resource Management",
             week=0,
             content_type=ContentType.policy,
             payload=(
-                "Staff member Jordan Park has a documented conflict with client Nexum Partners. "
-                "Do not assign to any Nexum work. HR record exists but system does not flag."
+                "Jordan Park has a documented HR conflict with Nexum Partners. "
+                "NEVER assign Jordan to any Nexum work. There is an HR record of this "
+                "conflict, but the staffing system does NOT flag it automatically."
             ),
             structured_data={
-                "staff_member": "jordan_park",
-                "client": "nexum_partners",
-                "conflict_type": "documented",
-                "hr_record": True,
-                "system_flag": False,
-                "action": "do_not_assign",
+                "staff_name": "Jordan Park",
+                "client_name": "Nexum Partners",
+                "conflict_type": "Documented HR conflict",
+                "hr_record_exists": True,
+                "system_flags_automatically": False,
+                "action_required": "Never assign to this client",
             },
             valid_from=base_time,
             decay_function=DecayFunction.permanent,
@@ -326,25 +432,32 @@ def _create_seeded_objects() -> list[ContextObject]:
             org_lineage_confidence=0.95,
         ),
 
-        # CTX-011: Friday proposal submission (EXPIRED PROCESS)
-        # Intentionally low-grade - agents should deprioritize
+        # =================================================================
+        # CTX-011: [EXPIRED] FRIDAY PROPOSAL TIMING OBSERVATION
+        # =================================================================
+        # This is INTENTIONALLY low-grade expired knowledge
+        # Agents should learn to deprioritize or ignore this
+        # Tests: Does the system correctly identify outdated knowledge?
         ContextObject(
             id="CTX-011",
+            display_name="[EXPIRED] Friday Proposal Win Rate Observation",
             created_at=base_time,
             created_by="system",
             source_type=SourceType.system,
             workflow_id="W2",
+            department="Business Development",
             week=0,
             content_type=ContentType.observation,
             payload=(
-                "Proposals submitted on Fridays have a 23% lower win rate based on three years "
-                "of data. Internal best practice: submit Tuesday through Thursday."
+                "[OUTDATED - LOW CONFIDENCE] Historical observation that Friday proposals "
+                "had 23% lower win rates. Based on old data. Market conditions have changed. "
+                "Do not rely on this for decision-making."
             ),
             structured_data={
-                "metric": "win_rate",
-                "friday_delta_percent": -23,
-                "data_period_years": 3,
-                "recommended_days": ["tuesday", "wednesday", "thursday"],
+                "observation_type": "Win rate correlation",
+                "data_age": "3+ years old",
+                "current_validity": "Questionable",
+                "recommendation": "Do not rely on this",
             },
             valid_from=base_time,
             decay_function=DecayFunction.exponential,
@@ -356,26 +469,32 @@ def _create_seeded_objects() -> list[ContextObject]:
             org_lineage_confidence=0.65,
         ),
 
-        # CTX-012: 50-page deliverable review (EXPIRED PROCESS)
-        # Intentionally low-grade - agents should deprioritize
+        # =================================================================
+        # CTX-012: [EXPIRED] 50-PAGE PARTNER REVIEW REQUIREMENT
+        # =================================================================
+        # This is INTENTIONALLY low-grade expired knowledge
+        # Old policy that no longer applies broadly
+        # Tests: Does the system correctly identify outdated policies?
         ContextObject(
             id="CTX-012",
+            display_name="[EXPIRED] Partner Review for 50+ Page Deliverables",
             created_at=base_time,
             created_by="system",
             source_type=SourceType.system,
             workflow_id="W1",
+            department="Client Engagements",
             week=0,
             content_type=ContentType.policy,
             payload=(
-                "Senior partner review of all deliverables over 50 pages was policy until 2023. "
-                "Now only applies to regulatory submissions. Many staff still follow old rule "
-                "unnecessarily."
+                "[OUTDATED - POLICY CHANGED] The old rule requiring senior partner review "
+                "for all deliverables over 50 pages ended in 2023. It now ONLY applies to "
+                "regulatory submissions. Many staff still follow the old rule unnecessarily."
             ),
             structured_data={
-                "old_threshold_pages": 50,
-                "old_policy_end_year": 2023,
-                "current_scope": "regulatory_submissions_only",
-                "compliance_status": "over_applied",
+                "policy_status": "Expired in 2023",
+                "current_scope": "Regulatory submissions only",
+                "common_mistake": "Staff still over-applying old rule",
+                "action": "Only enforce for regulatory submissions",
             },
             valid_from=base_time,
             decay_function=DecayFunction.exponential,

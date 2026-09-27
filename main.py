@@ -2,11 +2,17 @@
 """
 Acme Advisory: Context Bank Simulation
 
-Main entry point that runs both conditions (WITHOUT_BANK, WITH_BANK),
-calculates metrics, and generates all output artifacts.
+Main entry point that runs experimental conditions and calculates metrics.
+
+Supports four experimental conditions:
+- SILOED_TYPICAL: Agent only sees their department's context (~55% accuracy)
+- SILOED_ADVANCED: Agent sees department + adjacent departments (~62% accuracy)
+- GLOBAL_RAG: Agent sees all context, but no sophistication features (~70% accuracy)
+- CONTEXT_BANK: Full visibility + full sophistication (~85% accuracy)
 
 Usage:
-    python main.py              # Run full simulation
+    python main.py              # Run standard 2-way comparison (silo vs bank)
+    python main.py --4-way      # Run full 4-condition comparison
     python main.py --quick      # Run abbreviated 4-week simulation
     python main.py --verbose    # Run with detailed output
     python main.py --chaos      # Run with chaos injection enabled (v3.0)
@@ -37,6 +43,7 @@ def run_simulation(
     verbose: bool = True,
     output_dir: str = "results",
     realism_config: Optional[RealismConfig] = None,
+    seed: Optional[int] = None,
 ) -> Dict[str, Any]:
     """
     Run the complete simulation comparing both conditions.
@@ -46,10 +53,14 @@ def run_simulation(
         verbose: Print progress updates
         output_dir: Directory for output files
         realism_config: Optional realism configuration (v3.0)
+        seed: Random seed for reproducibility (default: 42)
 
     Returns:
         Complete results dictionary
     """
+    # Use provided seed or default
+    if seed is None:
+        seed = SIMULATION_CONFIG.random_seed
     output_path = Path(output_dir)
     output_path.mkdir(parents=True, exist_ok=True)
 
@@ -82,7 +93,7 @@ def run_simulation(
 
     # Note: Chaos is only meaningful for WITH_BANK condition
     # (tests resilience of institutional memory)
-    clock_without = SimulationClock(RunCondition.WITHOUT_BANK)
+    clock_without = SimulationClock(RunCondition.WITHOUT_BANK, seed=seed)
     snapshots_without = []
 
     for week in range(1, weeks + 1):
@@ -120,6 +131,7 @@ def run_simulation(
     clock_with = SimulationClock(
         RunCondition.WITH_BANK,
         realism_config=realism_config,
+        seed=seed,
     )
     snapshots_with = []
 
@@ -185,7 +197,7 @@ def run_simulation(
         "metadata": {
             "timestamp": datetime.now(timezone.utc).isoformat(),
             "weeks_simulated": weeks,
-            "random_seed": SIMULATION_CONFIG.random_seed,
+            "random_seed": seed,
             "realism_mode": realism_mode,
             "realism_config": realism_config.to_dict() if realism_config else None,
         },
@@ -288,6 +300,292 @@ def run_simulation(
     return results
 
 
+def run_4way_comparison(
+    weeks: int = 12,
+    verbose: bool = True,
+    output_dir: str = "results",
+    realism_config: Optional[RealismConfig] = None,
+    seed: Optional[int] = None,
+) -> Dict[str, Any]:
+    """
+    Run the complete 4-condition comparison simulation.
+
+    This compares all four experimental conditions:
+    - SILOED_TYPICAL: Department-only visibility (~55% accuracy)
+    - SILOED_ADVANCED: Department + adjacent visibility (~62% accuracy)
+    - GLOBAL_RAG: All visibility, no sophistication (~70% accuracy)
+    - CONTEXT_BANK: Full visibility + sophistication (~85% accuracy)
+
+    Args:
+        weeks: Number of weeks to simulate (default 12)
+        verbose: Print progress updates
+        output_dir: Directory for output files
+        realism_config: Optional realism configuration (v3.0)
+        seed: Random seed for reproducibility (default: 42)
+
+    Returns:
+        Complete results dictionary with all 4 conditions
+    """
+    # Use provided seed or default
+    if seed is None:
+        seed = SIMULATION_CONFIG.random_seed
+    output_path = Path(output_dir)
+    output_path.mkdir(parents=True, exist_ok=True)
+
+    # v3.0: Display realism mode
+    realism_mode = "Standard"
+    if realism_config:
+        if realism_config.chaos.enabled and realism_config.bpi_calibration.enabled:
+            realism_mode = "Full Realism (BPI + Chaos)"
+        elif realism_config.chaos.enabled:
+            realism_mode = "Chaos Enabled"
+        elif realism_config.bpi_calibration.enabled:
+            realism_mode = "BPI Calibrated"
+
+    if verbose:
+        print("=" * 70)
+        print("  ACME ADVISORY: 4-CONDITION COMPARISON SIMULATION")
+        print("=" * 70)
+        print(f"  Simulating {weeks} weeks of operations")
+        print(f"  Realism mode: {realism_mode}")
+        print(f"  Output directory: {output_path.absolute()}")
+        print()
+        print("  CONDITIONS:")
+        print("    1. SILOED_TYPICAL   - Department-only context visibility")
+        print("    2. SILOED_ADVANCED  - Department + adjacent departments")
+        print("    3. GLOBAL_RAG       - All context, no sophistication")
+        print("    4. CONTEXT_BANK     - Full visibility + full sophistication")
+        print("=" * 70)
+        print()
+
+    # Store results for each condition
+    condition_results = {}
+    conditions = [
+        (RunCondition.SILOED_TYPICAL, "SILOED_TYPICAL", "Department-Only"),
+        (RunCondition.SILOED_ADVANCED, "SILOED_ADVANCED", "Dept + Adjacent"),
+        (RunCondition.GLOBAL_RAG, "GLOBAL_RAG", "Global RAG"),
+        (RunCondition.CONTEXT_BANK, "CONTEXT_BANK", "Context Bank"),
+    ]
+
+    for i, (condition, name, display_name) in enumerate(conditions, 1):
+        if verbose:
+            print(f"PHASE {i}: Running {display_name} ({name})")
+            print("-" * 50)
+
+        # Only apply chaos to CONTEXT_BANK condition (to test resilience)
+        apply_realism = condition == RunCondition.CONTEXT_BANK
+
+        clock = SimulationClock(
+            condition,
+            realism_config=realism_config if apply_realism else None,
+            seed=seed,
+        )
+        snapshots = []
+
+        for week in range(1, weeks + 1):
+            snapshot = clock.run_week(week)
+            snapshots.append(snapshot)
+
+            if verbose:
+                decisions = len(snapshot.agent_decisions)
+                errors = snapshot.organizational_error_count
+                extras = []
+
+                if hasattr(snapshot, 'bank_snapshot') and snapshot.bank_snapshot:
+                    extras.append(f"bank={snapshot.bank_snapshot.total_objects}")
+
+                if hasattr(snapshot, 'chaos_impacts') and snapshot.chaos_impacts:
+                    extras.append(f"chaos={len(snapshot.chaos_impacts)}")
+
+                extra_str = f", {', '.join(extras)}" if extras else ""
+                print(f"  Week {week:2d}: {decisions} decisions, {errors} errors{extra_str}")
+
+                for d in snapshot.agent_decisions:
+                    status = "✓" if d.outcome.value == "correct" else "✗"
+                    ctx = f" [{','.join(d.context_used)}]" if d.context_used else ""
+                    print(f"           {status} {d.scenario_type}{ctx}")
+
+        summary = clock.get_summary()
+        condition_results[name] = {
+            "snapshots": snapshots,
+            "summary": summary,
+            "clock": clock,
+        }
+
+        if verbose:
+            print()
+            print(f"  {display_name.upper()} COMPLETE")
+            print(f"  Total decisions: {summary['total_decisions']}")
+            print(f"  Correct: {summary['correct_decisions']}")
+            print(f"  Incorrect: {summary['incorrect_decisions']}")
+            print(f"  Accuracy: {summary['overall_accuracy']:.1f}%")
+            if 'final_bank_size' in summary:
+                print(f"  Final bank size: {summary['final_bank_size']}")
+            print()
+
+    # ================================================================
+    # CALCULATE COMPARISON METRICS
+    # ================================================================
+    if verbose:
+        print("PHASE 5: Calculating Comparison Metrics")
+        print("-" * 50)
+
+    calculator = MetricsCalculator()
+
+    # Compare SILOED_TYPICAL vs CONTEXT_BANK (main comparison)
+    main_comparison = calculator.compare_conditions(
+        condition_results["SILOED_TYPICAL"]["snapshots"],
+        condition_results["CONTEXT_BANK"]["snapshots"],
+    )
+
+    # Calculate accuracy improvements across all conditions
+    accuracies = {
+        name: data["summary"]["overall_accuracy"]
+        for name, data in condition_results.items()
+    }
+
+    if verbose:
+        print()
+        print("  ACCURACY COMPARISON:")
+        print("  " + "-" * 46)
+        for name, acc in accuracies.items():
+            bar_len = int(acc / 2)  # Scale to fit
+            bar = "█" * bar_len + "░" * (50 - bar_len)
+            print(f"  {name:20} {acc:5.1f}%  {bar[:40]}")
+        print("  " + "-" * 46)
+        print()
+        print("  IMPROVEMENT ANALYSIS:")
+        baseline = accuracies["SILOED_TYPICAL"]
+        for name in ["SILOED_ADVANCED", "GLOBAL_RAG", "CONTEXT_BANK"]:
+            improvement = accuracies[name] - baseline
+            print(f"    {name:20} vs Baseline: +{improvement:.1f}%")
+        print()
+        print("  GAP ANALYSIS:")
+        gap_advanced_rag = accuracies["GLOBAL_RAG"] - accuracies["SILOED_ADVANCED"]
+        gap_rag_bank = accuracies["CONTEXT_BANK"] - accuracies["GLOBAL_RAG"]
+        print(f"    Global RAG over SILOED_ADVANCED: +{gap_advanced_rag:.1f}%")
+        print(f"    Context Bank over Global RAG:    +{gap_rag_bank:.1f}% (sophistication value)")
+        print()
+
+    # ================================================================
+    # GENERATE OUTPUTS
+    # ================================================================
+    if verbose:
+        print("PHASE 6: Generating Output Artifacts")
+        print("-" * 50)
+
+    # Save raw JSON results
+    results = {
+        "metadata": {
+            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "weeks_simulated": weeks,
+            "random_seed": seed,
+            "realism_mode": realism_mode,
+            "comparison_type": "4-way",
+            "realism_config": realism_config.to_dict() if realism_config else None,
+        },
+        "condition_summaries": {
+            name: data["summary"] for name, data in condition_results.items()
+        },
+        "accuracies": accuracies,
+        "improvements_over_baseline": {
+            name: accuracies[name] - accuracies["SILOED_TYPICAL"]
+            for name in ["SILOED_ADVANCED", "GLOBAL_RAG", "CONTEXT_BANK"]
+        },
+        "main_comparison": main_comparison,
+    }
+
+    results_file = output_path / "simulation_results_4way.json"
+    with open(results_file, "w") as f:
+        json.dump(results, f, indent=2, default=str)
+
+    if verbose:
+        print(f"  Saved: {results_file}")
+
+    # Save decisions for each condition
+    all_decisions = {}
+    for name, data in condition_results.items():
+        all_decisions[name] = [
+            {
+                "decision_id": d.decision_id,
+                "week": d.week,
+                "agent_id": d.agent_id,
+                "scenario_type": d.scenario_type,
+                "decision_taken": d.decision_taken,
+                "outcome": d.outcome.value,
+                "context_retrieved": d.context_retrieved,
+                "context_used": d.context_used,
+            }
+            for d in data["clock"].all_decisions
+        ]
+
+    decisions_file = output_path / "all_decisions_4way.json"
+    with open(decisions_file, "w") as f:
+        json.dump(all_decisions, f, indent=2)
+
+    if verbose:
+        print(f"  Saved: {decisions_file}")
+
+    # Save bank state (only CONTEXT_BANK has a bank)
+    bank_clock = condition_results["CONTEXT_BANK"]["clock"]
+    if hasattr(bank_clock, 'bank') and bank_clock.bank:
+        bank_file = output_path / "final_bank_state.json"
+        with open(bank_file, "w") as f:
+            json.dump(bank_clock.bank.export_to_dict(), f, indent=2, default=str)
+        if verbose:
+            print(f"  Saved: {bank_file}")
+
+    # Generate charts (use main comparison for chart generation)
+    chart_gen = ChartGenerator(str(output_path))
+    chart_paths = chart_gen.generate_all(main_comparison)
+
+    if verbose:
+        for name, path in chart_paths.items():
+            print(f"  Saved: {path}")
+
+    # Generate summary
+    summary_gen = SummaryGenerator(str(output_path))
+    summary_path = summary_gen.generate(main_comparison)
+
+    if verbose:
+        print(f"  Saved: {summary_path}")
+
+    # ================================================================
+    # FINAL SUMMARY
+    # ================================================================
+    if verbose:
+        print()
+        print("=" * 70)
+        print("  4-WAY COMPARISON COMPLETE")
+        print("=" * 70)
+        print()
+        print("  KEY RESULTS (Accuracy by Condition):")
+        print()
+        print("    ┌─────────────────────┬──────────┬─────────────┐")
+        print("    │ Condition           │ Accuracy │ vs Baseline │")
+        print("    ├─────────────────────┼──────────┼─────────────┤")
+        baseline = accuracies["SILOED_TYPICAL"]
+        for name in ["SILOED_TYPICAL", "SILOED_ADVANCED", "GLOBAL_RAG", "CONTEXT_BANK"]:
+            acc = accuracies[name]
+            improvement = acc - baseline
+            imp_str = f"+{improvement:.1f}%" if improvement > 0 else "baseline"
+            print(f"    │ {name:19} │ {acc:6.1f}%  │ {imp_str:>11} │")
+        print("    └─────────────────────┴──────────┴─────────────┘")
+        print()
+        print("  INSIGHT: Context Bank's sophistication features (decay, provenance,")
+        print(f"  attribution) add +{accuracies['CONTEXT_BANK'] - accuracies['GLOBAL_RAG']:.1f}% accuracy over basic RAG.")
+        print()
+        print("  OUTPUT FILES:")
+        print(f"    Results JSON:     {results_file}")
+        print(f"    Decisions JSON:   {decisions_file}")
+        print(f"    Business Charts:  {chart_paths.get('business_dashboard', 'N/A')}")
+        print(f"    Summary:          {summary_path}")
+        print()
+        print("=" * 70)
+
+    return results
+
+
 def main():
     """Main entry point."""
     parser = argparse.ArgumentParser(
@@ -337,6 +635,18 @@ def main():
         action="store_true",
         help="Enable both chaos and BPI calibration"
     )
+    parser.add_argument(
+        "--4-way",
+        dest="four_way",
+        action="store_true",
+        help="Run full 4-condition comparison (SILOED_TYPICAL, SILOED_ADVANCED, GLOBAL_RAG, CONTEXT_BANK)"
+    )
+    parser.add_argument(
+        "--seed",
+        type=int,
+        default=None,
+        help="Random seed for reproducibility (default: 42)"
+    )
 
     args = parser.parse_args()
 
@@ -358,12 +668,22 @@ def main():
         )
 
     try:
-        results = run_simulation(
-            weeks=weeks,
-            verbose=verbose,
-            output_dir=args.output,
-            realism_config=realism_config,
-        )
+        if args.four_way:
+            results = run_4way_comparison(
+                weeks=weeks,
+                verbose=verbose,
+                output_dir=args.output,
+                realism_config=realism_config,
+                seed=args.seed,
+            )
+        else:
+            results = run_simulation(
+                weeks=weeks,
+                verbose=verbose,
+                output_dir=args.output,
+                realism_config=realism_config,
+                seed=args.seed,
+            )
         return 0
     except Exception as e:
         print(f"Error: {e}", file=sys.stderr)

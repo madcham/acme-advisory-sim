@@ -2,20 +2,124 @@
 Simulation configuration for Acme Advisory.
 
 Defines the simulation clock, event rates, exception injection schedule,
-and run structure for comparing WITH_BANK vs WITHOUT_BANK conditions.
+and run structure for comparing four experimental conditions:
+
+1. SILOED_TYPICAL   - Each agent sees only their department's knowledge (baseline)
+2. SILOED_ADVANCED  - Department + adjacent departments, with basic time decay
+3. GLOBAL_RAG       - All agents see all knowledge, but no sophistication
+4. CONTEXT_BANK     - Full sophistication: decay, provenance, synthesis, validation
 
 Includes realism calibration for graduated performance improvement.
 """
 
 from dataclasses import dataclass, field
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Set
 from enum import Enum
 
 
 class RunCondition(str, Enum):
-    """The two experimental conditions being compared."""
-    WITHOUT_BANK = "WITHOUT_BANK"
-    WITH_BANK = "WITH_BANK"
+    """
+    The four experimental conditions being compared.
+
+    Each represents a different level of context sophistication:
+    - SILOED_TYPICAL: Basic vendor setup (department-only RAG)
+    - SILOED_ADVANCED: Sophisticated vendor (dept + adjacent, basic decay)
+    - GLOBAL_RAG: Naive centralization (shared but dumb)
+    - CONTEXT_BANK: Full institutional memory (shared + sophisticated)
+    """
+    SILOED_TYPICAL = "SILOED_TYPICAL"
+    SILOED_ADVANCED = "SILOED_ADVANCED"
+    GLOBAL_RAG = "GLOBAL_RAG"
+    CONTEXT_BANK = "CONTEXT_BANK"
+
+    # Legacy aliases for backwards compatibility
+    WITHOUT_BANK = "SILOED_TYPICAL"  # Maps to basic silos
+    WITH_BANK = "CONTEXT_BANK"       # Maps to full sophistication
+
+
+# =============================================================================
+# DEPARTMENT STRUCTURE
+# =============================================================================
+# Defines which departments exist and their relationships (for silo overlap)
+
+DEPARTMENTS = {
+    "Business Development": {
+        "id": "biz_dev",
+        "workflows": ["W2"],
+        "adjacent_departments": ["Client Engagements", "Resource Management"],
+        "context_ids": ["CTX-003", "CTX-007", "CTX-011"],  # Knowledge owned by this dept
+    },
+    "Client Engagements": {
+        "id": "client_eng",
+        "workflows": ["W1"],
+        "adjacent_departments": ["Business Development", "Finance & Billing"],
+        "context_ids": ["CTX-002", "CTX-008", "CTX-012"],
+    },
+    "Resource Management": {
+        "id": "resource_mgmt",
+        "workflows": ["W3"],
+        "adjacent_departments": ["Business Development", "Client Engagements"],
+        "context_ids": ["CTX-004", "CTX-010"],
+    },
+    "Vendor & Procurement": {
+        "id": "vendor_proc",
+        "workflows": ["W4"],
+        "adjacent_departments": ["Finance & Billing"],
+        "context_ids": ["CTX-001", "CTX-005"],
+    },
+    "Finance & Billing": {
+        "id": "finance",
+        "workflows": ["W5"],
+        "adjacent_departments": ["Vendor & Procurement", "Client Engagements"],
+        "context_ids": ["CTX-006", "CTX-009"],
+    },
+}
+
+
+def get_visible_context_ids(department: str, condition: RunCondition) -> Set[str]:
+    """
+    Get the context IDs visible to a department under a given condition.
+
+    Args:
+        department: The department name (e.g., "Finance & Billing")
+        condition: The experimental condition
+
+    Returns:
+        Set of context IDs the department can see
+    """
+    if condition in [RunCondition.GLOBAL_RAG, RunCondition.CONTEXT_BANK, RunCondition.WITH_BANK]:
+        # Full visibility - all context IDs
+        all_ids = set()
+        for dept_info in DEPARTMENTS.values():
+            all_ids.update(dept_info["context_ids"])
+        return all_ids
+
+    dept_info = DEPARTMENTS.get(department)
+    if not dept_info:
+        return set()
+
+    visible = set(dept_info["context_ids"])
+
+    if condition == RunCondition.SILOED_ADVANCED:
+        # Add adjacent department context
+        for adj_dept in dept_info["adjacent_departments"]:
+            adj_info = DEPARTMENTS.get(adj_dept)
+            if adj_info:
+                visible.update(adj_info["context_ids"])
+
+    # SILOED_TYPICAL only sees own department
+    return visible
+
+
+def get_department_for_agent(agent_id: str) -> str:
+    """Get the department name for an agent."""
+    agent_departments = {
+        "proposal_agent": "Business Development",
+        "staffing_agent": "Resource Management",
+        "vendor_agent": "Vendor & Procurement",
+        "billing_agent": "Finance & Billing",
+    }
+    return agent_departments.get(agent_id, "Unknown")
 
 
 @dataclass
@@ -47,7 +151,11 @@ class ExceptionInjectionSchedule:
 
     These are the key scenarios that test whether the Context Bank
     provides value by surfacing relevant institutional memory.
+
+    Includes both within-department scenarios and cross-domain scenarios
+    (where an agent needs knowledge from another department).
     """
+    # Within-department scenarios (agent has access in siloed mode)
     # Weeks where Brightline SOW is triggered (CTX-001 is relevant)
     brightline_sow: List[int] = field(default_factory=lambda: [3, 7, 11])
 
@@ -63,6 +171,18 @@ class ExceptionInjectionSchedule:
     # Weeks where Jordan Park conflict scenario occurs (CTX-010)
     jordan_park_conflict: List[int] = field(default_factory=lambda: [6, 11])
 
+    # CROSS-DOMAIN SCENARIOS (agent needs knowledge from another department)
+    # These demonstrate where siloed approaches fail most dramatically
+
+    # Billing agent needs Client Engagements knowledge (CTX-002)
+    meridian_billing_cross: List[int] = field(default_factory=lambda: [4, 9])
+
+    # Staffing agent needs Vendor knowledge (CTX-001)
+    brightline_staffing_cross: List[int] = field(default_factory=lambda: [5, 10])
+
+    # Billing agent needs Business Development knowledge (CTX-003)
+    hartwell_collection_cross: List[int] = field(default_factory=lambda: [7, 12])
+
     def get_injections_for_week(self, week: int) -> List[str]:
         """Get list of exception scenarios to inject in a given week."""
         injections = []
@@ -76,11 +196,29 @@ class ExceptionInjectionSchedule:
             injections.append("terralogic_payment")
         if week in self.jordan_park_conflict:
             injections.append("jordan_park_conflict")
+        # Cross-domain scenarios
+        if week in self.meridian_billing_cross:
+            injections.append("meridian_billing_cross")
+        if week in self.brightline_staffing_cross:
+            injections.append("brightline_staffing_cross")
+        if week in self.hartwell_collection_cross:
+            injections.append("hartwell_collection_cross")
         return injections
 
     def is_brightline_week(self, week: int) -> bool:
         """Check if this week has a Brightline SOW scenario."""
         return week in self.brightline_sow
+
+    def get_cross_domain_scenarios_for_week(self, week: int) -> List[str]:
+        """Get cross-domain scenarios for a given week."""
+        scenarios = []
+        if week in self.meridian_billing_cross:
+            scenarios.append("meridian_billing_cross")
+        if week in self.brightline_staffing_cross:
+            scenarios.append("brightline_staffing_cross")
+        if week in self.hartwell_collection_cross:
+            scenarios.append("hartwell_collection_cross")
+        return scenarios
 
 
 @dataclass
@@ -109,57 +247,144 @@ class RetrievalNoiseConfig:
 
 
 @dataclass
+class ConditionCalibration:
+    """
+    Calibration parameters for a single experimental condition.
+
+    Defines baseline accuracy, improvement rate, and caps for
+    normal, chaos, and cross-domain scenarios.
+    """
+    # Base accuracy in normal (steady-state) operations
+    baseline_normal: float
+
+    # Weekly improvement rate (positive = improves, negative = degrades)
+    weekly_improvement: float
+
+    # Maximum accuracy cap
+    max_accuracy: float
+
+    # Accuracy under chaos conditions (staff departure, policy conflict, etc.)
+    chaos_multiplier: float = 1.0  # Applied to baseline during chaos
+
+    # Accuracy for cross-domain decisions (requires multi-department knowledge)
+    cross_domain_multiplier: float = 1.0  # Applied to baseline for cross-domain
+
+
+@dataclass
 class PerformanceCalibration:
     """
     Calibration for graduated performance improvement over time.
 
-    WITHOUT_BANK starts at baseline and may slightly improve (learning).
-    WITH_BANK starts at baseline and improves more rapidly as bank grows.
+    Defines accuracy trajectories for all four experimental conditions:
+    - SILOED_TYPICAL: Basic department-only silos
+    - SILOED_ADVANCED: Sophisticated silos with overlap and decay
+    - GLOBAL_RAG: Unified but unsophisticated
+    - CONTEXT_BANK: Full sophistication
     """
-    # Baseline accuracy for WITHOUT_BANK (week 1)
-    # This represents agent accuracy with no institutional memory
-    baseline_accuracy_without_bank: float = 0.25
 
-    # Baseline accuracy for WITH_BANK (week 1)
-    # Starts similar but with seeded context available
-    baseline_accuracy_with_bank: float = 0.70
+    # Per-condition calibration
+    siloed_typical: ConditionCalibration = field(default_factory=lambda: ConditionCalibration(
+        baseline_normal=0.55,
+        weekly_improvement=-0.005,  # Slight degradation (knowledge goes stale)
+        max_accuracy=0.60,
+        chaos_multiplier=0.73,      # 40% accuracy under chaos (55% * 0.73)
+        cross_domain_multiplier=0.55,  # 30% accuracy cross-domain (55% * 0.55)
+    ))
 
-    # Weekly improvement multiplier for WITHOUT_BANK
-    # Small improvement from ad-hoc learning
-    weekly_improvement_without_bank: float = 0.02
+    siloed_advanced: ConditionCalibration = field(default_factory=lambda: ConditionCalibration(
+        baseline_normal=0.62,
+        weekly_improvement=-0.003,  # Slower degradation (has basic decay)
+        max_accuracy=0.65,
+        chaos_multiplier=0.81,      # 50% under chaos
+        cross_domain_multiplier=0.73,  # 45% cross-domain
+    ))
 
-    # Weekly improvement multiplier for WITH_BANK
-    # Larger improvement as bank accumulates knowledge
-    weekly_improvement_with_bank: float = 0.03
+    global_rag: ConditionCalibration = field(default_factory=lambda: ConditionCalibration(
+        baseline_normal=0.70,
+        weekly_improvement=-0.004,  # Degrades (signal-to-noise worsens)
+        max_accuracy=0.72,
+        chaos_multiplier=0.79,      # 55% under chaos
+        cross_domain_multiplier=0.79,  # 55% cross-domain
+    ))
 
-    # Maximum accuracy caps
-    max_accuracy_without_bank: float = 0.40
-    max_accuracy_with_bank: float = 0.95
+    context_bank: ConditionCalibration = field(default_factory=lambda: ConditionCalibration(
+        baseline_normal=0.75,
+        weekly_improvement=0.012,   # Improves (validation reinforces good knowledge)
+        max_accuracy=0.92,
+        chaos_multiplier=0.94,      # 80% under chaos (resilient!)
+        cross_domain_multiplier=0.97,  # 82% cross-domain (knowledge flows)
+    ))
 
-    def get_accuracy_for_week(self, condition: "RunCondition", week: int) -> float:
+    # Legacy compatibility
+    baseline_accuracy_without_bank: float = 0.55
+    baseline_accuracy_with_bank: float = 0.75
+    weekly_improvement_without_bank: float = -0.005
+    weekly_improvement_with_bank: float = 0.012
+    max_accuracy_without_bank: float = 0.60
+    max_accuracy_with_bank: float = 0.92
+
+    def _get_calibration(self, condition: "RunCondition") -> ConditionCalibration:
+        """Get calibration for a condition."""
+        mapping = {
+            RunCondition.SILOED_TYPICAL: self.siloed_typical,
+            RunCondition.SILOED_ADVANCED: self.siloed_advanced,
+            RunCondition.GLOBAL_RAG: self.global_rag,
+            RunCondition.CONTEXT_BANK: self.context_bank,
+            # Legacy mappings
+            RunCondition.WITHOUT_BANK: self.siloed_typical,
+            RunCondition.WITH_BANK: self.context_bank,
+        }
+        return mapping.get(condition, self.siloed_typical)
+
+    def get_accuracy_for_week(
+        self,
+        condition: "RunCondition",
+        week: int,
+        is_chaos: bool = False,
+        is_cross_domain: bool = False,
+    ) -> float:
         """
         Calculate expected accuracy for a given condition and week.
 
         Args:
-            condition: WITHOUT_BANK or WITH_BANK
+            condition: The experimental condition
             week: Simulation week (1-indexed)
+            is_chaos: Whether chaos conditions are active
+            is_cross_domain: Whether this is a cross-domain decision
 
         Returns:
             Expected accuracy as a float between 0 and 1
         """
-        if condition == RunCondition.WITHOUT_BANK:
-            baseline = self.baseline_accuracy_without_bank
-            improvement = self.weekly_improvement_without_bank
-            cap = self.max_accuracy_without_bank
-        else:
-            baseline = self.baseline_accuracy_with_bank
-            improvement = self.weekly_improvement_with_bank
-            cap = self.max_accuracy_with_bank
+        cal = self._get_calibration(condition)
 
-        # Linear improvement from baseline
+        # Base calculation
         weeks_elapsed = week - 1
-        accuracy = baseline + (improvement * weeks_elapsed)
-        return min(accuracy, cap)
+        accuracy = cal.baseline_normal + (cal.weekly_improvement * weeks_elapsed)
+        accuracy = min(accuracy, cal.max_accuracy)
+
+        # Apply modifiers
+        if is_chaos:
+            accuracy *= cal.chaos_multiplier
+        if is_cross_domain:
+            accuracy *= cal.cross_domain_multiplier
+
+        return max(0.1, min(accuracy, 1.0))  # Clamp to [0.1, 1.0]
+
+    def get_all_accuracies(self, week: int) -> Dict[str, Dict[str, float]]:
+        """Get accuracy for all conditions at a given week."""
+        result = {}
+        for condition in [
+            RunCondition.SILOED_TYPICAL,
+            RunCondition.SILOED_ADVANCED,
+            RunCondition.GLOBAL_RAG,
+            RunCondition.CONTEXT_BANK,
+        ]:
+            result[condition.value] = {
+                "normal": self.get_accuracy_for_week(condition, week),
+                "chaos": self.get_accuracy_for_week(condition, week, is_chaos=True),
+                "cross_domain": self.get_accuracy_for_week(condition, week, is_cross_domain=True),
+            }
+        return result
 
 
 @dataclass
@@ -180,9 +405,14 @@ class SimulationConfig:
     random_seed: int = 42
 
     # Experimental conditions to run
+    # Default: Run the two extremes (basic silos vs full context bank)
+    # Full comparison: Run all four conditions
     runs: List[RunCondition] = field(
-        default_factory=lambda: [RunCondition.WITHOUT_BANK, RunCondition.WITH_BANK]
+        default_factory=lambda: [RunCondition.SILOED_TYPICAL, RunCondition.CONTEXT_BANK]
     )
+
+    # For full 4-way comparison, use:
+    # runs = [SILOED_TYPICAL, SILOED_ADVANCED, GLOBAL_RAG, CONTEXT_BANK]
 
     # Agent configuration
     agent_model: str = "claude-sonnet-4-20250514"
@@ -210,12 +440,21 @@ class SimulationConfig:
 SIMULATION_CONFIG = SimulationConfig()
 
 
-# Agent definitions
+# =============================================================================
+# AGENT DEFINITIONS
+# =============================================================================
+# Each agent handles a specific domain of organizational decisions.
+# In SILOED mode, each agent only has access to knowledge in their domain.
+# In CONTEXT_BANK mode, all agents access unified institutional memory.
+
 AGENTS = {
     "proposal_agent": {
         "id": "proposal_agent",
-        "name": "Proposal Agent",
-        "role": "Drafts and coordinates proposals",
+        "name": "Business Development AI",
+        "display_name": "Business Development AI",
+        "short_name": "BizDev AI",
+        "role": "Evaluates opportunities, coordinates proposals, makes go/no-go recommendations",
+        "department": "Business Development",
         "workflows": ["W2"],
         "decision_authority": "recommend_only",
         "context_retrieval": True,
@@ -245,8 +484,11 @@ Provide your recommendation with confidence level and reasoning.""",
     },
     "staffing_agent": {
         "id": "staffing_agent",
-        "name": "Staffing Agent",
-        "role": "Matches resources to engagements",
+        "name": "Resource Management AI",
+        "display_name": "Resource Management AI",
+        "short_name": "Staffing AI",
+        "role": "Assigns staff to projects, manages resource allocation and conflicts",
+        "department": "Resource Management",
         "workflows": ["W3"],
         "decision_authority": "recommend_only",
         "context_retrieval": True,
@@ -276,8 +518,11 @@ Provide your staffing recommendation with confidence level and reasoning.""",
     },
     "vendor_agent": {
         "id": "vendor_agent",
-        "name": "Vendor Agent",
-        "role": "Manages subcontractor SOWs and approvals",
+        "name": "Procurement AI",
+        "display_name": "Procurement AI",
+        "short_name": "Vendor AI",
+        "role": "Manages vendor contracts, SOWs, approvals, and pricing negotiations",
+        "department": "Vendor & Procurement",
         "workflows": ["W4"],
         "decision_authority": "initiate_only",
         "context_retrieval": True,
@@ -308,8 +553,11 @@ IMPORTANT: Always check if any vendor has special approval requirements before i
     },
     "billing_agent": {
         "id": "billing_agent",
-        "name": "Billing Agent",
-        "role": "Generates invoices and manages collections",
+        "name": "Accounts Receivable AI",
+        "display_name": "Accounts Receivable AI",
+        "short_name": "Billing AI",
+        "role": "Generates invoices, manages collections, handles payment escalations",
+        "department": "Finance & Billing",
         "workflows": ["W5"],
         "decision_authority": "recommend_only",
         "context_retrieval": True,

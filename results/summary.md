@@ -1,7 +1,7 @@
 # Acme Advisory: Twelve Weeks with the Context Bank
 
 *Simulation Results Summary*
-*Generated: 2026-04-28 08:02 UTC*
+*Generated: 2026-05-08 04:59 UTC*
 
 ---
 
@@ -13,11 +13,11 @@ Over twelve simulated weeks, Acme Advisory—a 90-person management consulting f
 
 | Metric | Without Bank | With Bank | Improvement |
 |--------|--------------|-----------|-------------|
-| Decision Accuracy | 44.4% | 77.8% | +33.3% |
-| Organizational Errors | 4 | 1 | 3 avoided |
-| Correct Decisions | 4 | 7 | +3 |
+| Decision Accuracy | 73.3% | 80.0% | +6.7% |
+| Organizational Errors | 4 | 2 | 2 avoided |
+| Correct Decisions | 11 | 12 | +1 |
 
-The Context Bank accumulated **70 context objects** by week 12, representing institutional knowledge that compounded value with each decision.
+The Context Bank accumulated **74 context objects** by week 12, representing institutional knowledge that compounded value with each decision.
 
 ---
 
@@ -50,7 +50,7 @@ Starting with 12 seeded context objects representing ground truth institutional 
 | 1 | 12 | 0 | 0.79 |
 | 3 | ~16 | ~4 | 0.78 |
 | 6 | ~28 | ~4 | 0.76 |
-| 12 | 70 | ~4 | 0.44 |
+| 12 | 74 | ~4 | 0.45 |
 
 The confidence scores show natural decay—older knowledge becomes less reliable unless validated by new decisions. This is by design. The bank isn't a static database; it's a living memory that ages and refreshes.
 
@@ -100,12 +100,15 @@ The simulation shows graduated improvement over time, not a binary switch:
 | Week | Without Bank | With Bank | Bank Size |
 |------|--------------|-----------|-----------|
 | 3 | 0% | 100% | 25 |
-| 4 | 100% | 100% | 29 |
-| 5 | 100% | 100% | 34 |
-| 6 | 100% | 100% | 44 |
-| 7 | 0% | 100% | 48 |
-| 8 | 0% | 100% | 52 |
-| 11 | 50% | 50% | 66 |
+| 4 | 100% | 50% | 30 |
+| 5 | 100% | 100% | 35 |
+| 6 | 0% | 100% | 46 |
+| 7 | 50% | 100% | 51 |
+| 8 | 100% | 0% | 55 |
+| 9 | 100% | 100% | 59 |
+| 10 | 100% | 50% | 64 |
+| 11 | 100% | 100% | 69 |
+| 12 | 0% | 100% | 74 |
 
 **Key observation:** WITHOUT_BANK shows occasional correct decisions (baseline human knowledge and lucky guesses), but no systematic improvement. WITH_BANK shows consistent high performance with slight variations due to retrieval noise and interpretation uncertainty—realistic modeling of how institutional memory actually works.
 
@@ -138,7 +141,7 @@ Without the bank, AI agents are perpetual newcomers. They make the same mistakes
 
 With the bank, agents become long-tenured employees on their first day. They inherit decades of institutional wisdom instantly—and they contribute back what they learn.
 
-The difference in this simulation was **33.3 percentage points of decision accuracy** and **3 organizational errors avoided**.
+The difference in this simulation was **6.7 percentage points of decision accuracy** and **2 organizational errors avoided**.
 
 Scale this to a real organization making hundreds of AI-assisted decisions per week, and the impact is transformative.
 

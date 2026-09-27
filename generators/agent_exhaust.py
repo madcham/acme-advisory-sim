@@ -3,18 +3,27 @@ Agent Exhaust Generator.
 
 Deploys specialized agents into Acme's workflows using the Claude API.
 Each agent makes decisions and generates context objects from their reasoning.
+
+Supports four experimental conditions:
+- SILOED_TYPICAL: Agent only sees their department's context
+- SILOED_ADVANCED: Agent sees department + adjacent departments, with basic decay
+- GLOBAL_RAG: Agent sees all context, but no sophistication features
+- CONTEXT_BANK: Agent sees all context with full sophistication (decay, provenance, etc.)
 """
 
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
-from typing import List, Dict, Optional, Any, Tuple
+from typing import List, Dict, Optional, Any, Tuple, Set
 from enum import Enum
 import json
 import os
 import re
 import random
 
-from config.simulation_config import SIMULATION_CONFIG, AGENTS, CLIENTS, VENDORS, RunCondition
+from config.simulation_config import (
+    SIMULATION_CONFIG, AGENTS, CLIENTS, VENDORS, RunCondition,
+    get_visible_context_ids, get_department_for_agent,
+)
 from config.workflows import get_workflow
 from models.context_object import (
     ContextObject, ContentType, SourceType, DecayFunction,
@@ -93,32 +102,50 @@ class AgentExhaustGenerator:
     """
     Generates agent decisions using Claude API.
 
-    In WITH_BANK mode, agents retrieve context before making decisions.
-    In WITHOUT_BANK mode, agents make decisions cold.
+    Supports four experimental conditions:
+    - SILOED_TYPICAL: Department-only visibility, no sophistication
+    - SILOED_ADVANCED: Department + adjacent, basic time decay
+    - GLOBAL_RAG: Full visibility, no sophistication
+    - CONTEXT_BANK: Full visibility + full sophistication
 
-    Uses performance calibration to introduce realistic noise:
-    - WITHOUT_BANK: Baseline accuracy with small improvements (ad-hoc learning)
-    - WITH_BANK: Higher baseline with steeper improvements (bank accumulation)
+    Uses performance calibration to introduce realistic accuracy variance
+    based on condition, week, chaos state, and cross-domain requirements.
     """
 
     def __init__(
         self,
-        use_context_bank: bool = True,
+        condition: RunCondition = RunCondition.CONTEXT_BANK,
         api_key: Optional[str] = None,
         model: str = "claude-sonnet-4-20250514",
         seed: Optional[int] = None,
+        # Legacy parameter for backwards compatibility
+        use_context_bank: Optional[bool] = None,
     ):
         """
         Initialize the agent generator.
 
         Args:
-            use_context_bank: Whether agents can retrieve from the bank
+            condition: The experimental condition (SILOED_TYPICAL, SILOED_ADVANCED,
+                      GLOBAL_RAG, or CONTEXT_BANK)
             api_key: Anthropic API key (defaults to env var)
             model: Claude model to use
             seed: Random seed for reproducibility
+            use_context_bank: DEPRECATED - use condition parameter instead
         """
-        self.use_context_bank = use_context_bank
-        self.condition = RunCondition.WITH_BANK if use_context_bank else RunCondition.WITHOUT_BANK
+        # Handle legacy parameter
+        if use_context_bank is not None:
+            self.condition = RunCondition.CONTEXT_BANK if use_context_bank else RunCondition.SILOED_TYPICAL
+        else:
+            self.condition = condition
+
+        # Backwards compatibility property
+        self.use_context_bank = self.condition in [
+            RunCondition.CONTEXT_BANK,
+            RunCondition.GLOBAL_RAG,
+            RunCondition.SILOED_ADVANCED,
+            RunCondition.WITH_BANK,
+        ]
+
         self.api_key = api_key or os.environ.get("ANTHROPIC_API_KEY")
         self.model = model
         self._decision_counter = 0
@@ -133,6 +160,37 @@ class AgentExhaustGenerator:
         # Track API usage
         self.total_tokens = 0
         self.api_calls = 0
+
+    def get_visible_context_for_agent(self, agent_id: str) -> Set[str]:
+        """
+        Get the context IDs visible to an agent under current condition.
+
+        For SILOED conditions, visibility is limited by department.
+        For GLOBAL_RAG and CONTEXT_BANK, all context is visible.
+        """
+        department = get_department_for_agent(agent_id)
+        return get_visible_context_ids(department, self.condition)
+
+    def is_cross_domain_scenario(self, scenario: "AgentScenario", agent_id: str) -> bool:
+        """
+        Check if a scenario requires cross-domain knowledge.
+
+        A scenario is cross-domain if the required context is outside
+        the agent's primary department.
+        """
+        department = get_department_for_agent(agent_id)
+        visible_in_silo = get_visible_context_ids(department, RunCondition.SILOED_TYPICAL)
+
+        # If any ground truth context is NOT in the agent's basic silo, it's cross-domain
+        for ctx_id in scenario.ground_truth_context_ids:
+            if ctx_id not in visible_in_silo:
+                return True
+        return False
+
+    def can_agent_see_context(self, agent_id: str, context_id: str) -> bool:
+        """Check if an agent can see a specific context object under current condition."""
+        visible = self.get_visible_context_for_agent(agent_id)
+        return context_id in visible
 
     def _generate_decision_id(self) -> str:
         """Generate unique decision ID."""
@@ -225,6 +283,9 @@ Format your response as JSON:
         system_prompt: str,
         user_prompt: str,
         week: int = 1,
+        agent_id: str = "unknown_agent",
+        scenario: Optional["AgentScenario"] = None,
+        is_chaos: bool = False,
     ) -> Tuple[str, int]:
         """
         Call the Claude API.
@@ -233,13 +294,18 @@ Format your response as JSON:
             system_prompt: System prompt for the agent
             user_prompt: User prompt describing the scenario
             week: Current simulation week (for calibration in simulation mode)
+            agent_id: The agent making the decision (for condition-based visibility)
+            scenario: The scenario being processed (for cross-domain detection)
+            is_chaos: Whether chaos conditions are active
 
         Returns:
             Tuple of (response text, tokens used)
         """
         if not self.api_key:
             # Simulation mode without API
-            return self._simulate_response(user_prompt, week), 0
+            return self._simulate_response(
+                user_prompt, week, agent_id, scenario, is_chaos
+            ), 0
 
         try:
             import anthropic
@@ -264,24 +330,42 @@ Format your response as JSON:
 
         except ImportError:
             # anthropic package not installed, use simulation
-            return self._simulate_response(user_prompt, week), 0
+            return self._simulate_response(
+                user_prompt, week, agent_id, scenario, is_chaos
+            ), 0
         except Exception as e:
             # API error, use simulation
             print(f"API error: {e}, using simulated response")
-            return self._simulate_response(user_prompt, week), 0
+            return self._simulate_response(
+                user_prompt, week, agent_id, scenario, is_chaos
+            ), 0
 
-    def _should_succeed(self, week: int) -> bool:
+    def _should_succeed(
+        self,
+        week: int,
+        is_chaos: bool = False,
+        is_cross_domain: bool = False,
+    ) -> bool:
         """
         Determine if this decision should succeed based on calibration.
 
         Uses performance calibration to introduce realistic noise.
-        Applies chaos accuracy modifier (v3.0) if set.
+        Applies condition-specific accuracy, chaos penalties, and cross-domain penalties.
+
+        Args:
+            week: Current simulation week
+            is_chaos: Whether chaos conditions are active
+            is_cross_domain: Whether this decision requires cross-department knowledge
         """
+        # Get base accuracy from calibration (now supports all 4 conditions)
         expected_accuracy = self.performance_calibration.get_accuracy_for_week(
-            self.condition, week
+            self.condition,
+            week,
+            is_chaos=is_chaos,
+            is_cross_domain=is_cross_domain,
         )
 
-        # Apply chaos modifier (v3.0): higher modifier = more errors
+        # Apply additional chaos modifier (v3.0) if set externally
         accuracy_modifier = getattr(self, '_current_accuracy_modifier', 1.0)
         if accuracy_modifier > 1.0:
             # Convert accuracy to error rate, multiply, convert back
@@ -291,21 +375,34 @@ Format your response as JSON:
 
         return self._rng.random() < expected_accuracy
 
-    def _should_retrieve_succeed(self) -> bool:
+    def _should_retrieve_succeed(self, agent_id: str, required_context_ids: List[str]) -> bool:
         """
         Determine if context retrieval should succeed.
 
-        Uses retrieval noise config for WITH_BANK decisions.
+        For SILOED conditions, checks if required context is visible to the agent.
+        For GLOBAL_RAG and CONTEXT_BANK, all context is potentially retrievable.
         Applies chaos context ignore probability (v3.0) if set.
+
+        Args:
+            agent_id: The agent making the decision
+            required_context_ids: The context IDs needed for correct decision
         """
-        if not self.use_context_bank:
-            return False
+        # Check if agent can see the required context under current condition
+        visible_context = self.get_visible_context_for_agent(agent_id)
+
+        # For siloed conditions, if required context isn't visible, retrieval fails
+        if self.condition in [RunCondition.SILOED_TYPICAL, RunCondition.SILOED_ADVANCED]:
+            # Check if ANY required context is visible
+            visible_required = [ctx for ctx in required_context_ids if ctx in visible_context]
+            if not visible_required:
+                return False  # Can't retrieve what you can't see
 
         # Check chaos-based context ignore (v3.0)
         context_ignore_prob = getattr(self, '_current_context_ignore_prob', 0.0)
         if context_ignore_prob > 0 and self._rng.random() < context_ignore_prob:
             return False  # Agent ignores context due to drift
 
+        # Apply retrieval noise
         return self._rng.random() < self.retrieval_noise.retrieval_success_rate
 
     def _should_interpret_correctly(self) -> bool:
@@ -314,25 +411,47 @@ Format your response as JSON:
         """
         return self._rng.random() < self.retrieval_noise.interpretation_accuracy
 
-    def _simulate_response(self, user_prompt: str, week: int = 1) -> str:
+    def _simulate_response(
+        self,
+        user_prompt: str,
+        week: int = 1,
+        agent_id: str = "unknown_agent",
+        scenario: Optional["AgentScenario"] = None,
+        is_chaos: bool = False,
+    ) -> str:
         """
         Simulate an agent response when API is not available.
 
         Uses performance calibration to introduce realistic variance
-        in decision quality instead of deterministic 100%/0% splits.
+        in decision quality based on condition, week, chaos state, and
+        cross-domain requirements.
 
         Args:
             user_prompt: The scenario prompt
             week: Current simulation week (for calibration)
+            agent_id: The agent making the decision
+            scenario: The scenario being processed (for cross-domain detection)
+            is_chaos: Whether chaos conditions are active
         """
-        # Determine if this decision should succeed
-        decision_succeeds = self._should_succeed(week)
+        # Determine if this is a cross-domain scenario
+        is_cross_domain = False
+        required_context_ids = []
+        if scenario:
+            is_cross_domain = self.is_cross_domain_scenario(scenario, agent_id)
+            required_context_ids = scenario.ground_truth_context_ids
 
-        # For WITH_BANK, also check retrieval and interpretation
-        if self.use_context_bank:
-            retrieval_succeeds = self._should_retrieve_succeed()
+        # Determine if this decision should succeed (uses 4-condition calibration)
+        decision_succeeds = self._should_succeed(
+            week,
+            is_chaos=is_chaos,
+            is_cross_domain=is_cross_domain,
+        )
+
+        # For conditions that retrieve context, also check retrieval and interpretation
+        if self.use_context_bank and required_context_ids:
+            retrieval_succeeds = self._should_retrieve_succeed(agent_id, required_context_ids)
             interpretation_correct = self._should_interpret_correctly()
-            # All three must succeed for correct WITH_BANK decision
+            # All three must succeed for correct decision with context
             decision_succeeds = retrieval_succeeds and interpretation_correct and decision_succeeds
 
         # Check for key scenario patterns
@@ -396,6 +515,25 @@ Format your response as JSON:
                     "context_considered": []
                 })
 
+        elif "hartwell" in user_prompt.lower() and "collection" in user_prompt.lower():
+            # Cross-domain: Billing agent needs Business Development knowledge
+            if decision_succeeds:
+                return json.dumps({
+                    "action": "Hold escalation and notify Marcus Webb directly. Strategic relationship.",
+                    "reasoning": "Context CTX-003 indicates Hartwell Group has a strategic relationship with Marcus Webb. Direct escalation could damage the relationship.",
+                    "confidence": 0.88,
+                    "concerns": ["Strategic account - coordinate with relationship owner"],
+                    "context_considered": ["CTX-003"] if self.use_context_bank else []
+                })
+            else:
+                return json.dumps({
+                    "action": "Proceed with standard collection escalation at 45 days",
+                    "reasoning": "Following standard collections process for overdue accounts.",
+                    "confidence": 0.80,
+                    "concerns": [],
+                    "context_considered": []
+                })
+
         elif "hartwell" in user_prompt.lower():
             if decision_succeeds:
                 # Correct decision: proceed with override
@@ -413,6 +551,44 @@ Format your response as JSON:
                     "reasoning": "Margin analysis shows below 25% threshold. Standard criteria not met.",
                     "confidence": 0.75,
                     "concerns": ["Margin below threshold"],
+                    "context_considered": []
+                })
+
+        elif "meridian" in user_prompt.lower() and ("billing" in user_prompt.lower() or "invoice" in user_prompt.lower()):
+            # Cross-domain: Billing agent needs Client Engagements knowledge
+            if decision_succeeds:
+                return json.dumps({
+                    "action": "Check scope documentation before escalating. Financial services clients need 24hr docs.",
+                    "reasoning": "Context CTX-002 indicates financial services clients frequently expand scope verbally. Must verify documentation exists before escalating billing dispute.",
+                    "confidence": 0.87,
+                    "concerns": ["Scope documentation may be incomplete", "Financial services scope creep risk"],
+                    "context_considered": ["CTX-002"] if self.use_context_bank else []
+                })
+            else:
+                return json.dumps({
+                    "action": "Escalate to collections for non-payment",
+                    "reasoning": "Invoice is past due and client is disputing. Standard escalation process.",
+                    "confidence": 0.78,
+                    "concerns": [],
+                    "context_considered": []
+                })
+
+        elif "brightline" in user_prompt.lower() and "staffing" in user_prompt.lower():
+            # Cross-domain: Staffing agent needs Vendor knowledge
+            if decision_succeeds:
+                return json.dumps({
+                    "action": "Flag Brightline relationship for extra oversight due to historical overbilling.",
+                    "reasoning": "Context CTX-001 indicates Brightline Consulting has overbilling history. PM assignment should include active cost monitoring.",
+                    "confidence": 0.89,
+                    "concerns": ["Historical 40% overbilling incident", "Recommend dedicated financial oversight"],
+                    "context_considered": ["CTX-001"] if self.use_context_bank else []
+                })
+            else:
+                return json.dumps({
+                    "action": "Proceed with standard subcontractor assignment",
+                    "reasoning": "Brightline is on approved vendor list. Assigning PM per standard process.",
+                    "confidence": 0.82,
+                    "concerns": [],
                     "context_considered": []
                 })
 
@@ -584,8 +760,16 @@ Format your response as JSON:
         system_prompt = self._build_system_prompt(agent_config, week, retrieved_context)
         user_prompt = self._build_user_prompt(scenario)
 
-        # Call API or simulate
-        response_text, tokens = self._call_claude_api(system_prompt, user_prompt, week)
+        # Determine if we're in chaos conditions based on accuracy modifier
+        is_chaos = accuracy_modifier > 1.0 or context_ignore_probability > 0.0
+
+        # Call API or simulate (passes condition-aware parameters)
+        response_text, tokens = self._call_claude_api(
+            system_prompt, user_prompt, week,
+            agent_id=agent_id,
+            scenario=scenario,
+            is_chaos=is_chaos,
+        )
 
         # Parse response
         parsed = self._parse_agent_response(response_text)
@@ -741,4 +925,81 @@ HARTWELL_PROPOSAL_SCENARIO = AgentScenario(
     ground_truth_context_ids=["CTX-003"],
     correct_action="proceed with go decision due to Marcus Webb override",
     incorrect_action="recommend no-go due to margin below threshold",
+)
+
+# =============================================================================
+# CROSS-DOMAIN SCENARIOS (require multi-department knowledge)
+# =============================================================================
+# These scenarios demonstrate where siloed approaches fail most dramatically.
+# An agent in one department needs context owned by another department.
+
+MERIDIAN_BILLING_SCENARIO = AgentScenario(
+    scenario_id="SCEN-MERIDIAN-CROSS-001",
+    scenario_type="billing_escalation",
+    workflow_id="W5",
+    description=(
+        "Meridian Financial invoice #7891 is 35 days past due. "
+        "Client claims the invoiced amount exceeds the agreed scope. "
+        "Please recommend next steps for resolving this dispute."
+    ),
+    entities={
+        "client": "meridian_financial",
+        "client_name": "Meridian Financial",
+        "invoice_number": "7891",
+        "days_overdue": "35",
+        "amount": "$95,000",
+        "dispute_reason": "scope_disagreement",
+    },
+    # Requires CTX-002 (Client Engagements knowledge about scope documentation)
+    # But billing_agent is in Finance & Billing, not Client Engagements
+    ground_truth_context_ids=["CTX-002"],
+    correct_action="check scope documentation before escalating, financial services clients need 24hr docs",
+    incorrect_action="escalate to collections for non-payment",
+)
+
+BRIGHTLINE_STAFFING_SCENARIO = AgentScenario(
+    scenario_id="SCEN-BRIGHTLINE-CROSS-001",
+    scenario_type="subcontractor_assignment",
+    workflow_id="W3",
+    description=(
+        "A staffing request has been submitted for a federal compliance engagement. "
+        "Brightline Consulting is the proposed subcontractor, and we need to assign "
+        "an internal PM to manage the relationship. Please recommend the assignment."
+    ),
+    entities={
+        "client": "federal_client_xyz",
+        "client_name": "Federal Client XYZ",
+        "subcontractor": "brightline_consulting",
+        "subcontractor_name": "Brightline Consulting",
+        "role_needed": "Project Manager",
+        "engagement_type": "federal_compliance",
+    },
+    # Requires CTX-001 (Vendor & Procurement knowledge about Brightline issues)
+    # But staffing_agent is in Resource Management, not Vendor & Procurement
+    ground_truth_context_ids=["CTX-001"],
+    correct_action="flag Brightline relationship for extra oversight, historical overbilling",
+    incorrect_action="proceed with standard subcontractor assignment",
+)
+
+HARTWELL_COLLECTION_SCENARIO = AgentScenario(
+    scenario_id="SCEN-HARTWELL-CROSS-001",
+    scenario_type="payment_collection",
+    workflow_id="W5",
+    description=(
+        "Hartwell Group has an outstanding balance of $125,000 that is 40 days past due. "
+        "Standard collection process calls for escalation at 45 days. "
+        "Please recommend next steps."
+    ),
+    entities={
+        "client": "hartwell_group",
+        "client_name": "Hartwell Group",
+        "outstanding_amount": "$125,000",
+        "days_overdue": "40",
+        "relationship_tenure": "5 years",
+    },
+    # Requires CTX-003 (Business Development knowledge about Marcus Webb relationship)
+    # But billing_agent is in Finance & Billing, not Business Development
+    ground_truth_context_ids=["CTX-003"],
+    correct_action="hold escalation and notify Marcus Webb directly, strategic relationship",
+    incorrect_action="proceed with standard collection escalation at 45 days",
 )

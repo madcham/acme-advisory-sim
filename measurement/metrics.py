@@ -93,6 +93,11 @@ class SimulationMetrics:
     total_validations_propagated: int = 0
     total_decay_adjustments: int = 0
 
+    # Enhanced synthesis metrics
+    crystallized_entities: List[str] = field(default_factory=list)  # entities that were crystallized
+    confidence_boosts_history: List[Dict[str, float]] = field(default_factory=list)  # per week
+    synthesis_objects_created: List[str] = field(default_factory=list)  # IDs of synthesized objects
+
     # Chaos metrics (v3.0)
     chaos_metrics: Optional[ChaosImpactMetrics] = None
 
@@ -129,6 +134,24 @@ class SimulationMetrics:
         """Calculate overall Institutional Memory Utilization."""
         return statistics.mean(self.institutional_memory_utilization) if self.institutional_memory_utilization else 0.0
 
+    def average_synthesis_score(self) -> float:
+        """Calculate average synthesis intelligence score."""
+        non_zero = [s for s in self.synthesis_intelligence_scores if s > 0]
+        return statistics.mean(non_zero) if non_zero else 0.0
+
+    def synthesis_summary(self) -> Dict[str, Any]:
+        """Generate a summary of synthesis activity."""
+        return {
+            "total_patterns_crystallized": self.total_patterns_crystallized,
+            "total_validations_propagated": self.total_validations_propagated,
+            "total_decay_adjustments": self.total_decay_adjustments,
+            "average_intelligence_score": self.average_synthesis_score(),
+            "peak_intelligence_score": max(self.synthesis_intelligence_scores) if self.synthesis_intelligence_scores else 0.0,
+            "active_weeks": len([s for s in self.synthesis_intelligence_scores if s > 0]),
+            "crystallized_entities": self.crystallized_entities,
+            "objects_created": len(self.synthesis_objects_created),
+        }
+
     def total_oer(self) -> int:
         """Calculate total Organizational Error Rate."""
         return sum(self.organizational_error_rates)
@@ -153,11 +176,10 @@ class SimulationMetrics:
                 "contradiction_counts": self.contradiction_counts,
             },
             "synthesis_metrics": {
-                "synthesis_results": self.synthesis_results,
-                "intelligence_scores": self.synthesis_intelligence_scores,
-                "total_patterns_crystallized": self.total_patterns_crystallized,
-                "total_validations_propagated": self.total_validations_propagated,
-                "total_decay_adjustments": self.total_decay_adjustments,
+                "summary": self.synthesis_summary(),
+                "weekly_scores": self.synthesis_intelligence_scores,
+                "weekly_results": self.synthesis_results,
+                "confidence_boosts_history": self.confidence_boosts_history,
             },
             "chaos_metrics": self.chaos_metrics.to_dict() if self.chaos_metrics else None,
             "summary": {
@@ -311,6 +333,9 @@ class MetricsCalculator:
         total_crystals = 0
         total_validations = 0
         total_decay_adj = 0
+        crystallized_entities = []
+        confidence_boosts_history = []
+        synthesis_objects_created = []
 
         # Chaos tracking (v3.0)
         chaos_metrics = ChaosImpactMetrics()
@@ -364,9 +389,20 @@ class MetricsCalculator:
                 total_crystals += sr.patterns_crystallized
                 total_validations += sr.validations_propagated
                 total_decay_adj += sr.decay_rates_adjusted
+
+                # Track enhanced synthesis metrics
+                synthesis_objects_created.extend(sr.new_objects_created)
+                confidence_boosts_history.append(sr.confidence_boosts)
+
+                # Extract crystallized entities from new objects
+                for obj_id in sr.new_objects_created:
+                    # Entity is typically embedded in the ID or structured data
+                    # For now, just track the object IDs
+                    pass
             else:
                 synthesis_results.append(None)
                 synthesis_scores.append(0.0)
+                confidence_boosts_history.append({})
 
             # Chaos tracking (v3.0)
             if snapshot.chaos_impacts:
@@ -437,6 +473,9 @@ class MetricsCalculator:
             total_patterns_crystallized=total_crystals,
             total_validations_propagated=total_validations,
             total_decay_adjustments=total_decay_adj,
+            crystallized_entities=crystallized_entities,
+            confidence_boosts_history=confidence_boosts_history,
+            synthesis_objects_created=synthesis_objects_created,
             chaos_metrics=chaos_metrics,
             total_decisions=total_decisions,
             correct_decisions=correct_decisions,

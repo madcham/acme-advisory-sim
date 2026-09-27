@@ -1,10 +1,38 @@
 """
 Active Intelligence Synthesis Layer.
 
-Performs three key operations on the Context Bank:
+THIS IS THE KEY DIFFERENTIATOR / MOAT OF THE CONTEXT BANK.
+
+Why RAG Alone Is Not Enough:
+- RAG retrieves existing documents verbatim
+- RAG cannot recognize that 3 people said similar things about the same entity
+- RAG cannot conclude "this is organizational truth, not one person's opinion"
+
+What Synthesis Does:
+- Detects patterns across multiple context objects (same entity, different sources)
+- Crystallizes patterns into high-confidence "organizational truths"
+- Propagates validation signals through provenance chains
+- Adapts decay rates based on actual usage and validation
+
+Example:
+    Week 1: David says "Brightline overbilled us" (0.7 confidence)
+    Week 3: Sarah says "Brightline has pricing issues" (0.75 confidence)
+    Week 5: Marcus says "Always verify Brightline invoices" (0.8 confidence)
+    Week 6: Synthesis runs →
+        Creates: "Brightline requires extra billing scrutiny" (0.92 confidence)
+        Links provenance to all 3 sources
+        Marks as institutional_memory grade
+
+Three Key Operations:
 1. Pattern Crystallization - Promote recurring learnings to high-confidence context
 2. Validation Propagation - Propagate validation signals through provenance chains
 3. Adaptive Decay - Adjust decay rates based on retrieval/validation frequency
+
+Why Competitors Can't Easily Copy:
+- Requires entity resolution across informal mentions
+- Requires cross-source correlation with credibility weighting
+- Requires temporal awareness (3 mentions in 1 week vs 6 months)
+- Requires domain understanding to generate meaningful prose
 
 This module transforms raw context accumulation into active organizational intelligence.
 """

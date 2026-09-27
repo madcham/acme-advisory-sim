@@ -1,0 +1,285 @@
+# =============================================================================
+# AGENT SCENARIOS CONFIGURATION
+# =============================================================================
+# This file defines all test scenarios for the Context Bank simulation.
+# Each scenario tests whether agents can use institutional knowledge correctly.
+#
+# Scenario Structure:
+#   scenario_id: Unique identifier
+#   scenario_type: Category (vendor_sow, staffing, payment, go_no_go, etc.)
+#   workflow_id: Which workflow (W1-W5) this belongs to
+#   description: Human-readable scenario description
+#   entities: Key-value pairs of entities involved
+#   ground_truth_context_ids: Context IDs needed for correct decision
+#   correct_action: What the agent should do with context
+#   incorrect_action: What the agent would do without context
+#   is_cross_domain: Whether this requires knowledge from another department
+#   injection_weeks: Which simulation weeks to inject this scenario
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# WITHIN-DEPARTMENT SCENARIOS
+# These test basic context retrieval within an agent's own domain
+# -----------------------------------------------------------------------------
+
+vendor_scenarios:
+  - scenario_id: "SCEN-BRIGHTLINE-001"
+    scenario_type: "vendor_sow"
+    workflow_id: "W4"
+    description: >
+      A request has been received to issue a Statement of Work (SOW) to
+      Brightline Consulting for a new financial services engagement.
+      The engagement manager has submitted the standard SOW request form.
+      Please determine the appropriate next steps for processing this SOW.
+    entities:
+      vendor: "brightline_consulting"
+      vendor_name: "Brightline Consulting"
+      engagement_type: "financial_services"
+      sow_value: "$150,000"
+      requestor: "engagement_manager"
+    ground_truth_context_ids:
+      - "CTX-001"
+    correct_action: "route through secondary approval from David Okafor"
+    incorrect_action: "issue SOW directly to vendor"
+    is_cross_domain: false
+    injection_weeks: [3, 7, 11]
+
+staffing_scenarios:
+  - scenario_id: "SCEN-JORDAN-001"
+    scenario_type: "staffing_assignment"
+    workflow_id: "W3"
+    description: >
+      A staffing request has been submitted for the Nexum Partners engagement.
+      Jordan Park has been identified as a skills match with current availability.
+      Please recommend whether to proceed with this assignment.
+    entities:
+      client: "nexum_partners"
+      client_name: "Nexum Partners"
+      candidate: "jordan_park"
+      candidate_name: "Jordan Park"
+      skills_match: "high"
+      availability: "available"
+    ground_truth_context_ids:
+      - "CTX-010"
+    correct_action: "do not assign Jordan Park, find alternative"
+    incorrect_action: "assign Jordan Park based on skills match"
+    is_cross_domain: false
+    injection_weeks: [6, 11]
+
+payment_scenarios:
+  - scenario_id: "SCEN-TERRALOGIC-001"
+    scenario_type: "payment_escalation"
+    workflow_id: "W5"
+    description: >
+      TerraLogic invoice #4523 is now 48 days past due.
+      Standard process indicates escalation to collections at 45 days.
+      Please recommend next steps for this overdue payment.
+    entities:
+      client: "terralogic"
+      client_name: "TerraLogic"
+      invoice_number: "4523"
+      days_overdue: "48"
+      amount: "$75,000"
+    ground_truth_context_ids:
+      - "CTX-006"
+    correct_action: "do not escalate until day 65"
+    incorrect_action: "escalate to collections"
+    is_cross_domain: false
+    injection_weeks: [5, 10]
+
+proposal_scenarios:
+  - scenario_id: "SCEN-HARTWELL-001"
+    scenario_type: "go_no_go"
+    workflow_id: "W2"
+    description: >
+      A new opportunity has been identified with Hartwell Group.
+      Initial margin analysis shows the engagement at 18% margin,
+      below the 25% standard threshold. Please provide go/no-go recommendation.
+    entities:
+      client: "hartwell_group"
+      client_name: "Hartwell Group"
+      opportunity_value: "$400,000"
+      calculated_margin: "18%"
+      standard_threshold: "25%"
+    ground_truth_context_ids:
+      - "CTX-003"
+    correct_action: "proceed with go decision due to Marcus Webb override"
+    incorrect_action: "recommend no-go due to margin below threshold"
+    is_cross_domain: false
+    injection_weeks: [4, 8]
+
+# -----------------------------------------------------------------------------
+# CROSS-DOMAIN SCENARIOS
+# These test whether unified knowledge enables cross-department decisions
+# Siloed systems fail on these because the required context is in another dept
+# -----------------------------------------------------------------------------
+
+cross_domain_scenarios:
+  - scenario_id: "SCEN-MERIDIAN-CROSS-001"
+    scenario_type: "billing_escalation"
+    workflow_id: "W5"
+    description: >
+      Meridian Financial invoice #7891 is 35 days past due.
+      Client claims the invoiced amount exceeds the agreed scope.
+      Please recommend next steps for resolving this dispute.
+    entities:
+      client: "meridian_financial"
+      client_name: "Meridian Financial"
+      invoice_number: "7891"
+      days_overdue: "35"
+      amount: "$95,000"
+      dispute_reason: "scope_disagreement"
+    ground_truth_context_ids:
+      - "CTX-002"  # Client Engagements knowledge (different dept from Billing)
+    correct_action: "check scope documentation before escalating, financial services clients need 24hr docs"
+    incorrect_action: "escalate to collections for non-payment"
+    is_cross_domain: true
+    required_from_department: "Client Engagements"
+    agent_department: "Finance & Billing"
+    injection_weeks: [4, 9]
+
+  - scenario_id: "SCEN-BRIGHTLINE-CROSS-001"
+    scenario_type: "subcontractor_assignment"
+    workflow_id: "W3"
+    description: >
+      A staffing request has been submitted for a federal compliance engagement.
+      Brightline Consulting is the proposed subcontractor, and we need to assign
+      an internal PM to manage the relationship. Please recommend the assignment.
+    entities:
+      client: "federal_client_xyz"
+      client_name: "Federal Client XYZ"
+      subcontractor: "brightline_consulting"
+      subcontractor_name: "Brightline Consulting"
+      role_needed: "Project Manager"
+      engagement_type: "federal_compliance"
+    ground_truth_context_ids:
+      - "CTX-001"  # Vendor knowledge (different dept from Staffing)
+    correct_action: "flag Brightline relationship for extra oversight, historical overbilling"
+    incorrect_action: "proceed with standard subcontractor assignment"
+    is_cross_domain: true
+    required_from_department: "Vendor & Procurement"
+    agent_department: "Resource Management"
+    injection_weeks: [5, 10]
+
+  - scenario_id: "SCEN-HARTWELL-CROSS-001"
+    scenario_type: "payment_collection"
+    workflow_id: "W5"
+    description: >
+      Hartwell Group has an outstanding balance of $125,000 that is 40 days past due.
+      Standard collection process calls for escalation at 45 days.
+      Please recommend next steps.
+    entities:
+      client: "hartwell_group"
+      client_name: "Hartwell Group"
+      outstanding_amount: "$125,000"
+      days_overdue: "40"
+      relationship_tenure: "5 years"
+    ground_truth_context_ids:
+      - "CTX-003"  # Business Development knowledge (different dept from Billing)
+    correct_action: "hold escalation and notify Marcus Webb directly, strategic relationship"
+    incorrect_action: "proceed with standard collection escalation at 45 days"
+    is_cross_domain: true
+    required_from_department: "Business Development"
+    agent_department: "Finance & Billing"
+    injection_weeks: [7, 12]
+
+# -----------------------------------------------------------------------------
+# CHAOS SCENARIOS
+# These are injected during chaos testing to verify resilience
+# -----------------------------------------------------------------------------
+
+chaos_scenarios:
+  - scenario_id: "SCEN-POST-DEPARTURE-001"
+    scenario_type: "knowledge_recovery"
+    workflow_id: "W1"
+    description: >
+      Elena Vasquez has departed the firm. A new financial services engagement
+      requires her methodology for regulatory compliance. Can we proceed?
+    entities:
+      departed_employee: "elena_vasquez"
+      engagement_type: "regulatory_compliance"
+      client_vertical: "financial_services"
+    ground_truth_context_ids:
+      - "CTX-008"  # Elena's methodology (should be captured)
+    correct_action: "retrieve Elena's documented methodology from context bank"
+    incorrect_action: "delay engagement while rebuilding methodology"
+    is_cross_domain: false
+    chaos_type: "knowledge_departure"
+    injection_weeks: []  # Injected dynamically during chaos
+
+  - scenario_id: "SCEN-POLICY-CONFLICT-001"
+    scenario_type: "policy_resolution"
+    workflow_id: "W4"
+    description: >
+      Two policies exist for vendor approval: one says standard process,
+      another says secondary approval required. Which applies?
+    entities:
+      vendor: "test_vendor"
+      policy_a: "standard_approval"
+      policy_b: "secondary_approval"
+    ground_truth_context_ids:
+      - "CTX-CONFLICT-001"
+      - "CTX-CONFLICT-002"
+    correct_action: "flag contradiction and escalate to policy owner"
+    incorrect_action: "choose one policy arbitrarily"
+    is_cross_domain: false
+    chaos_type: "policy_contradiction"
+    injection_weeks: []  # Injected dynamically during chaos
+
+# -----------------------------------------------------------------------------
+# SCENARIO RESPONSE TEMPLATES
+# Maps scenario patterns to expected response structure
+# -----------------------------------------------------------------------------
+
+response_templates:
+  vendor_sow:
+    correct_with_context:
+      action_pattern: "route|secondary approval|David Okafor"
+      reasoning_pattern: "CTX-001|overbill|pricing dispute|historical"
+      concerns:
+        - "Historical pricing dispute"
+    incorrect_without_context:
+      action_pattern: "issue|approve|proceed"
+      reasoning_pattern: "standard|approved vendor list"
+
+  staffing_assignment:
+    correct_with_context:
+      action_pattern: "do not assign|find alternative|conflict"
+      reasoning_pattern: "CTX-010|conflict|documented"
+    incorrect_without_context:
+      action_pattern: "assign|proceed|skills match"
+
+  payment_escalation:
+    correct_with_context:
+      action_pattern: "do not escalate|wait|day 65"
+      reasoning_pattern: "CTX-006|60-day|payment cycle"
+    incorrect_without_context:
+      action_pattern: "escalate|collections|45 days"
+
+  go_no_go:
+    correct_with_context:
+      action_pattern: "proceed|go|override"
+      reasoning_pattern: "CTX-003|Marcus Webb|relationship"
+    incorrect_without_context:
+      action_pattern: "no-go|reject|below threshold"
+
+  billing_escalation:
+    correct_with_context:
+      action_pattern: "check scope|documentation|24hr"
+      reasoning_pattern: "CTX-002|financial services|scope creep"
+    incorrect_without_context:
+      action_pattern: "escalate|collections"
+
+  subcontractor_assignment:
+    correct_with_context:
+      action_pattern: "flag|oversight|overbilling"
+      reasoning_pattern: "CTX-001|historical|40%"
+    incorrect_without_context:
+      action_pattern: "proceed|standard|approved"
+
+  payment_collection:
+    correct_with_context:
+      action_pattern: "hold|Marcus Webb|strategic"
+      reasoning_pattern: "CTX-003|relationship|partner"
+    incorrect_without_context:
+      action_pattern: "escalate|standard|45 days"
