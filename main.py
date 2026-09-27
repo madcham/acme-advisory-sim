@@ -91,9 +91,12 @@ def run_simulation(
         print("PHASE 1: Running WITHOUT Context Bank")
         print("-" * 50)
 
-    # Note: Chaos is only meaningful for WITH_BANK condition
-    # (tests resilience of institutional memory)
-    clock_without = SimulationClock(RunCondition.WITHOUT_BANK, seed=seed)
+    # Realism (chaos, BPI) applies to both arms so the comparison is fair
+    clock_without = SimulationClock(
+        RunCondition.WITHOUT_BANK,
+        realism_config=realism_config,
+        seed=seed,
+    )
     snapshots_without = []
 
     for week in range(1, weeks + 1):
@@ -124,8 +127,6 @@ def run_simulation(
     # ================================================================
     if verbose:
         print("PHASE 2: Running WITH Context Bank")
-        if realism_config and realism_config.chaos.enabled:
-            print("         (Chaos injection ENABLED)")
         print("-" * 50)
 
     clock_with = SimulationClock(
@@ -306,6 +307,7 @@ def run_4way_comparison(
     output_dir: str = "results",
     realism_config: Optional[RealismConfig] = None,
     seed: Optional[int] = None,
+    generate_reports: bool = True,
 ) -> Dict[str, Any]:
     """
     Run the complete 4-condition comparison simulation.
@@ -322,6 +324,8 @@ def run_4way_comparison(
         output_dir: Directory for output files
         realism_config: Optional realism configuration (v3.0)
         seed: Random seed for reproducibility (default: 42)
+        generate_reports: Write bank state, dashboards and summary (the dashboards
+            are ~9MB; multi-seed runs turn this off)
 
     Returns:
         Complete results dictionary with all 4 conditions
@@ -372,12 +376,10 @@ def run_4way_comparison(
             print(f"PHASE {i}: Running {display_name} ({name})")
             print("-" * 50)
 
-        # Only apply chaos to CONTEXT_BANK condition (to test resilience)
-        apply_realism = condition == RunCondition.CONTEXT_BANK
-
+        # Realism (chaos, BPI) applies to every condition so the comparison is fair
         clock = SimulationClock(
             condition,
-            realism_config=realism_config if apply_realism else None,
+            realism_config=realism_config,
             seed=seed,
         )
         snapshots = []
@@ -525,6 +527,9 @@ def run_4way_comparison(
 
     if verbose:
         print(f"  Saved: {decisions_file}")
+
+    if not generate_reports:
+        return results
 
     # Save bank state (only CONTEXT_BANK has a bank)
     bank_clock = condition_results["CONTEXT_BANK"]["clock"]

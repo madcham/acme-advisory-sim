@@ -455,7 +455,9 @@ Format your response as JSON:
             decision_succeeds = retrieval_succeeds and interpretation_correct and decision_succeeds
 
         # Check for key scenario patterns
-        if "brightline" in user_prompt.lower():
+        # Exclude the cross-domain Brightline staffing scenario, handled further down;
+        # otherwise it gets the vendor SOW responses and is scored on the wrong keywords.
+        if "brightline" in user_prompt.lower() and "staffing" not in user_prompt.lower():
             if decision_succeeds:
                 # Correct decision: route through secondary approval
                 return json.dumps({

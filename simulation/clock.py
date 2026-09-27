@@ -154,6 +154,7 @@ class SimulationClock:
         # Initialize generators with the specific condition (not just boolean)
         self.agent_generator = AgentExhaustGenerator(
             condition=condition,
+            seed=self.seed,
         )
         self.classifier = ContextClassifier(use_api=False)
 
@@ -312,19 +313,23 @@ class SimulationClock:
         # conditions. This would allow true controlled comparison rather than
         # approximately matched comparison.
 
-        # Process chaos events (v3.0)
+        # Process chaos events (v3.0). Applied under every condition so comparisons
+        # are fair: agent drift and workload surges hit all agents, while knowledge
+        # departure and policy contradictions only have objects to act on when a
+        # bank exists.
         chaos_impacts = []
-        if self.chaos_engine and self.use_bank:
+        if self.chaos_engine:
             chaos_events = self.chaos_engine.get_events_for_week(week)
-            if chaos_events and self.bank:
+            if chaos_events:
                 chaos_impacts, chaos_objects = self.chaos_engine.apply_events(
                     chaos_events,
-                    self.bank.get_all(),
+                    self.bank.get_all() if self.bank is not None else [],
                     week,
                 )
                 # Deposit chaos-generated objects (e.g., contradicting policies)
-                for obj in chaos_objects:
-                    self.bank.deposit(obj, check_contradictions=True)
+                if self.bank is not None:
+                    for obj in chaos_objects:
+                        self.bank.deposit(obj, check_contradictions=True)
 
         # Get event multiplier from chaos (workload surge)
         event_multiplier = 1.0
