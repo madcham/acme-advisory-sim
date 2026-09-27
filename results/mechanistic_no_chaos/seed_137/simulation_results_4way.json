@@ -1,0 +1,606 @@
+{
+  "metadata": {
+    "timestamp": "2026-09-27T18:21:39.391703+00:00",
+    "weeks_simulated": 12,
+    "random_seed": 137,
+    "realism_mode": "BPI Calibrated",
+    "comparison_type": "4-way",
+    "decision_mode": "mechanistic",
+    "mechanistic_config": {
+      "base_success_rate": 0.25,
+      "retrieval_recall": 0.85,
+      "interpretation_accuracy": 0.9,
+      "top_k": 5,
+      "bank_min_confidence": 0.3,
+      "use_confidence": true,
+      "use_validation": true,
+      "use_supersession": true
+    },
+    "realism_config": {
+      "bpi_calibration": {
+        "enabled": true,
+        "dataset": "BPI2012",
+        "use_timing": true
+      },
+      "chaos": {
+        "enabled": false,
+        "knowledge_departure_weeks": [
+          4,
+          8
+        ],
+        "policy_contradiction_weeks": [
+          5,
+          9
+        ],
+        "agent_drift_weeks": [
+          6,
+          10
+        ],
+        "workload_surge_weeks": [
+          3,
+          7
+        ]
+      },
+      "noise_level": 0.1
+    }
+  },
+  "condition_summaries": {
+    "SILOED_TYPICAL": {
+      "condition": "SILOED_TYPICAL",
+      "weeks_run": 12,
+      "total_decisions": 15,
+      "correct_decisions": 4,
+      "incorrect_decisions": 11,
+      "overall_accuracy": 26.666666666666668,
+      "final_bank_size": 0,
+      "final_avg_confidence": 0,
+      "total_workflow_events": 1560,
+      "total_behavioral_events": 1800
+    },
+    "SILOED_ADVANCED": {
+      "condition": "SILOED_ADVANCED",
+      "weeks_run": 12,
+      "total_decisions": 15,
+      "correct_decisions": 10,
+      "incorrect_decisions": 5,
+      "overall_accuracy": 66.66666666666666,
+      "final_bank_size": 63,
+      "final_avg_confidence": 0.3488921464990283,
+      "total_workflow_events": 1560,
+      "total_behavioral_events": 1800
+    },
+    "GLOBAL_RAG": {
+      "condition": "GLOBAL_RAG",
+      "weeks_run": 12,
+      "total_decisions": 15,
+      "correct_decisions": 13,
+      "incorrect_decisions": 2,
+      "overall_accuracy": 86.66666666666667,
+      "final_bank_size": 63,
+      "final_avg_confidence": 0.35073234844695983,
+      "total_workflow_events": 1560,
+      "total_behavioral_events": 1800
+    },
+    "CONTEXT_BANK": {
+      "condition": "CONTEXT_BANK",
+      "weeks_run": 12,
+      "total_decisions": 15,
+      "correct_decisions": 12,
+      "incorrect_decisions": 3,
+      "overall_accuracy": 80.0,
+      "final_bank_size": 74,
+      "final_avg_confidence": 0.4474667703239586,
+      "total_workflow_events": 1560,
+      "total_behavioral_events": 1800
+    }
+  },
+  "accuracies": {
+    "SILOED_TYPICAL": 26.666666666666668,
+    "SILOED_ADVANCED": 66.66666666666666,
+    "GLOBAL_RAG": 86.66666666666667,
+    "CONTEXT_BANK": 80.0
+  },
+  "improvements_over_baseline": {
+    "SILOED_ADVANCED": 39.999999999999986,
+    "GLOBAL_RAG": 60.0,
+    "CONTEXT_BANK": 53.33333333333333
+  },
+  "main_comparison": {
+    "without_bank": {
+      "primary_metrics": {
+        "decision_quality_scores": {
+          "vendor_agent": [
+            100.0,
+            0.0,
+            0.0
+          ],
+          "proposal_agent": [
+            0.0,
+            0.0
+          ],
+          "billing_agent": [
+            0.0,
+            100.0,
+            0.0,
+            0.0,
+            0.0,
+            100.0
+          ],
+          "staffing_agent": [
+            0.0,
+            0.0,
+            100.0,
+            0.0
+          ]
+        },
+        "weekly_dqs": [
+          0.0,
+          0.0,
+          100.0,
+          0.0,
+          50.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          50.0,
+          0.0,
+          100.0
+        ],
+        "overall_dqs": 26.666666666666668,
+        "exception_handling_rates": [
+          0.0,
+          0.0,
+          100.0,
+          0.0,
+          50.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          50.0,
+          0.0,
+          100.0
+        ],
+        "overall_ehr": 25.0,
+        "institutional_memory_utilization": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "overall_imu": 0,
+        "organizational_error_rates": [
+          0,
+          0,
+          0,
+          2,
+          1,
+          1,
+          2,
+          1,
+          1,
+          1,
+          2,
+          0
+        ],
+        "total_oer": 11
+      },
+      "secondary_metrics": {
+        "context_object_growth": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "avg_confidence_history": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "contradiction_counts": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "synthesis_metrics": {
+        "summary": {
+          "total_patterns_crystallized": 0,
+          "total_validations_propagated": 0,
+          "total_decay_adjustments": 0,
+          "average_intelligence_score": 0.0,
+          "peak_intelligence_score": 0.0,
+          "active_weeks": 0,
+          "crystallized_entities": [],
+          "objects_created": 0
+        },
+        "weekly_scores": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "weekly_results": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "confidence_boosts_history": [
+          {},
+          {},
+          {},
+          {},
+          {},
+          {},
+          {},
+          {},
+          {},
+          {},
+          {},
+          {}
+        ]
+      },
+      "chaos_metrics": {
+        "event_counts": {
+          "knowledge_departures": 0,
+          "policy_contradictions": 0,
+          "agent_drifts": 0,
+          "workload_surges": 0,
+          "total": 0
+        },
+        "impact": {
+          "objects_degraded": 0,
+          "objects_contradicted": 0,
+          "chaos_objects_created": 0
+        },
+        "events_by_week": {},
+        "resilience": {
+          "accuracy_during_chaos": 0.0,
+          "accuracy_during_normal": 26.666666666666668,
+          "resilience_score": 0.0
+        }
+      },
+      "summary": {
+        "total_decisions": 15,
+        "correct_decisions": 4,
+        "incorrect_decisions": 11,
+        "accuracy": 26.666666666666668,
+        "final_bank_size": 0,
+        "final_avg_confidence": 0.0
+      }
+    },
+    "with_bank": {
+      "primary_metrics": {
+        "decision_quality_scores": {
+          "vendor_agent": [
+            0.0,
+            100.0,
+            100.0
+          ],
+          "proposal_agent": [
+            100.0,
+            0.0
+          ],
+          "billing_agent": [
+            100.0,
+            100.0,
+            100.0,
+            100.0,
+            100.0,
+            0.0
+          ],
+          "staffing_agent": [
+            100.0,
+            100.0,
+            100.0,
+            100.0
+          ]
+        },
+        "weekly_dqs": [
+          0.0,
+          0.0,
+          0.0,
+          100.0,
+          100.0,
+          100.0,
+          100.0,
+          0.0,
+          100.0,
+          100.0,
+          100.0,
+          0.0
+        ],
+        "overall_dqs": 80.0,
+        "exception_handling_rates": [
+          0.0,
+          0.0,
+          0.0,
+          100.0,
+          100.0,
+          100.0,
+          100.0,
+          0.0,
+          100.0,
+          100.0,
+          100.0,
+          0.0
+        ],
+        "overall_ehr": 58.333333333333336,
+        "institutional_memory_utilization": [
+          0,
+          0,
+          300.0,
+          200.0,
+          200.0,
+          200.0,
+          400.0,
+          500.0,
+          200.0,
+          500.0,
+          450.0,
+          500.0
+        ],
+        "overall_imu": 287.5,
+        "organizational_error_rates": [
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          1
+        ],
+        "total_oer": 3
+      },
+      "secondary_metrics": {
+        "context_object_growth": [
+          15,
+          18,
+          25,
+          30,
+          35,
+          45,
+          50,
+          54,
+          60,
+          65,
+          70,
+          74
+        ],
+        "avg_confidence_history": [
+          0.7688533333333333,
+          0.7291566666666668,
+          0.6956518869333334,
+          0.6556026402444444,
+          0.6149518467794665,
+          0.6148857376885037,
+          0.5826482998034774,
+          0.5510028116890604,
+          0.5418026847092462,
+          0.5166936397565433,
+          0.49352883953225807,
+          0.4474667703239586
+        ],
+        "contradiction_counts": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "synthesis_metrics": {
+        "summary": {
+          "total_patterns_crystallized": 11,
+          "total_validations_propagated": 0,
+          "total_decay_adjustments": 14,
+          "average_intelligence_score": 0.28,
+          "peak_intelligence_score": 0.42,
+          "active_weeks": 4,
+          "crystallized_entities": [],
+          "objects_created": 11
+        },
+        "weekly_scores": [
+          0.0,
+          0.0,
+          0.18,
+          0.0,
+          0.0,
+          0.42,
+          0.0,
+          0.0,
+          0.32,
+          0.0,
+          0.0,
+          0.2
+        ],
+        "weekly_results": [
+          null,
+          null,
+          {
+            "patterns_crystallized": 3,
+            "validations_propagated": 0,
+            "decay_rates_adjusted": 0,
+            "new_objects_created": [
+              "CTX-FBA7DB19",
+              "CTX-97E79035",
+              "CTX-6442EF2A"
+            ],
+            "objects_updated": [],
+            "confidence_boosts": {}
+          },
+          null,
+          null,
+          {
+            "patterns_crystallized": 6,
+            "validations_propagated": 0,
+            "decay_rates_adjusted": 3,
+            "new_objects_created": [
+              "CTX-C84BB288",
+              "CTX-4A73CB7B",
+              "CTX-F90B0343",
+              "CTX-3D059E8D",
+              "CTX-9757E450",
+              "CTX-2440E7EF"
+            ],
+            "objects_updated": [
+              "CTX-001",
+              "CTX-002",
+              "CTX-006"
+            ],
+            "confidence_boosts": {}
+          },
+          null,
+          null,
+          {
+            "patterns_crystallized": 2,
+            "validations_propagated": 0,
+            "decay_rates_adjusted": 5,
+            "new_objects_created": [
+              "CTX-E3BDA1EA",
+              "CTX-81A4A04F"
+            ],
+            "objects_updated": [
+              "CTX-001",
+              "CTX-002",
+              "CTX-006",
+              "CTX-1594E32F",
+              "CTX-3238ED19"
+            ],
+            "confidence_boosts": {}
+          },
+          null,
+          null,
+          {
+            "patterns_crystallized": 0,
+            "validations_propagated": 0,
+            "decay_rates_adjusted": 6,
+            "new_objects_created": [],
+            "objects_updated": [
+              "CTX-001",
+              "CTX-002",
+              "CTX-006",
+              "CTX-1594E32F",
+              "CTX-A33B810A",
+              "CTX-3238ED19"
+            ],
+            "confidence_boosts": {}
+          }
+        ],
+        "confidence_boosts_history": [
+          {},
+          {},
+          {},
+          {},
+          {},
+          {},
+          {},
+          {},
+          {},
+          {},
+          {},
+          {}
+        ]
+      },
+      "chaos_metrics": {
+        "event_counts": {
+          "knowledge_departures": 0,
+          "policy_contradictions": 0,
+          "agent_drifts": 0,
+          "workload_surges": 0,
+          "total": 0
+        },
+        "impact": {
+          "objects_degraded": 0,
+          "objects_contradicted": 0,
+          "chaos_objects_created": 0
+        },
+        "events_by_week": {},
+        "resilience": {
+          "accuracy_during_chaos": 0.0,
+          "accuracy_during_normal": 80.0,
+          "resilience_score": 0.0
+        }
+      },
+      "summary": {
+        "total_decisions": 15,
+        "correct_decisions": 12,
+        "incorrect_decisions": 3,
+        "accuracy": 80.0,
+        "final_bank_size": 74,
+        "final_avg_confidence": 0.4474667703239586
+      }
+    },
+    "comparison": {
+      "dqs_improvement": 53.33333333333333,
+      "ehr_improvement": 33.333333333333336,
+      "imu_improvement": 287.5,
+      "errors_avoided": 8,
+      "accuracy_improvement": 53.33333333333333
+    }
+  }
+}

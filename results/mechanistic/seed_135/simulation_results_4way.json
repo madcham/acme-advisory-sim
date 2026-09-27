@@ -1,0 +1,1519 @@
+{
+  "metadata": {
+    "timestamp": "2026-09-27T18:21:20.547156+00:00",
+    "weeks_simulated": 12,
+    "random_seed": 135,
+    "realism_mode": "Full Realism (BPI + Chaos)",
+    "comparison_type": "4-way",
+    "decision_mode": "mechanistic",
+    "mechanistic_config": {
+      "base_success_rate": 0.25,
+      "retrieval_recall": 0.85,
+      "interpretation_accuracy": 0.9,
+      "top_k": 5,
+      "bank_min_confidence": 0.3,
+      "use_confidence": true,
+      "use_validation": true,
+      "use_supersession": true
+    },
+    "realism_config": {
+      "bpi_calibration": {
+        "enabled": true,
+        "dataset": "BPI2012",
+        "use_timing": true
+      },
+      "chaos": {
+        "enabled": true,
+        "knowledge_departure_weeks": [
+          4,
+          8
+        ],
+        "policy_contradiction_weeks": [
+          5,
+          9
+        ],
+        "agent_drift_weeks": [
+          6,
+          10
+        ],
+        "workload_surge_weeks": [
+          3,
+          7
+        ]
+      },
+      "noise_level": 0.1
+    }
+  },
+  "condition_summaries": {
+    "SILOED_TYPICAL": {
+      "condition": "SILOED_TYPICAL",
+      "weeks_run": 12,
+      "total_decisions": 15,
+      "correct_decisions": 2,
+      "incorrect_decisions": 13,
+      "overall_accuracy": 13.333333333333334,
+      "final_bank_size": 0,
+      "final_avg_confidence": 0,
+      "total_workflow_events": 1560,
+      "total_behavioral_events": 2250,
+      "chaos_summary": {
+        "total_events": 12,
+        "knowledge_departures": 2,
+        "agent_drifts": 2,
+        "total_objects_degraded": 0,
+        "total_objects_contradicted": 2,
+        "total_objects_created": 2,
+        "impacts": [
+          {
+            "event": {
+              "week": 3,
+              "chaos_type": "workload_surge",
+              "target": null,
+              "severity": 1.5,
+              "description": "Workload surge: 2.5x normal volume"
+            },
+            "objects_degraded": [],
+            "objects_contradicted": [],
+            "objects_created": [],
+            "accuracy_modifier": 0.15,
+            "confidence_modifier": 0.0,
+            "event_multiplier": 2.5,
+            "impact_description": "Workload surge: 2.5x volume"
+          },
+          {
+            "event": {
+              "week": 4,
+              "chaos_type": "knowledge_departure",
+              "target": "david_okafor",
+              "severity": 0.7,
+              "description": "david_okafor has departed the organization"
+            },
+            "objects_degraded": [],
+            "objects_contradicted": [],
+            "objects_created": [],
+            "accuracy_modifier": 0.0,
+            "confidence_modifier": 2.0,
+            "event_multiplier": 1.0,
+            "impact_description": "Staff david_okafor departed, degrading associated context"
+          },
+          {
+            "event": {
+              "week": 4,
+              "chaos_type": "knowledge_departure",
+              "target": "marcus_webb",
+              "severity": 0.7,
+              "description": "marcus_webb has departed the organization"
+            },
+            "objects_degraded": [],
+            "objects_contradicted": [],
+            "objects_created": [],
+            "accuracy_modifier": 0.0,
+            "confidence_modifier": 2.0,
+            "event_multiplier": 1.0,
+            "impact_description": "Staff marcus_webb departed, degrading associated context"
+          },
+          {
+            "event": {
+              "week": 5,
+              "chaos_type": "policy_contradiction",
+              "target": "CTX-001",
+              "severity": 0.6,
+              "description": "Brightline Consulting has been cleared for standard SOW process after 2025 audit."
+            },
+            "objects_degraded": [],
+            "objects_contradicted": [
+              "CTX-001"
+            ],
+            "objects_created": [
+              "CTX-4331BFDE"
+            ],
+            "accuracy_modifier": 0.0,
+            "confidence_modifier": 0.0,
+            "event_multiplier": 1.0,
+            "impact_description": "Contradicting policy introduced for CTX-001"
+          },
+          {
+            "event": {
+              "week": 6,
+              "chaos_type": "agent_drift",
+              "target": "vendor_agent",
+              "severity": 0.5,
+              "description": "vendor_agent performance degradation begins"
+            },
+            "objects_degraded": [],
+            "objects_contradicted": [],
+            "objects_created": [],
+            "accuracy_modifier": 0.5,
+            "confidence_modifier": 0.0,
+            "event_multiplier": 1.0,
+            "impact_description": "Agent vendor_agent performance degrading"
+          },
+          {
+            "event": {
+              "week": 6,
+              "chaos_type": "agent_drift",
+              "target": "billing_agent",
+              "severity": 0.5,
+              "description": "billing_agent performance degradation begins"
+            },
+            "objects_degraded": [],
+            "objects_contradicted": [],
+            "objects_created": [],
+            "accuracy_modifier": 0.5,
+            "confidence_modifier": 0.0,
+            "event_multiplier": 1.0,
+            "impact_description": "Agent billing_agent performance degrading"
+          },
+          {
+            "event": {
+              "week": 7,
+              "chaos_type": "workload_surge",
+              "target": null,
+              "severity": 1.5,
+              "description": "Workload surge: 2.5x normal volume"
+            },
+            "objects_degraded": [],
+            "objects_contradicted": [],
+            "objects_created": [],
+            "accuracy_modifier": 0.15,
+            "confidence_modifier": 0.0,
+            "event_multiplier": 2.5,
+            "impact_description": "Workload surge: 2.5x volume"
+          },
+          {
+            "event": {
+              "week": 8,
+              "chaos_type": "knowledge_departure",
+              "target": "david_okafor",
+              "severity": 0.7,
+              "description": "david_okafor has departed the organization"
+            },
+            "objects_degraded": [],
+            "objects_contradicted": [],
+            "objects_created": [],
+            "accuracy_modifier": 0.0,
+            "confidence_modifier": 2.0,
+            "event_multiplier": 1.0,
+            "impact_description": "Staff david_okafor departed, degrading associated context"
+          },
+          {
+            "event": {
+              "week": 8,
+              "chaos_type": "knowledge_departure",
+              "target": "marcus_webb",
+              "severity": 0.7,
+              "description": "marcus_webb has departed the organization"
+            },
+            "objects_degraded": [],
+            "objects_contradicted": [],
+            "objects_created": [],
+            "accuracy_modifier": 0.0,
+            "confidence_modifier": 2.0,
+            "event_multiplier": 1.0,
+            "impact_description": "Staff marcus_webb departed, degrading associated context"
+          },
+          {
+            "event": {
+              "week": 9,
+              "chaos_type": "policy_contradiction",
+              "target": "CTX-006",
+              "severity": 0.6,
+              "description": "TerraLogic now pays within 30 days per new CFO policy. Standard escalation applies."
+            },
+            "objects_degraded": [],
+            "objects_contradicted": [
+              "CTX-006"
+            ],
+            "objects_created": [
+              "CTX-AB6CE5E0"
+            ],
+            "accuracy_modifier": 0.0,
+            "confidence_modifier": 0.0,
+            "event_multiplier": 1.0,
+            "impact_description": "Contradicting policy introduced for CTX-006"
+          },
+          {
+            "event": {
+              "week": 10,
+              "chaos_type": "agent_drift",
+              "target": "vendor_agent",
+              "severity": 0.5,
+              "description": "vendor_agent performance degradation begins"
+            },
+            "objects_degraded": [],
+            "objects_contradicted": [],
+            "objects_created": [],
+            "accuracy_modifier": 0.5,
+            "confidence_modifier": 0.0,
+            "event_multiplier": 1.0,
+            "impact_description": "Agent vendor_agent performance degrading"
+          },
+          {
+            "event": {
+              "week": 10,
+              "chaos_type": "agent_drift",
+              "target": "billing_agent",
+              "severity": 0.5,
+              "description": "billing_agent performance degradation begins"
+            },
+            "objects_degraded": [],
+            "objects_contradicted": [],
+            "objects_created": [],
+            "accuracy_modifier": 0.5,
+            "confidence_modifier": 0.0,
+            "event_multiplier": 1.0,
+            "impact_description": "Agent billing_agent performance degrading"
+          }
+        ]
+      }
+    },
+    "SILOED_ADVANCED": {
+      "condition": "SILOED_ADVANCED",
+      "weeks_run": 12,
+      "total_decisions": 15,
+      "correct_decisions": 5,
+      "incorrect_decisions": 10,
+      "overall_accuracy": 33.33333333333333,
+      "final_bank_size": 65,
+      "final_avg_confidence": 0.34663112744944036,
+      "total_workflow_events": 1560,
+      "total_behavioral_events": 2250,
+      "chaos_summary": {
+        "total_events": 12,
+        "knowledge_departures": 2,
+        "agent_drifts": 2,
+        "total_objects_degraded": 1,
+        "total_objects_contradicted": 2,
+        "total_objects_created": 2,
+        "impacts": [
+          {
+            "event": {
+              "week": 3,
+              "chaos_type": "workload_surge",
+              "target": null,
+              "severity": 1.5,
+              "description": "Workload surge: 2.5x normal volume"
+            },
+            "objects_degraded": [],
+            "objects_contradicted": [],
+            "objects_created": [],
+            "accuracy_modifier": 0.15,
+            "confidence_modifier": 0.0,
+            "event_multiplier": 2.5,
+            "impact_description": "Workload surge: 2.5x volume"
+          },
+          {
+            "event": {
+              "week": 4,
+              "chaos_type": "knowledge_departure",
+              "target": "david_okafor",
+              "severity": 0.7,
+              "description": "david_okafor has departed the organization"
+            },
+            "objects_degraded": [],
+            "objects_contradicted": [],
+            "objects_created": [],
+            "accuracy_modifier": 0.0,
+            "confidence_modifier": 2.0,
+            "event_multiplier": 1.0,
+            "impact_description": "Staff david_okafor departed, degrading associated context"
+          },
+          {
+            "event": {
+              "week": 4,
+              "chaos_type": "knowledge_departure",
+              "target": "marcus_webb",
+              "severity": 0.7,
+              "description": "marcus_webb has departed the organization"
+            },
+            "objects_degraded": [],
+            "objects_contradicted": [],
+            "objects_created": [],
+            "accuracy_modifier": 0.0,
+            "confidence_modifier": 2.0,
+            "event_multiplier": 1.0,
+            "impact_description": "Staff marcus_webb departed, degrading associated context"
+          },
+          {
+            "event": {
+              "week": 5,
+              "chaos_type": "policy_contradiction",
+              "target": "CTX-001",
+              "severity": 0.6,
+              "description": "Brightline Consulting has been cleared for standard SOW process after 2025 audit."
+            },
+            "objects_degraded": [],
+            "objects_contradicted": [
+              "CTX-001"
+            ],
+            "objects_created": [
+              "CTX-E93BB28F"
+            ],
+            "accuracy_modifier": 0.0,
+            "confidence_modifier": 0.0,
+            "event_multiplier": 1.0,
+            "impact_description": "Contradicting policy introduced for CTX-001"
+          },
+          {
+            "event": {
+              "week": 6,
+              "chaos_type": "agent_drift",
+              "target": "vendor_agent",
+              "severity": 0.5,
+              "description": "vendor_agent performance degradation begins"
+            },
+            "objects_degraded": [],
+            "objects_contradicted": [],
+            "objects_created": [],
+            "accuracy_modifier": 0.5,
+            "confidence_modifier": 0.0,
+            "event_multiplier": 1.0,
+            "impact_description": "Agent vendor_agent performance degrading"
+          },
+          {
+            "event": {
+              "week": 6,
+              "chaos_type": "agent_drift",
+              "target": "billing_agent",
+              "severity": 0.5,
+              "description": "billing_agent performance degradation begins"
+            },
+            "objects_degraded": [],
+            "objects_contradicted": [],
+            "objects_created": [],
+            "accuracy_modifier": 0.5,
+            "confidence_modifier": 0.0,
+            "event_multiplier": 1.0,
+            "impact_description": "Agent billing_agent performance degrading"
+          },
+          {
+            "event": {
+              "week": 7,
+              "chaos_type": "workload_surge",
+              "target": null,
+              "severity": 1.5,
+              "description": "Workload surge: 2.5x normal volume"
+            },
+            "objects_degraded": [],
+            "objects_contradicted": [],
+            "objects_created": [],
+            "accuracy_modifier": 0.15,
+            "confidence_modifier": 0.0,
+            "event_multiplier": 2.5,
+            "impact_description": "Workload surge: 2.5x volume"
+          },
+          {
+            "event": {
+              "week": 8,
+              "chaos_type": "knowledge_departure",
+              "target": "david_okafor",
+              "severity": 0.7,
+              "description": "david_okafor has departed the organization"
+            },
+            "objects_degraded": [
+              "CTX-0170F865"
+            ],
+            "objects_contradicted": [],
+            "objects_created": [],
+            "accuracy_modifier": 0.0,
+            "confidence_modifier": 2.0,
+            "event_multiplier": 1.0,
+            "impact_description": "Staff david_okafor departed, degrading associated context"
+          },
+          {
+            "event": {
+              "week": 8,
+              "chaos_type": "knowledge_departure",
+              "target": "marcus_webb",
+              "severity": 0.7,
+              "description": "marcus_webb has departed the organization"
+            },
+            "objects_degraded": [],
+            "objects_contradicted": [],
+            "objects_created": [],
+            "accuracy_modifier": 0.0,
+            "confidence_modifier": 2.0,
+            "event_multiplier": 1.0,
+            "impact_description": "Staff marcus_webb departed, degrading associated context"
+          },
+          {
+            "event": {
+              "week": 9,
+              "chaos_type": "policy_contradiction",
+              "target": "CTX-006",
+              "severity": 0.6,
+              "description": "TerraLogic now pays within 30 days per new CFO policy. Standard escalation applies."
+            },
+            "objects_degraded": [],
+            "objects_contradicted": [
+              "CTX-006"
+            ],
+            "objects_created": [
+              "CTX-989C58B4"
+            ],
+            "accuracy_modifier": 0.0,
+            "confidence_modifier": 0.0,
+            "event_multiplier": 1.0,
+            "impact_description": "Contradicting policy introduced for CTX-006"
+          },
+          {
+            "event": {
+              "week": 10,
+              "chaos_type": "agent_drift",
+              "target": "vendor_agent",
+              "severity": 0.5,
+              "description": "vendor_agent performance degradation begins"
+            },
+            "objects_degraded": [],
+            "objects_contradicted": [],
+            "objects_created": [],
+            "accuracy_modifier": 0.5,
+            "confidence_modifier": 0.0,
+            "event_multiplier": 1.0,
+            "impact_description": "Agent vendor_agent performance degrading"
+          },
+          {
+            "event": {
+              "week": 10,
+              "chaos_type": "agent_drift",
+              "target": "billing_agent",
+              "severity": 0.5,
+              "description": "billing_agent performance degradation begins"
+            },
+            "objects_degraded": [],
+            "objects_contradicted": [],
+            "objects_created": [],
+            "accuracy_modifier": 0.5,
+            "confidence_modifier": 0.0,
+            "event_multiplier": 1.0,
+            "impact_description": "Agent billing_agent performance degrading"
+          }
+        ]
+      }
+    },
+    "GLOBAL_RAG": {
+      "condition": "GLOBAL_RAG",
+      "weeks_run": 12,
+      "total_decisions": 15,
+      "correct_decisions": 12,
+      "incorrect_decisions": 3,
+      "overall_accuracy": 80.0,
+      "final_bank_size": 65,
+      "final_avg_confidence": 0.35115109172552367,
+      "total_workflow_events": 1560,
+      "total_behavioral_events": 2250,
+      "chaos_summary": {
+        "total_events": 12,
+        "knowledge_departures": 2,
+        "agent_drifts": 2,
+        "total_objects_degraded": 1,
+        "total_objects_contradicted": 2,
+        "total_objects_created": 2,
+        "impacts": [
+          {
+            "event": {
+              "week": 3,
+              "chaos_type": "workload_surge",
+              "target": null,
+              "severity": 1.5,
+              "description": "Workload surge: 2.5x normal volume"
+            },
+            "objects_degraded": [],
+            "objects_contradicted": [],
+            "objects_created": [],
+            "accuracy_modifier": 0.15,
+            "confidence_modifier": 0.0,
+            "event_multiplier": 2.5,
+            "impact_description": "Workload surge: 2.5x volume"
+          },
+          {
+            "event": {
+              "week": 4,
+              "chaos_type": "knowledge_departure",
+              "target": "david_okafor",
+              "severity": 0.7,
+              "description": "david_okafor has departed the organization"
+            },
+            "objects_degraded": [],
+            "objects_contradicted": [],
+            "objects_created": [],
+            "accuracy_modifier": 0.0,
+            "confidence_modifier": 2.0,
+            "event_multiplier": 1.0,
+            "impact_description": "Staff david_okafor departed, degrading associated context"
+          },
+          {
+            "event": {
+              "week": 4,
+              "chaos_type": "knowledge_departure",
+              "target": "marcus_webb",
+              "severity": 0.7,
+              "description": "marcus_webb has departed the organization"
+            },
+            "objects_degraded": [],
+            "objects_contradicted": [],
+            "objects_created": [],
+            "accuracy_modifier": 0.0,
+            "confidence_modifier": 2.0,
+            "event_multiplier": 1.0,
+            "impact_description": "Staff marcus_webb departed, degrading associated context"
+          },
+          {
+            "event": {
+              "week": 5,
+              "chaos_type": "policy_contradiction",
+              "target": "CTX-001",
+              "severity": 0.6,
+              "description": "Brightline Consulting has been cleared for standard SOW process after 2025 audit."
+            },
+            "objects_degraded": [],
+            "objects_contradicted": [
+              "CTX-001"
+            ],
+            "objects_created": [
+              "CTX-A26286C8"
+            ],
+            "accuracy_modifier": 0.0,
+            "confidence_modifier": 0.0,
+            "event_multiplier": 1.0,
+            "impact_description": "Contradicting policy introduced for CTX-001"
+          },
+          {
+            "event": {
+              "week": 6,
+              "chaos_type": "agent_drift",
+              "target": "vendor_agent",
+              "severity": 0.5,
+              "description": "vendor_agent performance degradation begins"
+            },
+            "objects_degraded": [],
+            "objects_contradicted": [],
+            "objects_created": [],
+            "accuracy_modifier": 0.5,
+            "confidence_modifier": 0.0,
+            "event_multiplier": 1.0,
+            "impact_description": "Agent vendor_agent performance degrading"
+          },
+          {
+            "event": {
+              "week": 6,
+              "chaos_type": "agent_drift",
+              "target": "billing_agent",
+              "severity": 0.5,
+              "description": "billing_agent performance degradation begins"
+            },
+            "objects_degraded": [],
+            "objects_contradicted": [],
+            "objects_created": [],
+            "accuracy_modifier": 0.5,
+            "confidence_modifier": 0.0,
+            "event_multiplier": 1.0,
+            "impact_description": "Agent billing_agent performance degrading"
+          },
+          {
+            "event": {
+              "week": 7,
+              "chaos_type": "workload_surge",
+              "target": null,
+              "severity": 1.5,
+              "description": "Workload surge: 2.5x normal volume"
+            },
+            "objects_degraded": [],
+            "objects_contradicted": [],
+            "objects_created": [],
+            "accuracy_modifier": 0.15,
+            "confidence_modifier": 0.0,
+            "event_multiplier": 2.5,
+            "impact_description": "Workload surge: 2.5x volume"
+          },
+          {
+            "event": {
+              "week": 8,
+              "chaos_type": "knowledge_departure",
+              "target": "david_okafor",
+              "severity": 0.7,
+              "description": "david_okafor has departed the organization"
+            },
+            "objects_degraded": [
+              "CTX-4B66B501"
+            ],
+            "objects_contradicted": [],
+            "objects_created": [],
+            "accuracy_modifier": 0.0,
+            "confidence_modifier": 2.0,
+            "event_multiplier": 1.0,
+            "impact_description": "Staff david_okafor departed, degrading associated context"
+          },
+          {
+            "event": {
+              "week": 8,
+              "chaos_type": "knowledge_departure",
+              "target": "marcus_webb",
+              "severity": 0.7,
+              "description": "marcus_webb has departed the organization"
+            },
+            "objects_degraded": [],
+            "objects_contradicted": [],
+            "objects_created": [],
+            "accuracy_modifier": 0.0,
+            "confidence_modifier": 2.0,
+            "event_multiplier": 1.0,
+            "impact_description": "Staff marcus_webb departed, degrading associated context"
+          },
+          {
+            "event": {
+              "week": 9,
+              "chaos_type": "policy_contradiction",
+              "target": "CTX-006",
+              "severity": 0.6,
+              "description": "TerraLogic now pays within 30 days per new CFO policy. Standard escalation applies."
+            },
+            "objects_degraded": [],
+            "objects_contradicted": [
+              "CTX-006"
+            ],
+            "objects_created": [
+              "CTX-7FE167D1"
+            ],
+            "accuracy_modifier": 0.0,
+            "confidence_modifier": 0.0,
+            "event_multiplier": 1.0,
+            "impact_description": "Contradicting policy introduced for CTX-006"
+          },
+          {
+            "event": {
+              "week": 10,
+              "chaos_type": "agent_drift",
+              "target": "vendor_agent",
+              "severity": 0.5,
+              "description": "vendor_agent performance degradation begins"
+            },
+            "objects_degraded": [],
+            "objects_contradicted": [],
+            "objects_created": [],
+            "accuracy_modifier": 0.5,
+            "confidence_modifier": 0.0,
+            "event_multiplier": 1.0,
+            "impact_description": "Agent vendor_agent performance degrading"
+          },
+          {
+            "event": {
+              "week": 10,
+              "chaos_type": "agent_drift",
+              "target": "billing_agent",
+              "severity": 0.5,
+              "description": "billing_agent performance degradation begins"
+            },
+            "objects_degraded": [],
+            "objects_contradicted": [],
+            "objects_created": [],
+            "accuracy_modifier": 0.5,
+            "confidence_modifier": 0.0,
+            "event_multiplier": 1.0,
+            "impact_description": "Agent billing_agent performance degrading"
+          }
+        ]
+      }
+    },
+    "CONTEXT_BANK": {
+      "condition": "CONTEXT_BANK",
+      "weeks_run": 12,
+      "total_decisions": 15,
+      "correct_decisions": 12,
+      "incorrect_decisions": 3,
+      "overall_accuracy": 80.0,
+      "final_bank_size": 77,
+      "final_avg_confidence": 0.45265145110515687,
+      "total_workflow_events": 1560,
+      "total_behavioral_events": 2250,
+      "chaos_summary": {
+        "total_events": 12,
+        "knowledge_departures": 2,
+        "agent_drifts": 2,
+        "total_objects_degraded": 1,
+        "total_objects_contradicted": 2,
+        "total_objects_created": 2,
+        "impacts": [
+          {
+            "event": {
+              "week": 3,
+              "chaos_type": "workload_surge",
+              "target": null,
+              "severity": 1.5,
+              "description": "Workload surge: 2.5x normal volume"
+            },
+            "objects_degraded": [],
+            "objects_contradicted": [],
+            "objects_created": [],
+            "accuracy_modifier": 0.15,
+            "confidence_modifier": 0.0,
+            "event_multiplier": 2.5,
+            "impact_description": "Workload surge: 2.5x volume"
+          },
+          {
+            "event": {
+              "week": 4,
+              "chaos_type": "knowledge_departure",
+              "target": "david_okafor",
+              "severity": 0.7,
+              "description": "david_okafor has departed the organization"
+            },
+            "objects_degraded": [],
+            "objects_contradicted": [],
+            "objects_created": [],
+            "accuracy_modifier": 0.0,
+            "confidence_modifier": 2.0,
+            "event_multiplier": 1.0,
+            "impact_description": "Staff david_okafor departed, degrading associated context"
+          },
+          {
+            "event": {
+              "week": 4,
+              "chaos_type": "knowledge_departure",
+              "target": "marcus_webb",
+              "severity": 0.7,
+              "description": "marcus_webb has departed the organization"
+            },
+            "objects_degraded": [],
+            "objects_contradicted": [],
+            "objects_created": [],
+            "accuracy_modifier": 0.0,
+            "confidence_modifier": 2.0,
+            "event_multiplier": 1.0,
+            "impact_description": "Staff marcus_webb departed, degrading associated context"
+          },
+          {
+            "event": {
+              "week": 5,
+              "chaos_type": "policy_contradiction",
+              "target": "CTX-001",
+              "severity": 0.6,
+              "description": "Brightline Consulting has been cleared for standard SOW process after 2025 audit."
+            },
+            "objects_degraded": [],
+            "objects_contradicted": [
+              "CTX-001"
+            ],
+            "objects_created": [
+              "CTX-69FF64C5"
+            ],
+            "accuracy_modifier": 0.0,
+            "confidence_modifier": 0.0,
+            "event_multiplier": 1.0,
+            "impact_description": "Contradicting policy introduced for CTX-001"
+          },
+          {
+            "event": {
+              "week": 6,
+              "chaos_type": "agent_drift",
+              "target": "vendor_agent",
+              "severity": 0.5,
+              "description": "vendor_agent performance degradation begins"
+            },
+            "objects_degraded": [],
+            "objects_contradicted": [],
+            "objects_created": [],
+            "accuracy_modifier": 0.5,
+            "confidence_modifier": 0.0,
+            "event_multiplier": 1.0,
+            "impact_description": "Agent vendor_agent performance degrading"
+          },
+          {
+            "event": {
+              "week": 6,
+              "chaos_type": "agent_drift",
+              "target": "billing_agent",
+              "severity": 0.5,
+              "description": "billing_agent performance degradation begins"
+            },
+            "objects_degraded": [],
+            "objects_contradicted": [],
+            "objects_created": [],
+            "accuracy_modifier": 0.5,
+            "confidence_modifier": 0.0,
+            "event_multiplier": 1.0,
+            "impact_description": "Agent billing_agent performance degrading"
+          },
+          {
+            "event": {
+              "week": 7,
+              "chaos_type": "workload_surge",
+              "target": null,
+              "severity": 1.5,
+              "description": "Workload surge: 2.5x normal volume"
+            },
+            "objects_degraded": [],
+            "objects_contradicted": [],
+            "objects_created": [],
+            "accuracy_modifier": 0.15,
+            "confidence_modifier": 0.0,
+            "event_multiplier": 2.5,
+            "impact_description": "Workload surge: 2.5x volume"
+          },
+          {
+            "event": {
+              "week": 8,
+              "chaos_type": "knowledge_departure",
+              "target": "david_okafor",
+              "severity": 0.7,
+              "description": "david_okafor has departed the organization"
+            },
+            "objects_degraded": [
+              "CTX-46E5EE70"
+            ],
+            "objects_contradicted": [],
+            "objects_created": [],
+            "accuracy_modifier": 0.0,
+            "confidence_modifier": 2.0,
+            "event_multiplier": 1.0,
+            "impact_description": "Staff david_okafor departed, degrading associated context"
+          },
+          {
+            "event": {
+              "week": 8,
+              "chaos_type": "knowledge_departure",
+              "target": "marcus_webb",
+              "severity": 0.7,
+              "description": "marcus_webb has departed the organization"
+            },
+            "objects_degraded": [],
+            "objects_contradicted": [],
+            "objects_created": [],
+            "accuracy_modifier": 0.0,
+            "confidence_modifier": 2.0,
+            "event_multiplier": 1.0,
+            "impact_description": "Staff marcus_webb departed, degrading associated context"
+          },
+          {
+            "event": {
+              "week": 9,
+              "chaos_type": "policy_contradiction",
+              "target": "CTX-006",
+              "severity": 0.6,
+              "description": "TerraLogic now pays within 30 days per new CFO policy. Standard escalation applies."
+            },
+            "objects_degraded": [],
+            "objects_contradicted": [
+              "CTX-006"
+            ],
+            "objects_created": [
+              "CTX-CC195560"
+            ],
+            "accuracy_modifier": 0.0,
+            "confidence_modifier": 0.0,
+            "event_multiplier": 1.0,
+            "impact_description": "Contradicting policy introduced for CTX-006"
+          },
+          {
+            "event": {
+              "week": 10,
+              "chaos_type": "agent_drift",
+              "target": "vendor_agent",
+              "severity": 0.5,
+              "description": "vendor_agent performance degradation begins"
+            },
+            "objects_degraded": [],
+            "objects_contradicted": [],
+            "objects_created": [],
+            "accuracy_modifier": 0.5,
+            "confidence_modifier": 0.0,
+            "event_multiplier": 1.0,
+            "impact_description": "Agent vendor_agent performance degrading"
+          },
+          {
+            "event": {
+              "week": 10,
+              "chaos_type": "agent_drift",
+              "target": "billing_agent",
+              "severity": 0.5,
+              "description": "billing_agent performance degradation begins"
+            },
+            "objects_degraded": [],
+            "objects_contradicted": [],
+            "objects_created": [],
+            "accuracy_modifier": 0.5,
+            "confidence_modifier": 0.0,
+            "event_multiplier": 1.0,
+            "impact_description": "Agent billing_agent performance degrading"
+          }
+        ]
+      }
+    }
+  },
+  "accuracies": {
+    "SILOED_TYPICAL": 13.333333333333334,
+    "SILOED_ADVANCED": 33.33333333333333,
+    "GLOBAL_RAG": 80.0,
+    "CONTEXT_BANK": 80.0
+  },
+  "improvements_over_baseline": {
+    "SILOED_ADVANCED": 19.999999999999993,
+    "GLOBAL_RAG": 66.66666666666667,
+    "CONTEXT_BANK": 66.66666666666667
+  },
+  "main_comparison": {
+    "without_bank": {
+      "primary_metrics": {
+        "decision_quality_scores": {
+          "vendor_agent": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "proposal_agent": [
+            0.0,
+            100.0
+          ],
+          "billing_agent": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "staffing_agent": [
+            0.0,
+            100.0,
+            0.0,
+            0.0
+          ]
+        },
+        "weekly_dqs": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          100.0,
+          0.0,
+          100.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "overall_dqs": 13.333333333333334,
+        "exception_handling_rates": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          100.0,
+          0.0,
+          100.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "overall_ehr": 16.666666666666668,
+        "institutional_memory_utilization": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "overall_imu": 0,
+        "organizational_error_rates": [
+          0,
+          0,
+          1,
+          2,
+          2,
+          0,
+          2,
+          0,
+          1,
+          2,
+          2,
+          1
+        ],
+        "total_oer": 13
+      },
+      "secondary_metrics": {
+        "context_object_growth": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "avg_confidence_history": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "contradiction_counts": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "synthesis_metrics": {
+        "summary": {
+          "total_patterns_crystallized": 0,
+          "total_validations_propagated": 0,
+          "total_decay_adjustments": 0,
+          "average_intelligence_score": 0.0,
+          "peak_intelligence_score": 0.0,
+          "active_weeks": 0,
+          "crystallized_entities": [],
+          "objects_created": 0
+        },
+        "weekly_scores": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "weekly_results": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "confidence_boosts_history": [
+          {},
+          {},
+          {},
+          {},
+          {},
+          {},
+          {},
+          {},
+          {},
+          {},
+          {},
+          {}
+        ]
+      },
+      "chaos_metrics": {
+        "event_counts": {
+          "knowledge_departures": 4,
+          "policy_contradictions": 2,
+          "agent_drifts": 4,
+          "workload_surges": 2,
+          "total": 12
+        },
+        "impact": {
+          "objects_degraded": 0,
+          "objects_contradicted": 2,
+          "chaos_objects_created": 2
+        },
+        "events_by_week": {
+          "3": [
+            "workload_surge"
+          ],
+          "4": [
+            "knowledge_departure",
+            "knowledge_departure"
+          ],
+          "5": [
+            "policy_contradiction"
+          ],
+          "6": [
+            "agent_drift",
+            "agent_drift"
+          ],
+          "7": [
+            "workload_surge"
+          ],
+          "8": [
+            "knowledge_departure",
+            "knowledge_departure"
+          ],
+          "9": [
+            "policy_contradiction"
+          ],
+          "10": [
+            "agent_drift",
+            "agent_drift"
+          ]
+        },
+        "resilience": {
+          "accuracy_during_chaos": 16.666666666666664,
+          "accuracy_during_normal": 0.0,
+          "resilience_score": 0.0
+        }
+      },
+      "summary": {
+        "total_decisions": 15,
+        "correct_decisions": 2,
+        "incorrect_decisions": 13,
+        "accuracy": 13.333333333333334,
+        "final_bank_size": 0,
+        "final_avg_confidence": 0.0
+      }
+    },
+    "with_bank": {
+      "primary_metrics": {
+        "decision_quality_scores": {
+          "vendor_agent": [
+            100.0,
+            100.0,
+            100.0
+          ],
+          "proposal_agent": [
+            0.0,
+            100.0
+          ],
+          "billing_agent": [
+            100.0,
+            100.0,
+            100.0,
+            100.0,
+            100.0,
+            0.0
+          ],
+          "staffing_agent": [
+            100.0,
+            100.0,
+            100.0,
+            0.0
+          ]
+        },
+        "weekly_dqs": [
+          0.0,
+          0.0,
+          100.0,
+          50.0,
+          100.0,
+          100.0,
+          100.0,
+          100.0,
+          100.0,
+          100.0,
+          50.0,
+          0.0
+        ],
+        "overall_dqs": 80.0,
+        "exception_handling_rates": [
+          0.0,
+          0.0,
+          100.0,
+          50.0,
+          100.0,
+          100.0,
+          100.0,
+          100.0,
+          100.0,
+          100.0,
+          50.0,
+          0.0
+        ],
+        "overall_ehr": 66.66666666666667,
+        "institutional_memory_utilization": [
+          0,
+          0,
+          400.0,
+          150.0,
+          300.0,
+          200.0,
+          400.0,
+          300.0,
+          300.0,
+          500.0,
+          400.0,
+          500.0
+        ],
+        "overall_imu": 287.5,
+        "organizational_error_rates": [
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1
+        ],
+        "total_oer": 3
+      },
+      "secondary_metrics": {
+        "context_object_growth": [
+          15,
+          18,
+          23,
+          28,
+          34,
+          45,
+          50,
+          54,
+          62,
+          67,
+          72,
+          77
+        ],
+        "avg_confidence_history": [
+          0.7808533333333334,
+          0.7432122222222224,
+          0.6978154568115942,
+          0.6490992871666668,
+          0.6141476939886668,
+          0.6154965884223,
+          0.580889169204519,
+          0.5466684597255429,
+          0.5466297172483161,
+          0.5195157942643363,
+          0.49353082636282636,
+          0.45265145110515687
+        ],
+        "contradiction_counts": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1
+        ]
+      },
+      "synthesis_metrics": {
+        "summary": {
+          "total_patterns_crystallized": 12,
+          "total_validations_propagated": 0,
+          "total_decay_adjustments": 20,
+          "average_intelligence_score": 0.3,
+          "peak_intelligence_score": 0.46,
+          "active_weeks": 4,
+          "crystallized_entities": [],
+          "objects_created": 12
+        },
+        "weekly_scores": [
+          0.0,
+          0.0,
+          0.1,
+          0.0,
+          0.0,
+          0.46,
+          0.0,
+          0.0,
+          0.38,
+          0.0,
+          0.0,
+          0.26
+        ],
+        "weekly_results": [
+          null,
+          null,
+          {
+            "patterns_crystallized": 1,
+            "validations_propagated": 0,
+            "decay_rates_adjusted": 1,
+            "new_objects_created": [
+              "CTX-69051F46"
+            ],
+            "objects_updated": [
+              "CTX-001"
+            ],
+            "confidence_boosts": {}
+          },
+          null,
+          null,
+          {
+            "patterns_crystallized": 7,
+            "validations_propagated": 0,
+            "decay_rates_adjusted": 4,
+            "new_objects_created": [
+              "CTX-D1C70F77",
+              "CTX-7B10B8E0",
+              "CTX-C12CCD4F",
+              "CTX-821E6D46",
+              "CTX-6836E3A0",
+              "CTX-117597FB",
+              "CTX-D14FA77B"
+            ],
+            "objects_updated": [
+              "CTX-001",
+              "CTX-002",
+              "CTX-006",
+              "CTX-5BDB1522"
+            ],
+            "confidence_boosts": {}
+          },
+          null,
+          null,
+          {
+            "patterns_crystallized": 3,
+            "validations_propagated": 0,
+            "decay_rates_adjusted": 6,
+            "new_objects_created": [
+              "CTX-58694C4C",
+              "CTX-00640A88",
+              "CTX-8A19FD58"
+            ],
+            "objects_updated": [
+              "CTX-001",
+              "CTX-002",
+              "CTX-006",
+              "CTX-5BDB1522",
+              "CTX-93C0F79B",
+              "CTX-9A170A6E"
+            ],
+            "confidence_boosts": {}
+          },
+          null,
+          null,
+          {
+            "patterns_crystallized": 1,
+            "validations_propagated": 0,
+            "decay_rates_adjusted": 9,
+            "new_objects_created": [
+              "CTX-DF27E62F"
+            ],
+            "objects_updated": [
+              "CTX-001",
+              "CTX-002",
+              "CTX-006",
+              "CTX-5BDB1522",
+              "CTX-69FF64C5",
+              "CTX-93C0F79B",
+              "CTX-586E8186",
+              "CTX-9A170A6E",
+              "CTX-502E6536"
+            ],
+            "confidence_boosts": {}
+          }
+        ],
+        "confidence_boosts_history": [
+          {},
+          {},
+          {},
+          {},
+          {},
+          {},
+          {},
+          {},
+          {},
+          {},
+          {},
+          {}
+        ]
+      },
+      "chaos_metrics": {
+        "event_counts": {
+          "knowledge_departures": 4,
+          "policy_contradictions": 2,
+          "agent_drifts": 4,
+          "workload_surges": 2,
+          "total": 12
+        },
+        "impact": {
+          "objects_degraded": 1,
+          "objects_contradicted": 2,
+          "chaos_objects_created": 2
+        },
+        "events_by_week": {
+          "3": [
+            "workload_surge"
+          ],
+          "4": [
+            "knowledge_departure",
+            "knowledge_departure"
+          ],
+          "5": [
+            "policy_contradiction"
+          ],
+          "6": [
+            "agent_drift",
+            "agent_drift"
+          ],
+          "7": [
+            "workload_surge"
+          ],
+          "8": [
+            "knowledge_departure",
+            "knowledge_departure"
+          ],
+          "9": [
+            "policy_contradiction"
+          ],
+          "10": [
+            "agent_drift",
+            "agent_drift"
+          ]
+        },
+        "resilience": {
+          "accuracy_during_chaos": 91.66666666666666,
+          "accuracy_during_normal": 33.33333333333333,
+          "resilience_score": 2.75
+        }
+      },
+      "summary": {
+        "total_decisions": 15,
+        "correct_decisions": 12,
+        "incorrect_decisions": 3,
+        "accuracy": 80.0,
+        "final_bank_size": 77,
+        "final_avg_confidence": 0.45265145110515687
+      }
+    },
+    "comparison": {
+      "dqs_improvement": 66.66666666666667,
+      "ehr_improvement": 50.0,
+      "imu_improvement": 287.5,
+      "errors_avoided": 10,
+      "accuracy_improvement": 66.66666666666667
+    }
+  }
+}

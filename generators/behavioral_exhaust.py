@@ -114,6 +114,9 @@ class BehavioralExchange:
     inferred_lineage: Optional[str] = None
     inferred_lineage_confidence: float = 0.0
 
+    # GROUND_TRUTH_ANSWERS key this answer was drawn from (None for generic answers)
+    ground_truth_key: Optional[str] = None
+
 
 @dataclass
 class BehavioralEvent:
@@ -705,6 +708,7 @@ class BehavioralExhaustGenerator:
         # 60% chance of ground truth template to reinforce seeded knowledge
         use_ground_truth = force_ground_truth or self.rng.random() < 0.6
 
+        template_key = None
         if use_ground_truth:
             template_key, template_data = self._select_ground_truth_template()
             answer_templates = template_data["templates"]
@@ -767,6 +771,7 @@ class BehavioralExhaustGenerator:
             inferred_grade_confidence=grade_conf,
             inferred_lineage=inferred_lineage,
             inferred_lineage_confidence=lineage_conf,
+            ground_truth_key=template_key,
         )
 
     def _exchange_to_event(self, exchange: BehavioralExchange) -> BehavioralEvent:
@@ -800,6 +805,7 @@ class BehavioralExhaustGenerator:
                 "inferred_grade_confidence": exchange.inferred_grade_confidence,
                 "inferred_lineage": exchange.inferred_lineage,
                 "inferred_lineage_confidence": exchange.inferred_lineage_confidence,
+                "ground_truth_key": exchange.ground_truth_key,
             },
         )
 

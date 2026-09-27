@@ -1,0 +1,189 @@
+"""
+Tests for the mechanistic decision model.
+
+Tests:
+- Relevance matching of scenarios to seeded knowledge
+- Guidance labels (ground truth, contradictions, decision records, synthesis)
+- Condition-specific ranking of a contradiction against the original policy
+- Siloed visibility
+- Outcome feedback recorded by the Context Bank only
+- Reproducibility and seed sensitivity
+"""
+
+import copy
+
+import pytest
+
+from bank.context_bank import ContextBank
+from config.seeded_context import SEEDED_CONTEXT_OBJECTS
+from config.simulation_config import RunCondition
+from generators.agent_exhaust import (
+    BRIGHTLINE_SOW_SCENARIO, BRIGHTLINE_STAFFING_SCENARIO, HARTWELL_COLLECTION_SCENARIO,
+    HARTWELL_PROPOSAL_SCENARIO, JORDAN_PARK_STAFFING_SCENARIO, MERIDIAN_BILLING_SCENARIO,
+    TERRALOGIC_PAYMENT_SCENARIO, DecisionOutcome,
+)
+from models.context_object import (
+    ContextObject, ContentType, DecayFunction, ProvenanceLink, SourceType,
+)
+from simulation.clock import SimulationClock
+from simulation.mechanistic import (
+    Guidance, MechanisticConfig, MechanisticDecisionModel, guidance, relevance, scenario_terms,
+)
+
+
+ALL_SCENARIOS = [
+    BRIGHTLINE_SOW_SCENARIO, JORDAN_PARK_STAFFING_SCENARIO, TERRALOGIC_PAYMENT_SCENARIO,
+    HARTWELL_PROPOSAL_SCENARIO, MERIDIAN_BILLING_SCENARIO, BRIGHTLINE_STAFFING_SCENARIO,
+    HARTWELL_COLLECTION_SCENARIO,
+]
+
+# No retrieval or interpretation noise, so ranking alone decides the outcome
+NOISELESS = MechanisticConfig(retrieval_recall=1.0, interpretation_accuracy=1.0, base_success_rate=0.0)
+
+
+@pytest.fixture
+def seeded_bank() -> ContextBank:
+    bank = ContextBank()
+    for obj in SEEDED_CONTEXT_OBJECTS:
+        bank.deposit(copy.deepcopy(obj), check_contradictions=False)
+    bank.current_week = 6
+    return bank
+
+
+def _contradiction(original_id: str, workflow_id: str, payload: str) -> ContextObject:
+    return ContextObject(
+        created_by="compliance_update_2025",
+        source_type=SourceType.human,
+        workflow_id=workflow_id,
+        week=5,
+        content_type=ContentType.policy,
+        payload=payload,
+        structured_data={"is_chaos_injection": True, "contradicts": original_id},
+        decay_function=DecayFunction.linear,
+        decay_rate=0.08,
+        confidence_at_creation=0.85,
+    )
+
+
+class TestRelevanceAndGuidance:
+    """Shared relevance function and guidance labels."""
+
+    @pytest.mark.parametrize("scenario", ALL_SCENARIOS, ids=lambda s: s.scenario_type)
+    def test_ground_truth_is_relevant_to_its_scenario(self, scenario):
+        names, topics = scenario_terms(scenario.entities)
+        for ctx_id in scenario.ground_truth_context_ids:
+            obj = next(o for o in SEEDED_CONTEXT_OBJECTS if o.id == ctx_id)
+            assert relevance(obj, names, topics) > 0
+
+    def test_ground_truth_guidance_is_correct(self):
+        obj = next(o for o in SEEDED_CONTEXT_OBJECTS if o.id == "CTX-001")
+        assert guidance(obj, ["CTX-001"]) == Guidance.CORRECT
+        assert guidance(obj, ["CTX-006"]) == Guidance.NEUTRAL
+
+    def test_contradiction_guidance_is_wrong(self):
+        obj = _contradiction("CTX-001", "W4", "Brightline Consulting cleared for standard SOW process.")
+        assert guidance(obj, ["CTX-001"]) == Guidance.WRONG
+
+    def test_decision_record_guidance_follows_outcome(self):
+        def record(correct: bool) -> ContextObject:
+            return ContextObject(
+                created_by="vendor_agent", source_type=SourceType.agent, workflow_id="W4",
+                week=3, content_type=ContentType.decision, payload="Brightline Consulting SOW",
+                structured_data={"supports_context_id": "CTX-001", "decision_correct": correct},
+                decay_function=DecayFunction.exponential, confidence_at_creation=0.6,
+            )
+        assert guidance(record(True), ["CTX-001"]) == Guidance.CORRECT
+        assert guidance(record(False), ["CTX-001"]) == Guidance.WRONG
+
+    def test_synthesized_object_inherits_majority_guidance(self, seeded_bank):
+        wrong = _contradiction("CTX-001", "W4", "Brightline cleared.")
+        seeded_bank.deposit(wrong, check_contradictions=False)
+        crystal = ContextObject(
+            created_by="synthesis_engine", source_type=SourceType.derived, workflow_id="W4",
+            week=6, content_type=ContentType.inference, payload="Brightline pattern",
+            decay_function=DecayFunction.exponential, confidence_at_creation=0.8,
+            derivation_chain=[
+                ProvenanceLink(source_id="CTX-001", relationship="derived_from"),
+                ProvenanceLink(source_id=wrong.id, relationship="derived_from"),
+                ProvenanceLink(source_id=wrong.id, relationship="derived_from"),
+            ],
+        )
+        # Duplicate links count once, so this is a 1-1 tie
+        assert guidance(crystal, ["CTX-001"], seeded_bank) == Guidance.NEUTRAL
+        crystal.derivation_chain = crystal.derivation_chain[:1]
+        assert guidance(crystal, ["CTX-001"], seeded_bank) == Guidance.CORRECT
+
+
+class TestConditionRanking:
+    """Conditions differ only in how they rank and what they can see."""
+
+    def _decide(self, condition, bank, scenario=BRIGHTLINE_SOW_SCENARIO, agent="vendor_agent"):
+        model = MechanisticDecisionModel(condition, seed=1, config=NOISELESS)
+        return model.decide(agent, scenario, week=bank.current_week, context_bank=bank)
+
+    def test_global_rag_follows_more_relevant_contradiction(self, seeded_bank):
+        # The contradiction names the vendor twice, so it outranks CTX-001 on relevance
+        seeded_bank.deposit(_contradiction(
+            "CTX-001", "W4",
+            "Brightline Consulting cleared: Brightline Consulting now uses the standard SOW process.",
+        ), check_contradictions=False)
+        seeded_bank.get("CTX-001").record_validation("vendor_agent", validated=True)
+
+        rag = self._decide(RunCondition.GLOBAL_RAG, seeded_bank)
+        assert rag.outcome == DecisionOutcome.INCORRECT
+
+    def test_context_bank_prefers_validated_policy(self, seeded_bank):
+        contradiction = _contradiction(
+            "CTX-001", "W4",
+            "Brightline Consulting cleared: Brightline Consulting now uses the standard SOW process.",
+        )
+        seeded_bank.deposit(contradiction, check_contradictions=False)
+        contradiction.record_validation("vendor_agent", validated=False)
+        for _ in range(3):
+            seeded_bank.get("CTX-001").record_validation("vendor_agent", validated=True)
+
+        bank = self._decide(RunCondition.CONTEXT_BANK, seeded_bank)
+        assert bank.outcome == DecisionOutcome.CORRECT
+        assert bank.context_used == ["CTX-001"]
+
+    def test_siloed_typical_never_retrieves(self, seeded_bank):
+        decision = self._decide(RunCondition.SILOED_TYPICAL, seeded_bank)
+        assert decision.context_retrieved == []
+        assert decision.outcome == DecisionOutcome.INCORRECT  # base rate is 0 here
+
+    def test_siloed_advanced_cannot_see_distant_department(self, seeded_bank):
+        # Staffing (Resource Management) is not adjacent to Vendor & Procurement,
+        # where CTX-001 lives
+        decision = self._decide(
+            RunCondition.SILOED_ADVANCED, seeded_bank,
+            scenario=BRIGHTLINE_STAFFING_SCENARIO, agent="staffing_agent",
+        )
+        assert "CTX-001" not in decision.context_retrieved
+
+    def test_only_context_bank_records_outcome_feedback(self, seeded_bank):
+        for condition in (RunCondition.GLOBAL_RAG, RunCondition.CONTEXT_BANK):
+            bank = copy.deepcopy(seeded_bank)
+            self._decide(condition, bank)
+            validations = len(bank.get("CTX-001").validated_by)
+            assert validations == (1 if condition == RunCondition.CONTEXT_BANK else 0)
+
+
+class TestMechanisticSimulation:
+    """End-to-end runs through the simulation clock."""
+
+    def _accuracy(self, condition, seed):
+        clock = SimulationClock(condition, seed=seed, decision_mode="mechanistic")
+        for week in range(1, 13):
+            clock.run_week(week)
+        return clock.get_summary()["overall_accuracy"], [d.outcome for d in clock.all_decisions]
+
+    def test_same_seed_reproduces(self):
+        assert self._accuracy(RunCondition.CONTEXT_BANK, 7) == self._accuracy(RunCondition.CONTEXT_BANK, 7)
+
+    def test_results_vary_with_seed(self):
+        outcomes = {tuple(self._accuracy(RunCondition.GLOBAL_RAG, s)[1]) for s in range(42, 52)}
+        assert len(outcomes) > 1
+
+    def test_invalid_mode_rejected(self):
+        with pytest.raises(ValueError):
+            SimulationClock(RunCondition.CONTEXT_BANK, decision_mode="bogus")

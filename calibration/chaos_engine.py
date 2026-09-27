@@ -226,10 +226,15 @@ class ChaosEngine:
         if not scenario:
             return impact, None
 
-        # Create contradicting context object
+        # Create contradicting context object, filed under the same workflow as
+        # the policy it contradicts
+        original = next(
+            (o for o in existing_objects if o.id == scenario["original_context_id"]), None
+        )
         contradicting_obj = ContextObject(
             created_by=scenario["source"],
             source_type=SourceType.human,
+            workflow_id=original.workflow_id if original else None,
             week=week,
             content_type=ContentType.policy,
             payload=scenario["contradicting_payload"],

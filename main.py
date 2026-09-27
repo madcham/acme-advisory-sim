@@ -21,6 +21,7 @@ Usage:
 
 import argparse
 import json
+from dataclasses import asdict
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
@@ -32,6 +33,7 @@ from measurement.metrics import MetricsCalculator
 from measurement.ground_truth import GroundTruthEvaluator
 from results.charts import ChartGenerator
 from results.summary import SummaryGenerator
+from simulation.mechanistic import MechanisticConfig
 from calibration.realism_config import (
     RealismConfig, ChaosConfig, BPICalibrationConfig,
     DEFAULT_REALISM_CONFIG, CHAOS_ENABLED_CONFIG, FULL_REALISM_CONFIG,
@@ -308,6 +310,8 @@ def run_4way_comparison(
     realism_config: Optional[RealismConfig] = None,
     seed: Optional[int] = None,
     generate_reports: bool = True,
+    decision_mode: str = "calibrated",
+    mechanistic_config: Optional[MechanisticConfig] = None,
 ) -> Dict[str, Any]:
     """
     Run the complete 4-condition comparison simulation.
@@ -326,6 +330,8 @@ def run_4way_comparison(
         seed: Random seed for reproducibility (default: 42)
         generate_reports: Write bank state, dashboards and summary (the dashboards
             are ~9MB; multi-seed runs turn this off)
+        decision_mode: "calibrated" or "mechanistic" (see simulation/mechanistic.py)
+        mechanistic_config: Parameters for mechanistic mode
 
     Returns:
         Complete results dictionary with all 4 conditions
@@ -381,6 +387,8 @@ def run_4way_comparison(
             condition,
             realism_config=realism_config,
             seed=seed,
+            decision_mode=decision_mode,
+            mechanistic_config=mechanistic_config,
         )
         snapshots = []
 
@@ -484,6 +492,9 @@ def run_4way_comparison(
             "random_seed": seed,
             "realism_mode": realism_mode,
             "comparison_type": "4-way",
+            "decision_mode": decision_mode,
+            "mechanistic_config": asdict(mechanistic_config or MechanisticConfig())
+            if decision_mode == "mechanistic" else None,
             "realism_config": realism_config.to_dict() if realism_config else None,
         },
         "condition_summaries": {
@@ -647,6 +658,13 @@ def main():
         help="Run full 4-condition comparison (SILOED_TYPICAL, SILOED_ADVANCED, GLOBAL_RAG, CONTEXT_BANK)"
     )
     parser.add_argument(
+        "--mode",
+        choices=["calibrated", "mechanistic"],
+        default="calibrated",
+        help="Decision model for --4-way runs: accuracy set per condition in config "
+             "(calibrated) or outcomes driven by what agents retrieve (mechanistic)"
+    )
+    parser.add_argument(
         "--seed",
         type=int,
         default=None,
@@ -680,6 +698,7 @@ def main():
                 output_dir=args.output,
                 realism_config=realism_config,
                 seed=args.seed,
+                decision_mode=args.mode,
             )
         else:
             results = run_simulation(

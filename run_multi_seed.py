@@ -19,6 +19,7 @@ Usage:
     python run_multi_seed.py --seeds 42 43 44   # Specific seeds
     python run_multi_seed.py --quick            # 4-week simulation per seed
     python run_multi_seed.py --no-chaos         # Disable chaos injection
+    python run_multi_seed.py --mode mechanistic # Outcomes follow from retrieval
 """
 
 import argparse
@@ -31,6 +32,7 @@ from pathlib import Path
 from typing import Dict, Any, List, Tuple
 
 from main import run_4way_comparison
+from simulation.mechanistic import MechanisticConfig
 from calibration.realism_config import (
     FULL_REALISM_CONFIG, RealismConfig, ChaosConfig, BPICalibrationConfig
 )
@@ -86,6 +88,8 @@ def run_multi_seed(
     output_base: str = "results/multi_seed",
     verbose: bool = True,
     enable_chaos: bool = True,
+    decision_mode: str = "calibrated",
+    mechanistic_config: MechanisticConfig = None,
 ) -> Dict[str, Any]:
     """
     Run the 4-condition simulation for each seed and aggregate results.
@@ -96,6 +100,8 @@ def run_multi_seed(
         output_base: Base directory for output
         verbose: Print progress
         enable_chaos: Whether to enable chaos injection (default: True)
+        decision_mode: "calibrated" or "mechanistic" (see simulation/mechanistic.py)
+        mechanistic_config: Parameters for mechanistic mode
 
     Returns:
         Aggregated results with statistics
@@ -120,6 +126,7 @@ def run_multi_seed(
         print(f"  Seeds: {len(seeds)} ({seeds[0]}..{seeds[-1]})")
         print(f"  Weeks per run: {weeks}")
         print(f"  Realism mode: {realism_mode} (applied to all conditions)")
+        print(f"  Decision mode: {decision_mode}")
         print(f"  Output directory: {output_path.absolute()}")
         print("=" * 70)
         print()
@@ -139,6 +146,8 @@ def run_multi_seed(
             realism_config=realism_config,
             seed=seed,
             generate_reports=False,
+            decision_mode=decision_mode,
+            mechanistic_config=mechanistic_config,
         )
 
         for condition in CONDITIONS:
@@ -173,6 +182,7 @@ def run_multi_seed(
             "weeks_per_run": weeks,
             "realism_mode": realism_mode,
             "chaos_enabled": enable_chaos,
+            "decision_mode": decision_mode,
             "realism_applied_to": CONDITIONS,
             "total_runs": len(seeds),
             "decisions_per_run": decisions_per_run,
@@ -190,7 +200,7 @@ def run_multi_seed(
     if verbose:
         print()
         print("=" * 70)
-        print(f"  AGGREGATED RESULTS ({len(seeds)} seeds, {realism_mode})")
+        print(f"  AGGREGATED RESULTS ({len(seeds)} seeds, {realism_mode}, {decision_mode})")
         print("=" * 70)
         print()
         print(f"  {'Condition':18} {'Mean':>7} {'Std':>6}   95% CI")
@@ -252,6 +262,13 @@ def main():
         help="Suppress progress output"
     )
     parser.add_argument(
+        "--mode",
+        choices=["calibrated", "mechanistic"],
+        default="calibrated",
+        help="Decision model: accuracy set per condition in config (calibrated) "
+             "or outcomes driven by what agents retrieve (mechanistic)"
+    )
+    parser.add_argument(
         "--no-chaos",
         dest="no_chaos",
         action="store_true",
@@ -262,7 +279,8 @@ def main():
 
     seeds = args.seeds or list(range(42, 42 + args.n_seeds))
     weeks = 4 if args.quick else args.weeks
-    output = args.output or ("results/multi_seed_no_chaos" if args.no_chaos else "results/multi_seed")
+    default_dir = "results/multi_seed" if args.mode == "calibrated" else "results/mechanistic"
+    output = args.output or (default_dir + ("_no_chaos" if args.no_chaos else ""))
 
     try:
         run_multi_seed(
@@ -271,6 +289,7 @@ def main():
             output_base=output,
             verbose=not args.quiet,
             enable_chaos=not args.no_chaos,
+            decision_mode=args.mode,
         )
         return 0
     except Exception as e:

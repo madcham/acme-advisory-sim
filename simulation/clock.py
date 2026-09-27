@@ -34,6 +34,7 @@ from inference.classifier import classify_context_object, ContextClassifier
 from calibration.realism_config import RealismConfig, ChaosConfig
 from calibration.chaos_engine import ChaosEngine, ChaosImpact
 from calibration.bpi_calibrator import BPICalibrator
+from simulation.mechanistic import MechanisticDecisionModel, MechanisticConfig
 
 
 def utc_now() -> datetime:
@@ -115,6 +116,8 @@ class SimulationClock:
         condition: RunCondition,
         seed: Optional[int] = None,
         realism_config: Optional[RealismConfig] = None,
+        decision_mode: str = "calibrated",
+        mechanistic_config: Optional[MechanisticConfig] = None,
     ):
         """
         Initialize simulation clock.
@@ -129,7 +132,14 @@ class SimulationClock:
                 - WITH_BANK: Legacy alias for CONTEXT_BANK
             seed: Random seed (defaults to config)
             realism_config: Optional realism configuration for chaos and BPI calibration
+            decision_mode: "calibrated" (accuracy set per condition in config) or
+                "mechanistic" (outcome follows from what the agent retrieves;
+                see simulation/mechanistic.py)
+            mechanistic_config: Parameters for mechanistic mode
         """
+        if decision_mode not in ("calibrated", "mechanistic"):
+            raise ValueError(f"Unknown decision_mode: {decision_mode}")
+        self.decision_mode = decision_mode
         self.condition = condition
         self.seed = seed or SIMULATION_CONFIG.random_seed
         self.realism_config = realism_config
@@ -157,6 +167,11 @@ class SimulationClock:
             seed=self.seed,
         )
         self.classifier = ContextClassifier(use_api=False)
+        self.mechanistic_model: Optional[MechanisticDecisionModel] = None
+        if decision_mode == "mechanistic":
+            self.mechanistic_model = MechanisticDecisionModel(
+                condition, seed=self.seed, config=mechanistic_config,
+            )
 
         # Initialize chaos engine (v3.0)
         self.chaos_engine: Optional[ChaosEngine] = None
@@ -362,7 +377,11 @@ class SimulationClock:
                 accuracy_modifier = self.chaos_engine.get_agent_accuracy_modifier(agent_id)
                 context_ignore_prob = self.chaos_engine.get_context_ignore_probability(agent_id)
 
-            decision = self.agent_generator.generate_decision(
+            decide = (
+                self.mechanistic_model.decide if self.mechanistic_model
+                else self.agent_generator.generate_decision
+            )
+            decision = decide(
                 agent_id=agent_id,
                 scenario=scenario,
                 week=week,
@@ -385,8 +404,13 @@ class SimulationClock:
                 self.bank.deposit(obj)
 
         # Run synthesis pass (every 3 weeks or at specific milestones)
+        # In mechanistic mode synthesis is a Context Bank feature; the other
+        # conditions store records but do not crystallize them
+        runs_synthesis = self.decision_mode == "calibrated" or self.condition in (
+            RunCondition.CONTEXT_BANK, RunCondition.WITH_BANK,
+        )
         synthesis_result = None
-        if self.use_bank and self.bank is not None and week % 3 == 0:
+        if self.use_bank and self.bank is not None and runs_synthesis and week % 3 == 0:
             synthesis_result = run_synthesis_pass(self.bank, week)
 
         # Capture bank snapshot
@@ -448,6 +472,7 @@ class SimulationClock:
                     "behavior_type": event.behavior_type.value,
                     "application": event.application.value,
                     "staff_tenure_years": event.staff_tenure_years,
+                    "ground_truth_key": event.metadata.get("ground_truth_key"),
                 },
                 decay_function=DecayFunction.exponential,
                 decay_rate=0.15,
