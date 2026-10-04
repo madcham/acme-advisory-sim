@@ -11,6 +11,10 @@ Bank at 80%, a 46-point "partial sophistication trap" and the narrative in
 `summary.md`, are **not supported** and the current code does not reproduce them
 exactly.
 
-They are kept for reference because they back earlier public claims. For current
+They are kept for reference because they back earlier public claims, made in
+["The Partial Sophistication Trap"](https://andsnotors.substack.com/p/the-partial-sophistication-trap-what)
+(May 2026) and corrected in
+["I Stress-Tested My Own Simulation"](https://andsnotors.substack.com/p/i-stress-tested-my-own-simulation)
+(October 2026). For current
 results, see `../mechanistic/`, `../mechanistic_no_chaos/` and
 `docs/MECHANISTIC_MODE.md`.

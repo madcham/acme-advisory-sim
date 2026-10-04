@@ -11,6 +11,12 @@ face 15 decisions where institutional memory matters: for example, Brightline
 Consulting SOWs need secondary approval from the Finance head because of a past
 billing dispute, a fact recorded nowhere official.
 
+**Background:** the original results were published in
+["The Partial Sophistication Trap"](https://andsnotors.substack.com/p/the-partial-sophistication-trap-what)
+(May 2026) and corrected in
+["I Stress-Tested My Own Simulation"](https://andsnotors.substack.com/p/i-stress-tested-my-own-simulation)
+(October 2026). The correction explains what changed and why.
+
 ## Current findings
 
 Use the **mechanistic mode** results. Full method, ablation, sensitivity and
