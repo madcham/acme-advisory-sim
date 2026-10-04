@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "timestamp": "2026-09-27T18:21:31.380731+00:00",
+    "timestamp": "2026-10-04T00:00:03.127214+00:00",
     "weeks_simulated": 12,
     "random_seed": 93,
     "realism_mode": "BPI Calibrated",
@@ -65,7 +65,7 @@
       "incorrect_decisions": 5,
       "overall_accuracy": 66.66666666666666,
       "final_bank_size": 63,
-      "final_avg_confidence": 0.35183787013437773,
+      "final_avg_confidence": 0.35013403954271155,
       "total_workflow_events": 1560,
       "total_behavioral_events": 1800
     },
@@ -73,11 +73,11 @@
       "condition": "GLOBAL_RAG",
       "weeks_run": 12,
       "total_decisions": 15,
-      "correct_decisions": 11,
-      "incorrect_decisions": 4,
-      "overall_accuracy": 73.33333333333333,
+      "correct_decisions": 12,
+      "incorrect_decisions": 3,
+      "overall_accuracy": 80.0,
       "final_bank_size": 63,
-      "final_avg_confidence": 0.3539900603317409,
+      "final_avg_confidence": 0.3542602029543605,
       "total_workflow_events": 1560,
       "total_behavioral_events": 1800
     },
@@ -85,11 +85,11 @@
       "condition": "CONTEXT_BANK",
       "weeks_run": 12,
       "total_decisions": 15,
-      "correct_decisions": 13,
-      "incorrect_decisions": 2,
-      "overall_accuracy": 86.66666666666667,
+      "correct_decisions": 12,
+      "incorrect_decisions": 3,
+      "overall_accuracy": 80.0,
       "final_bank_size": 75,
-      "final_avg_confidence": 0.46325080635461385,
+      "final_avg_confidence": 0.4641406845877786,
       "total_workflow_events": 1560,
       "total_behavioral_events": 1800
     }
@@ -97,13 +97,13 @@
   "accuracies": {
     "SILOED_TYPICAL": 40.0,
     "SILOED_ADVANCED": 66.66666666666666,
-    "GLOBAL_RAG": 73.33333333333333,
-    "CONTEXT_BANK": 86.66666666666667
+    "GLOBAL_RAG": 80.0,
+    "CONTEXT_BANK": 80.0
   },
   "improvements_over_baseline": {
     "SILOED_ADVANCED": 26.666666666666657,
-    "GLOBAL_RAG": 33.33333333333333,
-    "CONTEXT_BANK": 46.66666666666667
+    "GLOBAL_RAG": 40.0,
+    "CONTEXT_BANK": 40.0
   },
   "main_comparison": {
     "without_bank": {
@@ -334,15 +334,15 @@
             100.0
           ],
           "billing_agent": [
+            100.0,
+            100.0,
+            100.0,
             0.0,
-            100.0,
-            100.0,
-            100.0,
             100.0,
             100.0
           ],
           "staffing_agent": [
-            100.0,
+            0.0,
             100.0,
             100.0,
             100.0
@@ -352,114 +352,114 @@
           0.0,
           0.0,
           0.0,
+          100.0,
           50.0,
           100.0,
           100.0,
           100.0,
-          100.0,
-          100.0,
+          0.0,
           100.0,
           100.0,
           100.0
         ],
-        "overall_dqs": 86.66666666666667,
+        "overall_dqs": 80.0,
         "exception_handling_rates": [
           0.0,
           0.0,
           0.0,
+          100.0,
           50.0,
           100.0,
           100.0,
           100.0,
-          100.0,
-          100.0,
+          0.0,
           100.0,
           100.0,
           100.0
         ],
-        "overall_ehr": 70.83333333333333,
+        "overall_ehr": 62.5,
         "institutional_memory_utilization": [
           0,
           0,
-          300.0,
-          150.0,
-          200.0,
-          200.0,
-          450.0,
           400.0,
-          300.0,
-          350.0,
+          100.0,
+          200.0,
+          200.0,
           450.0,
+          500.0,
+          100.0,
+          300.0,
+          500.0,
           500.0
         ],
-        "overall_imu": 275.0,
+        "overall_imu": 270.8333333333333,
         "organizational_error_rates": [
           0,
           0,
           1,
+          0,
           1,
           0,
           0,
           0,
-          0,
-          0,
+          1,
           0,
           0,
           0
         ],
-        "total_oer": 2
+        "total_oer": 3
       },
       "secondary_metrics": {
         "context_object_growth": [
           15,
           18,
-          24,
-          29,
-          34,
-          46,
-          51,
-          55,
-          61,
-          66,
-          71,
+          25,
+          30,
+          35,
+          45,
+          50,
+          54,
+          60,
+          65,
+          70,
           75
         ],
         "avg_confidence_history": [
-          0.7775200000000001,
-          0.7352955555555556,
-          0.7013648924444444,
-          0.6593603690574712,
-          0.6181414910327843,
-          0.6167468367170338,
-          0.5829329223165276,
-          0.5518823296993998,
-          0.5524592002124332,
-          0.5278589205165777,
-          0.502806391210371,
-          0.46325080635461385
+          0.7708533333333334,
+          0.7333511111111113,
+          0.7053152300800001,
+          0.6642012178666666,
+          0.6235768472413714,
+          0.6238960842676704,
+          0.5895822223091024,
+          0.5589054427097492,
+          0.5557625652843374,
+          0.5305081026308704,
+          0.5070599580401502,
+          0.4641406845877786
         ],
         "contradiction_counts": [
           0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
           1,
-          1
+          1,
+          1,
+          1,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2
         ]
       },
       "synthesis_metrics": {
         "summary": {
           "total_patterns_crystallized": 12,
           "total_validations_propagated": 0,
-          "total_decay_adjustments": 14,
-          "average_intelligence_score": 0.245,
-          "peak_intelligence_score": 0.34,
+          "total_decay_adjustments": 17,
+          "average_intelligence_score": 0.28500000000000003,
+          "peak_intelligence_score": 0.38,
           "active_weeks": 4,
           "crystallized_entities": [],
           "objects_created": 12
@@ -467,27 +467,28 @@
         "weekly_scores": [
           0.0,
           0.0,
-          0.12,
+          0.18,
           0.0,
           0.0,
-          0.34,
+          0.38,
           0.0,
           0.0,
           0.32,
           0.0,
           0.0,
-          0.2
+          0.26
         ],
         "weekly_results": [
           null,
           null,
           {
-            "patterns_crystallized": 2,
+            "patterns_crystallized": 3,
             "validations_propagated": 0,
             "decay_rates_adjusted": 0,
             "new_objects_created": [
-              "CTX-2588E80E",
-              "CTX-515772CB"
+              "CTX-57AE1650",
+              "CTX-ECD819D2",
+              "CTX-5B0045A8"
             ],
             "objects_updated": [],
             "confidence_boosts": {}
@@ -495,20 +496,19 @@
           null,
           null,
           {
-            "patterns_crystallized": 8,
+            "patterns_crystallized": 6,
             "validations_propagated": 0,
-            "decay_rates_adjusted": 1,
+            "decay_rates_adjusted": 2,
             "new_objects_created": [
-              "CTX-2799CA5E",
-              "CTX-EFF9CCB6",
-              "CTX-649042B8",
-              "CTX-4B25D878",
-              "CTX-FCCAC4A7",
-              "CTX-E2544D2F",
-              "CTX-5CCE3850",
-              "CTX-337BE4A1"
+              "CTX-DEA77ECA",
+              "CTX-6BA66FAF",
+              "CTX-17B97C29",
+              "CTX-58879200",
+              "CTX-8D35BC26",
+              "CTX-FA3859C0"
             ],
             "objects_updated": [
+              "CTX-002",
               "CTX-006"
             ],
             "confidence_boosts": {}
@@ -518,36 +518,40 @@
           {
             "patterns_crystallized": 2,
             "validations_propagated": 0,
-            "decay_rates_adjusted": 5,
+            "decay_rates_adjusted": 6,
             "new_objects_created": [
-              "CTX-9FEF0A06",
-              "CTX-F470B3B3"
+              "CTX-8565A78A",
+              "CTX-17CC60E4"
             ],
             "objects_updated": [
+              "CTX-001",
               "CTX-002",
               "CTX-006",
-              "CTX-B6C897A5",
-              "CTX-7D4F88C0",
-              "CTX-39237AF1"
+              "CTX-10D5DA19",
+              "CTX-1CEB3677",
+              "CTX-9EBBA8D0"
             ],
             "confidence_boosts": {}
           },
           null,
           null,
           {
-            "patterns_crystallized": 0,
+            "patterns_crystallized": 1,
             "validations_propagated": 0,
-            "decay_rates_adjusted": 8,
-            "new_objects_created": [],
+            "decay_rates_adjusted": 9,
+            "new_objects_created": [
+              "CTX-2DBC77F9"
+            ],
             "objects_updated": [
               "CTX-001",
               "CTX-002",
               "CTX-006",
-              "CTX-B6C897A5",
-              "CTX-7D4F88C0",
-              "CTX-A16EC1A7",
-              "CTX-39237AF1",
-              "CTX-B7ADD43D"
+              "CTX-10D5DA19",
+              "CTX-1CEB3677",
+              "CTX-6BAB213E",
+              "CTX-A5F207C7",
+              "CTX-9EBBA8D0",
+              "CTX-C49D34A5"
             ],
             "confidence_boosts": {}
           }
@@ -583,25 +587,25 @@
         "events_by_week": {},
         "resilience": {
           "accuracy_during_chaos": 0.0,
-          "accuracy_during_normal": 86.66666666666667,
+          "accuracy_during_normal": 80.0,
           "resilience_score": 0.0
         }
       },
       "summary": {
         "total_decisions": 15,
-        "correct_decisions": 13,
-        "incorrect_decisions": 2,
-        "accuracy": 86.66666666666667,
+        "correct_decisions": 12,
+        "incorrect_decisions": 3,
+        "accuracy": 80.0,
         "final_bank_size": 75,
-        "final_avg_confidence": 0.46325080635461385
+        "final_avg_confidence": 0.4641406845877786
       }
     },
     "comparison": {
-      "dqs_improvement": 46.66666666666667,
-      "ehr_improvement": 37.49999999999999,
-      "imu_improvement": 275.0,
-      "errors_avoided": 7,
-      "accuracy_improvement": 46.66666666666667
+      "dqs_improvement": 40.0,
+      "ehr_improvement": 29.166666666666664,
+      "imu_improvement": 270.8333333333333,
+      "errors_avoided": 6,
+      "accuracy_improvement": 40.0
     }
   }
 }

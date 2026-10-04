@@ -269,6 +269,9 @@ class MechanisticDecisionModel:
             correct = False
             path = "followed wrong guidance"
         else:
+            # Includes wrong guidance the agent did not follow: it falls back to
+            # standard process, so that object played no part in the outcome
+            acted_on = None
             correct = self._rng.random() < p_base
             path = "standard process"
 

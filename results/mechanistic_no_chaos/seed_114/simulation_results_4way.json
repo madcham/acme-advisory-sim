@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "timestamp": "2026-09-27T18:21:35.251642+00:00",
+    "timestamp": "2026-10-04T00:00:07.081261+00:00",
     "weeks_simulated": 12,
     "random_seed": 114,
     "realism_mode": "BPI Calibrated",
@@ -65,7 +65,7 @@
       "incorrect_decisions": 0,
       "overall_accuracy": 100.0,
       "final_bank_size": 63,
-      "final_avg_confidence": 0.35128064907598877,
+      "final_avg_confidence": 0.354362058114606,
       "total_workflow_events": 1560,
       "total_behavioral_events": 1800
     },
@@ -77,7 +77,7 @@
       "incorrect_decisions": 2,
       "overall_accuracy": 86.66666666666667,
       "final_bank_size": 63,
-      "final_avg_confidence": 0.3539253468597499,
+      "final_avg_confidence": 0.35570497913541305,
       "total_workflow_events": 1560,
       "total_behavioral_events": 1800
     },
@@ -85,11 +85,11 @@
       "condition": "CONTEXT_BANK",
       "weeks_run": 12,
       "total_decisions": 15,
-      "correct_decisions": 14,
-      "incorrect_decisions": 1,
-      "overall_accuracy": 93.33333333333333,
-      "final_bank_size": 73,
-      "final_avg_confidence": 0.460348439135866,
+      "correct_decisions": 13,
+      "incorrect_decisions": 2,
+      "overall_accuracy": 86.66666666666667,
+      "final_bank_size": 74,
+      "final_avg_confidence": 0.45638343967360145,
       "total_workflow_events": 1560,
       "total_behavioral_events": 1800
     }
@@ -98,12 +98,12 @@
     "SILOED_TYPICAL": 40.0,
     "SILOED_ADVANCED": 100.0,
     "GLOBAL_RAG": 86.66666666666667,
-    "CONTEXT_BANK": 93.33333333333333
+    "CONTEXT_BANK": 86.66666666666667
   },
   "improvements_over_baseline": {
     "SILOED_ADVANCED": 60.0,
     "GLOBAL_RAG": 46.66666666666667,
-    "CONTEXT_BANK": 53.33333333333333
+    "CONTEXT_BANK": 46.66666666666667
   },
   "main_comparison": {
     "without_bank": {
@@ -325,7 +325,7 @@
       "primary_metrics": {
         "decision_quality_scores": {
           "vendor_agent": [
-            100.0,
+            0.0,
             100.0,
             100.0
           ],
@@ -335,7 +335,7 @@
           ],
           "billing_agent": [
             100.0,
-            0.0,
+            100.0,
             100.0,
             100.0,
             100.0,
@@ -345,57 +345,55 @@
             100.0,
             100.0,
             100.0,
-            100.0
+            0.0
           ]
         },
         "weekly_dqs": [
           0.0,
           0.0,
+          0.0,
+          100.0,
+          100.0,
+          100.0,
+          100.0,
+          100.0,
           100.0,
           100.0,
           50.0,
-          100.0,
-          100.0,
-          100.0,
-          100.0,
-          100.0,
-          100.0,
           100.0
         ],
-        "overall_dqs": 93.33333333333333,
+        "overall_dqs": 86.66666666666667,
         "exception_handling_rates": [
           0.0,
           0.0,
+          0.0,
+          100.0,
+          100.0,
+          100.0,
+          100.0,
+          100.0,
           100.0,
           100.0,
           50.0,
-          100.0,
-          100.0,
-          100.0,
-          100.0,
-          100.0,
-          100.0,
           100.0
         ],
-        "overall_ehr": 79.16666666666667,
+        "overall_ehr": 70.83333333333333,
         "institutional_memory_utilization": [
           0,
           0,
+          400.0,
+          250.0,
+          300.0,
+          100.0,
           500.0,
-          150.0,
+          500.0,
+          500.0,
+          500.0,
           400.0,
-          200.0,
-          400.0,
-          400.0,
-          400.0,
-          400.0,
-          450.0,
           500.0
         ],
-        "overall_imu": 316.6666666666667,
+        "overall_imu": 329.1666666666667,
         "organizational_error_rates": [
-          0,
-          0,
           0,
           0,
           1,
@@ -405,38 +403,40 @@
           0,
           0,
           0,
+          0,
+          1,
           0
         ],
-        "total_oer": 1
+        "total_oer": 2
       },
       "secondary_metrics": {
         "context_object_growth": [
           15,
           18,
-          27,
-          32,
-          37,
+          26,
+          31,
+          36,
           44,
           49,
           53,
           59,
           64,
           69,
-          73
+          74
         ],
         "avg_confidence_history": [
           0.7741866666666667,
-          0.7357122222222223,
-          0.7172661916049384,
-          0.6732320064791666,
-          0.6322715239805765,
-          0.6223063518844566,
-          0.5889983068727132,
-          0.5569973398481189,
-          0.5533415941977228,
-          0.5279774154581149,
-          0.5043666004189034,
-          0.460348439135866
+          0.7329344444444446,
+          0.7110216220512823,
+          0.6682475550752687,
+          0.6280663927022592,
+          0.6228911403561402,
+          0.5874039108390077,
+          0.5558603666831937,
+          0.5477769691314626,
+          0.5222173538128388,
+          0.4984614704384117,
+          0.45638343967360145
         ],
         "contradiction_counts": [
           0,
@@ -449,69 +449,67 @@
           0,
           0,
           0,
-          1,
-          1
+          0,
+          0
         ]
       },
       "synthesis_metrics": {
         "summary": {
-          "total_patterns_crystallized": 10,
+          "total_patterns_crystallized": 11,
           "total_validations_propagated": 0,
-          "total_decay_adjustments": 20,
-          "average_intelligence_score": 0.29000000000000004,
-          "peak_intelligence_score": 0.34,
+          "total_decay_adjustments": 17,
+          "average_intelligence_score": 0.295,
+          "peak_intelligence_score": 0.36,
           "active_weeks": 4,
           "crystallized_entities": [],
-          "objects_created": 10
+          "objects_created": 11
         },
         "weekly_scores": [
           0.0,
           0.0,
-          0.34,
+          0.24,
           0.0,
           0.0,
-          0.3,
+          0.36,
           0.0,
           0.0,
           0.32,
           0.0,
           0.0,
-          0.2
+          0.26
         ],
         "weekly_results": [
           null,
           null,
           {
-            "patterns_crystallized": 5,
+            "patterns_crystallized": 4,
             "validations_propagated": 0,
-            "decay_rates_adjusted": 1,
+            "decay_rates_adjusted": 0,
             "new_objects_created": [
-              "CTX-03FA2E60",
-              "CTX-4401D4FE",
-              "CTX-A51A83AC",
-              "CTX-5216A9F9",
-              "CTX-AA5177CF"
+              "CTX-E2684B61",
+              "CTX-3683E1D7",
+              "CTX-6E92AA3C",
+              "CTX-06C2D41D"
             ],
-            "objects_updated": [
-              "CTX-001"
-            ],
+            "objects_updated": [],
             "confidence_boosts": {}
           },
           null,
           null,
           {
-            "patterns_crystallized": 3,
+            "patterns_crystallized": 4,
             "validations_propagated": 0,
             "decay_rates_adjusted": 3,
             "new_objects_created": [
-              "CTX-7C306A94",
-              "CTX-79BD9D9F",
-              "CTX-36271F00"
+              "CTX-303A713B",
+              "CTX-02809963",
+              "CTX-7D1FB372",
+              "CTX-33EA43C8"
             ],
             "objects_updated": [
               "CTX-001",
-              "CTX-AD6E4F22",
-              "CTX-A4003406"
+              "CTX-002",
+              "CTX-006"
             ],
             "confidence_boosts": {}
           },
@@ -520,39 +518,39 @@
           {
             "patterns_crystallized": 2,
             "validations_propagated": 0,
-            "decay_rates_adjusted": 7,
+            "decay_rates_adjusted": 6,
             "new_objects_created": [
-              "CTX-1F0E8E4A",
-              "CTX-A0C86051"
+              "CTX-AC466CF2",
+              "CTX-DC7BC74B"
             ],
             "objects_updated": [
               "CTX-001",
               "CTX-002",
-              "CTX-AD6E4F22",
-              "CTX-A4003406",
-              "CTX-F504D72F",
-              "CTX-953F98D6",
-              "CTX-3F256A83"
+              "CTX-006",
+              "CTX-C245A336",
+              "CTX-15085D74",
+              "CTX-2A1DB986"
             ],
             "confidence_boosts": {}
           },
           null,
           null,
           {
-            "patterns_crystallized": 0,
+            "patterns_crystallized": 1,
             "validations_propagated": 0,
-            "decay_rates_adjusted": 9,
-            "new_objects_created": [],
+            "decay_rates_adjusted": 8,
+            "new_objects_created": [
+              "CTX-4227218B"
+            ],
             "objects_updated": [
               "CTX-001",
               "CTX-002",
-              "CTX-AD6E4F22",
-              "CTX-A4003406",
-              "CTX-F504D72F",
-              "CTX-953F98D6",
-              "CTX-0F9047B2",
-              "CTX-3F256A83",
-              "CTX-3900EFA3"
+              "CTX-006",
+              "CTX-C245A336",
+              "CTX-15085D74",
+              "CTX-7FBA8F45",
+              "CTX-2A1DB986",
+              "CTX-540F21CC"
             ],
             "confidence_boosts": {}
           }
@@ -588,25 +586,25 @@
         "events_by_week": {},
         "resilience": {
           "accuracy_during_chaos": 0.0,
-          "accuracy_during_normal": 93.33333333333333,
+          "accuracy_during_normal": 86.66666666666667,
           "resilience_score": 0.0
         }
       },
       "summary": {
         "total_decisions": 15,
-        "correct_decisions": 14,
-        "incorrect_decisions": 1,
-        "accuracy": 93.33333333333333,
-        "final_bank_size": 73,
-        "final_avg_confidence": 0.460348439135866
+        "correct_decisions": 13,
+        "incorrect_decisions": 2,
+        "accuracy": 86.66666666666667,
+        "final_bank_size": 74,
+        "final_avg_confidence": 0.45638343967360145
       }
     },
     "comparison": {
-      "dqs_improvement": 53.33333333333333,
-      "ehr_improvement": 41.66666666666667,
-      "imu_improvement": 316.6666666666667,
-      "errors_avoided": 8,
-      "accuracy_improvement": 53.33333333333333
+      "dqs_improvement": 46.66666666666667,
+      "ehr_improvement": 33.33333333333333,
+      "imu_improvement": 329.1666666666667,
+      "errors_avoided": 7,
+      "accuracy_improvement": 46.66666666666667
     }
   }
 }

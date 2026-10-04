@@ -244,9 +244,9 @@
       "outcome": "incorrect",
       "context_retrieved": [
         "CTX-001",
-        "CTX-96F26F19",
-        "CTX-D8312520",
-        "CTX-7248DAB6"
+        "CTX-96C48D1C",
+        "CTX-0C345DF8",
+        "CTX-547E4765"
       ],
       "context_used": []
     },
@@ -269,7 +269,7 @@
       "outcome": "correct",
       "context_retrieved": [
         "CTX-003",
-        "CTX-08D82160"
+        "CTX-D3058257"
       ],
       "context_used": [
         "CTX-003"
@@ -283,7 +283,7 @@
       "decision_taken": "escalate to collections for non-payment",
       "outcome": "incorrect",
       "context_retrieved": [
-        "CTX-7248DAB6",
+        "CTX-547E4765",
         "CTX-002",
         "CTX-012"
       ],
@@ -298,7 +298,7 @@
       "outcome": "correct",
       "context_retrieved": [
         "CTX-006",
-        "CTX-2FEC52C2"
+        "CTX-9326767F"
       ],
       "context_used": [
         "CTX-006"
@@ -312,11 +312,11 @@
       "decision_taken": "flag Brightline relationship for extra oversight, historical overbilling",
       "outcome": "correct",
       "context_retrieved": [
-        "CTX-3BFB1107",
+        "CTX-03102589",
         "CTX-007"
       ],
       "context_used": [
-        "CTX-3BFB1107"
+        "CTX-03102589"
       ]
     },
     {
@@ -328,10 +328,10 @@
       "outcome": "incorrect",
       "context_retrieved": [
         "CTX-001",
-        "CTX-96F26F19",
-        "CTX-3CF79E20",
-        "CTX-D8312520",
-        "CTX-8F99F717"
+        "CTX-96C48D1C",
+        "CTX-AF1768DD",
+        "CTX-0C345DF8",
+        "CTX-761743FC"
       ],
       "context_used": []
     },
@@ -344,7 +344,7 @@
       "outcome": "correct",
       "context_retrieved": [
         "CTX-010",
-        "CTX-3E714552"
+        "CTX-4DB6F49F"
       ],
       "context_used": [
         "CTX-010"
@@ -358,11 +358,9 @@
       "decision_taken": "hold escalation and notify Marcus Webb directly, strategic relationship",
       "outcome": "correct",
       "context_retrieved": [
-        "CTX-1CF99390"
+        "CTX-9317A045"
       ],
-      "context_used": [
-        "CTX-1CF99390"
-      ]
+      "context_used": []
     }
   ],
   "GLOBAL_RAG": [
@@ -375,8 +373,6 @@
       "outcome": "correct",
       "context_retrieved": [
         "CTX-001",
-        "CTX-61A47C17",
-        "CTX-85BE358C",
         "CTX-008",
         "CTX-002"
       ],
@@ -389,30 +385,22 @@
       "week": 4,
       "agent_id": "proposal_agent",
       "scenario_type": "go_no_go",
-      "decision_taken": "proceed with go decision due to Marcus Webb override",
-      "outcome": "correct",
-      "context_retrieved": [
-        "CTX-28121B33",
-        "CTX-003"
-      ],
-      "context_used": [
-        "CTX-28121B33"
-      ]
+      "decision_taken": "recommend no-go due to margin below threshold",
+      "outcome": "incorrect",
+      "context_retrieved": [],
+      "context_used": []
     },
     {
       "decision_id": "DEC-MX-000003",
       "week": 4,
       "agent_id": "billing_agent",
       "scenario_type": "billing_escalation",
-      "decision_taken": "check scope documentation before escalating, financial services clients need 24hr docs",
-      "outcome": "correct",
+      "decision_taken": "escalate to collections for non-payment",
+      "outcome": "incorrect",
       "context_retrieved": [
-        "CTX-002",
-        "CTX-85BE358C"
+        "CTX-012"
       ],
-      "context_used": [
-        "CTX-002"
-      ]
+      "context_used": []
     },
     {
       "decision_id": "DEC-MX-000004",
@@ -437,9 +425,8 @@
       "outcome": "correct",
       "context_retrieved": [
         "CTX-001",
-        "CTX-F72A7A86",
-        "CTX-EC632872",
-        "CTX-F17C6835"
+        "CTX-4D31F6A4",
+        "CTX-4B42B725"
       ],
       "context_used": [
         "CTX-001"
@@ -454,9 +441,8 @@
       "outcome": "correct",
       "context_retrieved": [
         "CTX-010",
-        "CTX-B9B6BC88",
-        "CTX-03784A84",
-        "CTX-CC24AAB7"
+        "CTX-86BBBC72",
+        "CTX-1CE0BB23"
       ],
       "context_used": [
         "CTX-010"
@@ -470,14 +456,14 @@
       "decision_taken": "route through secondary approval from David Okafor",
       "outcome": "correct",
       "context_retrieved": [
-        "CTX-DBA0CA3A",
-        "CTX-F72A7A86",
-        "CTX-F12F9D8D",
-        "CTX-EC632872",
-        "CTX-F17C6835"
+        "CTX-4D31F6A4",
+        "CTX-4B42B725",
+        "CTX-E70BCA8E",
+        "CTX-002",
+        "CTX-008"
       ],
       "context_used": [
-        "CTX-DBA0CA3A"
+        "CTX-4D31F6A4"
       ]
     },
     {
@@ -485,35 +471,30 @@
       "week": 7,
       "agent_id": "billing_agent",
       "scenario_type": "payment_collection",
-      "decision_taken": "hold escalation and notify Marcus Webb directly, strategic relationship",
-      "outcome": "correct",
+      "decision_taken": "proceed with standard collection escalation at 45 days",
+      "outcome": "incorrect",
       "context_retrieved": [
-        "CTX-41D11F9E",
-        "CTX-E6F16FDD",
-        "CTX-7D0086A9",
-        "CTX-28121B33",
+        "CTX-53CE38A7",
+        "CTX-EF3C86C5",
         "CTX-003"
       ],
-      "context_used": [
-        "CTX-41D11F9E"
-      ]
+      "context_used": []
     },
     {
       "decision_id": "DEC-MX-000009",
       "week": 8,
       "agent_id": "proposal_agent",
       "scenario_type": "go_no_go",
-      "decision_taken": "recommend no-go due to margin below threshold",
-      "outcome": "incorrect",
+      "decision_taken": "proceed with go decision due to Marcus Webb override",
+      "outcome": "correct",
       "context_retrieved": [
-        "CTX-28121B33",
-        "CTX-E6F16FDD",
         "CTX-003",
-        "CTX-7D0086A9",
-        "CTX-41D11F9E"
+        "CTX-53CE38A7",
+        "CTX-EF3C86C5",
+        "CTX-D25E8274"
       ],
       "context_used": [
-        "CTX-28121B33"
+        "CTX-003"
       ]
     },
     {
@@ -521,16 +502,17 @@
       "week": 9,
       "agent_id": "billing_agent",
       "scenario_type": "billing_escalation",
-      "decision_taken": "check scope documentation before escalating, financial services clients need 24hr docs",
-      "outcome": "correct",
+      "decision_taken": "escalate to collections for non-payment",
+      "outcome": "incorrect",
       "context_retrieved": [
-        "CTX-91CF6C25",
-        "CTX-012",
-        "CTX-85BE358C",
-        "CTX-002"
+        "CTX-B37EA483",
+        "CTX-7A32615C",
+        "CTX-A2C44B30",
+        "CTX-5DBF6484",
+        "CTX-8F755904"
       ],
       "context_used": [
-        "CTX-91CF6C25"
+        "CTX-B37EA483"
       ]
     },
     {
@@ -541,12 +523,12 @@
       "decision_taken": "do not escalate until day 65",
       "outcome": "correct",
       "context_retrieved": [
-        "CTX-7D1EC3B5",
-        "CTX-1A251A7B",
-        "CTX-006"
+        "CTX-006",
+        "CTX-4477EB41",
+        "CTX-8401F43B"
       ],
       "context_used": [
-        "CTX-7D1EC3B5"
+        "CTX-006"
       ]
     },
     {
@@ -557,14 +539,14 @@
       "decision_taken": "flag Brightline relationship for extra oversight, historical overbilling",
       "outcome": "correct",
       "context_retrieved": [
+        "CTX-E70BCA8E",
         "CTX-001",
-        "CTX-F12F9D8D",
-        "CTX-F72A7A86",
-        "CTX-A8A576C9",
-        "CTX-EC632872"
+        "CTX-4B42B725",
+        "CTX-4D31F6A4",
+        "CTX-FFCC704C"
       ],
       "context_used": [
-        "CTX-001"
+        "CTX-E70BCA8E"
       ]
     },
     {
@@ -575,13 +557,15 @@
       "decision_taken": "issue SOW directly to vendor",
       "outcome": "incorrect",
       "context_retrieved": [
-        "CTX-8ADE896B",
-        "CTX-EC632872",
-        "CTX-DBA0CA3A",
-        "CTX-A8A576C9",
-        "CTX-F17C6835"
+        "CTX-4B42B725",
+        "CTX-EAE105F0",
+        "CTX-FFCC704C",
+        "CTX-E70BCA8E",
+        "CTX-001"
       ],
-      "context_used": []
+      "context_used": [
+        "CTX-4B42B725"
+      ]
     },
     {
       "decision_id": "DEC-MX-000014",
@@ -591,12 +575,13 @@
       "decision_taken": "do not assign Jordan Park, find alternative",
       "outcome": "correct",
       "context_retrieved": [
-        "CTX-03784A84",
-        "CTX-5C4A03E1",
-        "CTX-CC24AAB7"
+        "CTX-4D3577AF",
+        "CTX-06AB7585",
+        "CTX-1CE0BB23",
+        "CTX-010"
       ],
       "context_used": [
-        "CTX-03784A84"
+        "CTX-4D3577AF"
       ]
     },
     {
@@ -604,17 +589,16 @@
       "week": 12,
       "agent_id": "billing_agent",
       "scenario_type": "payment_collection",
-      "decision_taken": "hold escalation and notify Marcus Webb directly, strategic relationship",
-      "outcome": "correct",
+      "decision_taken": "proceed with standard collection escalation at 45 days",
+      "outcome": "incorrect",
       "context_retrieved": [
-        "CTX-41D11F9E",
-        "CTX-003",
-        "CTX-1D0295A5",
-        "CTX-5320FA62",
-        "CTX-7D0086A9"
+        "CTX-FD2D54AC",
+        "CTX-EF3C86C5",
+        "CTX-53CE38A7",
+        "CTX-003"
       ],
       "context_used": [
-        "CTX-41D11F9E"
+        "CTX-FD2D54AC"
       ]
     }
   ],
@@ -629,8 +613,6 @@
       "context_retrieved": [
         "CTX-001",
         "CTX-002",
-        "CTX-29B430A3",
-        "CTX-145E99F8",
         "CTX-008"
       ],
       "context_used": [
@@ -645,10 +627,11 @@
       "decision_taken": "proceed with go decision due to Marcus Webb override",
       "outcome": "correct",
       "context_retrieved": [
-        "CTX-660007BB"
+        "CTX-003",
+        "CTX-3DA3CDB2"
       ],
       "context_used": [
-        "CTX-660007BB"
+        "CTX-003"
       ]
     },
     {
@@ -658,36 +641,34 @@
       "scenario_type": "billing_escalation",
       "decision_taken": "check scope documentation before escalating, financial services clients need 24hr docs",
       "outcome": "correct",
-      "context_retrieved": [
-        "CTX-145E99F8"
-      ],
-      "context_used": [
-        "CTX-145E99F8"
-      ]
+      "context_retrieved": [],
+      "context_used": []
     },
     {
       "decision_id": "DEC-MX-000004",
       "week": 5,
       "agent_id": "billing_agent",
       "scenario_type": "payment_escalation",
-      "decision_taken": "escalate to collections",
-      "outcome": "incorrect",
-      "context_retrieved": [],
-      "context_used": []
+      "decision_taken": "do not escalate until day 65",
+      "outcome": "correct",
+      "context_retrieved": [
+        "CTX-006"
+      ],
+      "context_used": [
+        "CTX-006"
+      ]
     },
     {
       "decision_id": "DEC-MX-000005",
       "week": 5,
       "agent_id": "staffing_agent",
       "scenario_type": "subcontractor_assignment",
-      "decision_taken": "flag Brightline relationship for extra oversight, historical overbilling",
-      "outcome": "correct",
+      "decision_taken": "proceed with standard subcontractor assignment",
+      "outcome": "incorrect",
       "context_retrieved": [
         "CTX-001",
-        "CTX-E8243342",
-        "CTX-6F841817",
-        "CTX-0B126D7B",
-        "CTX-FA59DBC6"
+        "CTX-7755FD7C",
+        "CTX-007"
       ],
       "context_used": [
         "CTX-001"
@@ -701,11 +682,14 @@
       "decision_taken": "do not assign Jordan Park, find alternative",
       "outcome": "correct",
       "context_retrieved": [
-        "CTX-FF5588F8",
-        "CTX-5AC322AF"
+        "CTX-010",
+        "CTX-521200D8",
+        "CTX-A7A193D9",
+        "CTX-76C1891E",
+        "CTX-40A5BADF"
       ],
       "context_used": [
-        "CTX-FF5588F8"
+        "CTX-010"
       ]
     },
     {
@@ -717,10 +701,10 @@
       "outcome": "correct",
       "context_retrieved": [
         "CTX-001",
-        "CTX-E8243342",
-        "CTX-6F841817",
-        "CTX-AF361B64",
-        "CTX-FA59DBC6"
+        "CTX-0018BD80",
+        "CTX-7755FD7C",
+        "CTX-94625902",
+        "CTX-4D3F868F"
       ],
       "context_used": [
         "CTX-001"
@@ -735,10 +719,10 @@
       "outcome": "correct",
       "context_retrieved": [
         "CTX-003",
-        "CTX-278E2633",
-        "CTX-2D0E5F02",
-        "CTX-054D9451",
-        "CTX-60D09C40"
+        "CTX-3DA3CDB2",
+        "CTX-86A9D913",
+        "CTX-B306DC8F",
+        "CTX-2A69066F"
       ],
       "context_used": [
         "CTX-003"
@@ -753,10 +737,10 @@
       "outcome": "correct",
       "context_retrieved": [
         "CTX-003",
-        "CTX-278E2633",
-        "CTX-2D0E5F02",
-        "CTX-660007BB",
-        "CTX-3F2F91D2"
+        "CTX-86A9D913",
+        "CTX-D7AA5AF0",
+        "CTX-B306DC8F",
+        "CTX-2A69066F"
       ],
       "context_used": [
         "CTX-003"
@@ -770,7 +754,9 @@
       "decision_taken": "escalate to collections for non-payment",
       "outcome": "incorrect",
       "context_retrieved": [
-        "CTX-145E99F8",
+        "CTX-88160181",
+        "CTX-C1F6EC72",
+        "CTX-D75A8A63",
         "CTX-002"
       ],
       "context_used": []
@@ -780,13 +766,12 @@
       "week": 10,
       "agent_id": "billing_agent",
       "scenario_type": "payment_escalation",
-      "decision_taken": "escalate to collections",
-      "outcome": "incorrect",
+      "decision_taken": "do not escalate until day 65",
+      "outcome": "correct",
       "context_retrieved": [
         "CTX-006",
-        "CTX-FD47A5F4",
-        "CTX-90997CC2",
-        "CTX-E31B66DC"
+        "CTX-87BC9F7E",
+        "CTX-4D219B38"
       ],
       "context_used": [
         "CTX-006"
@@ -800,14 +785,12 @@
       "decision_taken": "flag Brightline relationship for extra oversight, historical overbilling",
       "outcome": "correct",
       "context_retrieved": [
-        "CTX-E8243342",
-        "CTX-FA59DBC6",
-        "CTX-CCC62FCF",
-        "CTX-6F841817",
-        "CTX-AF361B64"
+        "CTX-AEA0FE98",
+        "CTX-94625902",
+        "CTX-007"
       ],
       "context_used": [
-        "CTX-E8243342"
+        "CTX-AEA0FE98"
       ]
     },
     {
@@ -815,16 +798,18 @@
       "week": 11,
       "agent_id": "vendor_agent",
       "scenario_type": "vendor_sow",
-      "decision_taken": "issue SOW directly to vendor",
-      "outcome": "incorrect",
+      "decision_taken": "route through secondary approval from David Okafor",
+      "outcome": "correct",
       "context_retrieved": [
-        "CTX-B8ABE0D1",
-        "CTX-FA59DBC6",
-        "CTX-1850796F",
-        "CTX-145E99F8",
-        "CTX-CCC62FCF"
+        "CTX-001",
+        "CTX-0018BD80",
+        "CTX-C61FE188",
+        "CTX-4D3F868F",
+        "CTX-7755FD7C"
       ],
-      "context_used": []
+      "context_used": [
+        "CTX-001"
+      ]
     },
     {
       "decision_id": "DEC-MX-000014",
@@ -835,9 +820,9 @@
       "outcome": "correct",
       "context_retrieved": [
         "CTX-010",
-        "CTX-B453F177",
-        "CTX-AE19863F",
-        "CTX-FF5588F8"
+        "CTX-A7A193D9",
+        "CTX-AAA870EA",
+        "CTX-EA24752C"
       ],
       "context_used": [
         "CTX-010"
@@ -848,18 +833,16 @@
       "week": 12,
       "agent_id": "billing_agent",
       "scenario_type": "payment_collection",
-      "decision_taken": "hold escalation and notify Marcus Webb directly, strategic relationship",
-      "outcome": "correct",
+      "decision_taken": "proceed with standard collection escalation at 45 days",
+      "outcome": "incorrect",
       "context_retrieved": [
         "CTX-003",
-        "CTX-278E2633",
-        "CTX-2D0E5F02",
-        "CTX-660007BB",
-        "CTX-3F2F91D2"
+        "CTX-3DA3CDB2",
+        "CTX-86A9D913",
+        "CTX-D7AA5AF0",
+        "CTX-4AE7BF81"
       ],
-      "context_used": [
-        "CTX-003"
-      ]
+      "context_used": []
     }
   ]
 }

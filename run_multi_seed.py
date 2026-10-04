@@ -277,7 +277,8 @@ def main():
 
     args = parser.parse_args()
 
-    seeds = args.seeds or list(range(42, 42 + args.n_seeds))
+    # Duplicate seeds would be counted as independent runs; drop them
+    seeds = list(dict.fromkeys(args.seeds)) if args.seeds else list(range(42, 42 + args.n_seeds))
     weeks = 4 if args.quick else args.weeks
     default_dir = "results/multi_seed" if args.mode == "calibrated" else "results/mechanistic"
     output = args.output or (default_dir + ("_no_chaos" if args.no_chaos else ""))

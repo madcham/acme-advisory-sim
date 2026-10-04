@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "timestamp": "2026-09-27T18:21:33.076357+00:00",
+    "timestamp": "2026-10-04T00:00:04.837409+00:00",
     "weeks_simulated": 12,
     "random_seed": 102,
     "realism_mode": "BPI Calibrated",
@@ -65,7 +65,7 @@
       "incorrect_decisions": 6,
       "overall_accuracy": 60.0,
       "final_bank_size": 63,
-      "final_avg_confidence": 0.3536892809075231,
+      "final_avg_confidence": 0.35522453407285765,
       "total_workflow_events": 1560,
       "total_behavioral_events": 1800
     },
@@ -73,11 +73,11 @@
       "condition": "GLOBAL_RAG",
       "weeks_run": 12,
       "total_decisions": 15,
-      "correct_decisions": 8,
-      "incorrect_decisions": 7,
-      "overall_accuracy": 53.333333333333336,
+      "correct_decisions": 12,
+      "incorrect_decisions": 3,
+      "overall_accuracy": 80.0,
       "final_bank_size": 63,
-      "final_avg_confidence": 0.3538999022130476,
+      "final_avg_confidence": 0.3560476149517949,
       "total_workflow_events": 1560,
       "total_behavioral_events": 1800
     },
@@ -85,11 +85,11 @@
       "condition": "CONTEXT_BANK",
       "weeks_run": 12,
       "total_decisions": 15,
-      "correct_decisions": 14,
-      "incorrect_decisions": 1,
-      "overall_accuracy": 93.33333333333333,
-      "final_bank_size": 75,
-      "final_avg_confidence": 0.48246323289294213,
+      "correct_decisions": 13,
+      "incorrect_decisions": 2,
+      "overall_accuracy": 86.66666666666667,
+      "final_bank_size": 74,
+      "final_avg_confidence": 0.4651688251555699,
       "total_workflow_events": 1560,
       "total_behavioral_events": 1800
     }
@@ -97,13 +97,13 @@
   "accuracies": {
     "SILOED_TYPICAL": 20.0,
     "SILOED_ADVANCED": 60.0,
-    "GLOBAL_RAG": 53.333333333333336,
-    "CONTEXT_BANK": 93.33333333333333
+    "GLOBAL_RAG": 80.0,
+    "CONTEXT_BANK": 86.66666666666667
   },
   "improvements_over_baseline": {
     "SILOED_ADVANCED": 40.0,
-    "GLOBAL_RAG": 33.333333333333336,
-    "CONTEXT_BANK": 73.33333333333333
+    "GLOBAL_RAG": 60.0,
+    "CONTEXT_BANK": 66.66666666666667
   },
   "main_comparison": {
     "without_bank": {
@@ -338,7 +338,7 @@
             100.0,
             100.0,
             100.0,
-            100.0,
+            0.0,
             100.0
           ],
           "staffing_agent": [
@@ -358,11 +358,11 @@
           100.0,
           100.0,
           100.0,
-          100.0,
+          50.0,
           100.0,
           100.0
         ],
-        "overall_dqs": 93.33333333333333,
+        "overall_dqs": 86.66666666666667,
         "exception_handling_rates": [
           0.0,
           0.0,
@@ -373,26 +373,26 @@
           100.0,
           100.0,
           100.0,
-          100.0,
+          50.0,
           100.0,
           100.0
         ],
-        "overall_ehr": 79.16666666666667,
+        "overall_ehr": 75.0,
         "institutional_memory_utilization": [
           0,
           0,
           300.0,
           300.0,
-          250.0,
-          100.0,
-          450.0,
+          150.0,
+          400.0,
           500.0,
-          200.0,
-          400.0,
-          400.0,
+          500.0,
+          300.0,
+          350.0,
+          350.0,
           500.0
         ],
-        "overall_imu": 283.3333333333333,
+        "overall_imu": 304.1666666666667,
         "organizational_error_rates": [
           0,
           0,
@@ -403,40 +403,40 @@
           0,
           0,
           0,
-          0,
+          1,
           0,
           0
         ],
-        "total_oer": 1
+        "total_oer": 2
       },
       "secondary_metrics": {
         "context_object_growth": [
           15,
           18,
-          25,
-          30,
-          35,
+          28,
+          33,
+          38,
           45,
           50,
           54,
-          61,
-          66,
-          71,
-          75
+          59,
+          64,
+          69,
+          74
         ],
         "avg_confidence_history": [
-          0.7775200000000001,
-          0.7325177777777778,
-          0.7180462448,
-          0.6741241467999999,
-          0.6287250898985142,
-          0.6175031726000502,
-          0.585851764399404,
-          0.5552719430799488,
-          0.5629136639867491,
-          0.5374810297550109,
-          0.5128415711903337,
-          0.48246323289294213
+          0.7748533333333333,
+          0.7361844444444446,
+          0.72874754,
+          0.6847449819393939,
+          0.6444594841170526,
+          0.631654095070189,
+          0.5973338479807321,
+          0.5664554332456115,
+          0.5591811227544304,
+          0.5341069910116925,
+          0.5092073991216217,
+          0.4651688251555699
         ],
         "contradiction_counts": [
           0,
@@ -455,40 +455,43 @@
       },
       "synthesis_metrics": {
         "summary": {
-          "total_patterns_crystallized": 12,
+          "total_patterns_crystallized": 11,
           "total_validations_propagated": 0,
-          "total_decay_adjustments": 28,
-          "average_intelligence_score": 0.315,
-          "peak_intelligence_score": 0.46,
+          "total_decay_adjustments": 21,
+          "average_intelligence_score": 0.29000000000000004,
+          "peak_intelligence_score": 0.34,
           "active_weeks": 4,
           "crystallized_entities": [],
-          "objects_created": 12
+          "objects_created": 11
         },
         "weekly_scores": [
           0.0,
           0.0,
-          0.22,
+          0.34,
           0.0,
           0.0,
-          0.46,
+          0.3,
           0.0,
           0.0,
-          0.38,
+          0.26,
           0.0,
           0.0,
-          0.2
+          0.26
         ],
         "weekly_results": [
           null,
           null,
           {
-            "patterns_crystallized": 3,
+            "patterns_crystallized": 6,
             "validations_propagated": 0,
             "decay_rates_adjusted": 1,
             "new_objects_created": [
-              "CTX-D1F1545A",
-              "CTX-07B7FC32",
-              "CTX-78ED55F1"
+              "CTX-D919898C",
+              "CTX-4F982F16",
+              "CTX-BF631B55",
+              "CTX-25EEECC9",
+              "CTX-91B5B2C4",
+              "CTX-0101362E"
             ],
             "objects_updated": [
               "CTX-001"
@@ -498,71 +501,61 @@
           null,
           null,
           {
-            "patterns_crystallized": 6,
+            "patterns_crystallized": 3,
             "validations_propagated": 0,
-            "decay_rates_adjusted": 4,
+            "decay_rates_adjusted": 3,
             "new_objects_created": [
-              "CTX-C91D885A",
-              "CTX-9A03144F",
-              "CTX-DF7E8807",
-              "CTX-F1B980F7",
-              "CTX-E257B419",
-              "CTX-4BA9B6FA"
+              "CTX-AC7DE48D",
+              "CTX-B5DD6DEA",
+              "CTX-0C21DBC6"
             ],
             "objects_updated": [
               "CTX-001",
               "CTX-006",
-              "CTX-431C7A66",
-              "CTX-D1C2423D"
+              "CTX-0B1D4CBB"
             ],
             "confidence_boosts": {}
           },
           null,
           null,
           {
-            "patterns_crystallized": 3,
+            "patterns_crystallized": 1,
+            "validations_propagated": 0,
+            "decay_rates_adjusted": 7,
+            "new_objects_created": [
+              "CTX-F4357B4A"
+            ],
+            "objects_updated": [
+              "CTX-001",
+              "CTX-002",
+              "CTX-006",
+              "CTX-0B1D4CBB",
+              "CTX-D90F0FE8",
+              "CTX-6933971A",
+              "CTX-A6027353"
+            ],
+            "confidence_boosts": {}
+          },
+          null,
+          null,
+          {
+            "patterns_crystallized": 1,
             "validations_propagated": 0,
             "decay_rates_adjusted": 10,
             "new_objects_created": [
-              "CTX-7F6EED37",
-              "CTX-CC3AAF09",
-              "CTX-91342453"
+              "CTX-A150E758"
             ],
             "objects_updated": [
               "CTX-001",
               "CTX-002",
               "CTX-006",
-              "CTX-431C7A66",
-              "CTX-D1C2423D",
-              "CTX-0A654F02",
-              "CTX-8ECEF179",
-              "CTX-E39D9C65",
-              "CTX-1CA9B653",
-              "CTX-0B34362A"
-            ],
-            "confidence_boosts": {}
-          },
-          null,
-          null,
-          {
-            "patterns_crystallized": 0,
-            "validations_propagated": 0,
-            "decay_rates_adjusted": 13,
-            "new_objects_created": [],
-            "objects_updated": [
-              "CTX-001",
-              "CTX-002",
-              "CTX-006",
-              "CTX-431C7A66",
-              "CTX-D1C2423D",
-              "CTX-0A654F02",
-              "CTX-8ECEF179",
-              "CTX-E39D9C65",
-              "CTX-4DF3CD4A",
-              "CTX-1CA9B653",
-              "CTX-84AF799E",
-              "CTX-0B34362A",
-              "CTX-90A500B7"
+              "CTX-0B1D4CBB",
+              "CTX-D90F0FE8",
+              "CTX-6933971A",
+              "CTX-A6027353",
+              "CTX-5536BEAB",
+              "CTX-5BF1D75D",
+              "CTX-CC89435E"
             ],
             "confidence_boosts": {}
           }
@@ -598,25 +591,25 @@
         "events_by_week": {},
         "resilience": {
           "accuracy_during_chaos": 0.0,
-          "accuracy_during_normal": 93.33333333333333,
+          "accuracy_during_normal": 86.66666666666667,
           "resilience_score": 0.0
         }
       },
       "summary": {
         "total_decisions": 15,
-        "correct_decisions": 14,
-        "incorrect_decisions": 1,
-        "accuracy": 93.33333333333333,
-        "final_bank_size": 75,
-        "final_avg_confidence": 0.48246323289294213
+        "correct_decisions": 13,
+        "incorrect_decisions": 2,
+        "accuracy": 86.66666666666667,
+        "final_bank_size": 74,
+        "final_avg_confidence": 0.4651688251555699
       }
     },
     "comparison": {
-      "dqs_improvement": 73.33333333333333,
-      "ehr_improvement": 58.33333333333334,
-      "imu_improvement": 283.3333333333333,
-      "errors_avoided": 11,
-      "accuracy_improvement": 73.33333333333333
+      "dqs_improvement": 66.66666666666667,
+      "ehr_improvement": 54.16666666666667,
+      "imu_improvement": 304.1666666666667,
+      "errors_avoided": 10,
+      "accuracy_improvement": 66.66666666666667
     }
   }
 }

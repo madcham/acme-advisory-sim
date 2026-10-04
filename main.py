@@ -5,14 +5,24 @@ Acme Advisory: Context Bank Simulation
 Main entry point that runs experimental conditions and calculates metrics.
 
 Supports four experimental conditions:
-- SILOED_TYPICAL: Agent only sees their department's context (~55% accuracy)
-- SILOED_ADVANCED: Agent sees department + adjacent departments (~62% accuracy)
-- GLOBAL_RAG: Agent sees all context, but no sophistication features (~70% accuracy)
-- CONTEXT_BANK: Full visibility + full sophistication (~85% accuracy)
+- SILOED_TYPICAL: No context retrieval
+- SILOED_ADVANCED: Agent sees department + adjacent departments
+- GLOBAL_RAG: Agent sees all context, but no sophistication features
+- CONTEXT_BANK: Full visibility + full sophistication
+
+Two decision models (--mode, 4-way runs only):
+- calibrated: each condition's accuracy is set in config (PerformanceCalibration);
+  retrieved context does not affect outcomes, so results restate those settings
+- mechanistic: outcomes follow from what the agent retrieves
+  (simulation/mechanistic.py, docs/MECHANISTIC_MODE.md)
+
+A single run has 15 decisions per condition, so one decision moves accuracy by
+6.7 points; use run_multi_seed.py for any comparison you intend to report.
 
 Usage:
     python main.py              # Run standard 2-way comparison (silo vs bank)
     python main.py --4-way      # Run full 4-condition comparison
+    python main.py --4-way --mode mechanistic  # Outcomes follow from retrieval
     python main.py --quick      # Run abbreviated 4-week simulation
     python main.py --verbose    # Run with detailed output
     python main.py --chaos      # Run with chaos injection enabled (v3.0)
@@ -48,7 +58,7 @@ def run_simulation(
     seed: Optional[int] = None,
 ) -> Dict[str, Any]:
     """
-    Run the complete simulation comparing both conditions.
+    Run the legacy 2-way comparison (WITHOUT_BANK vs WITH_BANK), calibrated mode.
 
     Args:
         weeks: Number of weeks to simulate (default 12)
@@ -182,10 +192,10 @@ def run_simulation(
     comparison = calculator.compare_conditions(snapshots_without, snapshots_with)
 
     if verbose:
-        print(f"  DQS improvement: +{comparison['comparison']['dqs_improvement']:.1f}")
-        print(f"  EHR improvement: +{comparison['comparison']['ehr_improvement']:.1f}%")
+        print(f"  DQS change: {comparison['comparison']['dqs_improvement']:+.1f}")
+        print(f"  EHR change: {comparison['comparison']['ehr_improvement']:+.1f} pts")
         print(f"  Errors avoided: {comparison['comparison']['errors_avoided']}")
-        print(f"  Accuracy improvement: +{comparison['comparison']['accuracy_improvement']:.1f}%")
+        print(f"  Accuracy change: {comparison['comparison']['accuracy_improvement']:+.1f} pts")
         print()
 
     # ================================================================
@@ -288,7 +298,7 @@ def run_simulation(
         print("  KEY RESULTS:")
         print(f"    WITHOUT Bank accuracy: {summary_without['overall_accuracy']:.1f}%")
         print(f"    WITH Bank accuracy:    {summary_with['overall_accuracy']:.1f}%")
-        print(f"    Improvement:           +{comparison['comparison']['accuracy_improvement']:.1f}%")
+        print(f"    Difference:            {comparison['comparison']['accuracy_improvement']:+.1f} pts")
         print(f"    Errors avoided:        {comparison['comparison']['errors_avoided']}")
         print()
         print("  OUTPUT FILES:")
@@ -317,10 +327,10 @@ def run_4way_comparison(
     Run the complete 4-condition comparison simulation.
 
     This compares all four experimental conditions:
-    - SILOED_TYPICAL: Department-only visibility (~55% accuracy)
-    - SILOED_ADVANCED: Department + adjacent visibility (~62% accuracy)
-    - GLOBAL_RAG: All visibility, no sophistication (~70% accuracy)
-    - CONTEXT_BANK: Full visibility + sophistication (~85% accuracy)
+    - SILOED_TYPICAL: No context retrieval
+    - SILOED_ADVANCED: Department + adjacent visibility
+    - GLOBAL_RAG: All visibility, no sophistication
+    - CONTEXT_BANK: Full visibility + sophistication
 
     Args:
         weeks: Number of weeks to simulate (default 12)
@@ -468,13 +478,13 @@ def run_4way_comparison(
         baseline = accuracies["SILOED_TYPICAL"]
         for name in ["SILOED_ADVANCED", "GLOBAL_RAG", "CONTEXT_BANK"]:
             improvement = accuracies[name] - baseline
-            print(f"    {name:20} vs Baseline: +{improvement:.1f}%")
+            print(f"    {name:20} vs Baseline: {improvement:+.1f} pts")
         print()
         print("  GAP ANALYSIS:")
         gap_advanced_rag = accuracies["GLOBAL_RAG"] - accuracies["SILOED_ADVANCED"]
         gap_rag_bank = accuracies["CONTEXT_BANK"] - accuracies["GLOBAL_RAG"]
-        print(f"    Global RAG over SILOED_ADVANCED: +{gap_advanced_rag:.1f}%")
-        print(f"    Context Bank over Global RAG:    +{gap_rag_bank:.1f}% (sophistication value)")
+        print(f"    Global RAG minus SILOED_ADVANCED: {gap_advanced_rag:+.1f} pts")
+        print(f"    Context Bank minus Global RAG:    {gap_rag_bank:+.1f} pts (sophistication value)")
         print()
 
     # ================================================================
@@ -542,7 +552,7 @@ def run_4way_comparison(
     if not generate_reports:
         return results
 
-    # Save bank state (only CONTEXT_BANK has a bank)
+    # Save the Context Bank's state (the other bank-backed conditions are not saved)
     bank_clock = condition_results["CONTEXT_BANK"]["clock"]
     if hasattr(bank_clock, 'bank') and bank_clock.bank:
         bank_file = output_path / "final_bank_state.json"
@@ -583,13 +593,14 @@ def run_4way_comparison(
         baseline = accuracies["SILOED_TYPICAL"]
         for name in ["SILOED_TYPICAL", "SILOED_ADVANCED", "GLOBAL_RAG", "CONTEXT_BANK"]:
             acc = accuracies[name]
-            improvement = acc - baseline
-            imp_str = f"+{improvement:.1f}%" if improvement > 0 else "baseline"
+            imp_str = "baseline" if name == "SILOED_TYPICAL" else f"{acc - baseline:+.1f} pts"
             print(f"    │ {name:19} │ {acc:6.1f}%  │ {imp_str:>11} │")
         print("    └─────────────────────┴──────────┴─────────────┘")
         print()
-        print("  INSIGHT: Context Bank's sophistication features (decay, provenance,")
-        print(f"  attribution) add +{accuracies['CONTEXT_BANK'] - accuracies['GLOBAL_RAG']:.1f}% accuracy over basic RAG.")
+        print(f"  Context Bank minus Global RAG: "
+              f"{accuracies['CONTEXT_BANK'] - accuracies['GLOBAL_RAG']:+.1f} pts ({decision_mode} mode).")
+        print("  Single run of 15 decisions per condition; use run_multi_seed.py for")
+        print("  confidence intervals.")
         print()
         print("  OUTPUT FILES:")
         print(f"    Results JSON:     {results_file}")

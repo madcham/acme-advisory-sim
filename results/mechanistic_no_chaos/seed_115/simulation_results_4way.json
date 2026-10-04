@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "timestamp": "2026-09-27T18:21:35.430409+00:00",
+    "timestamp": "2026-10-04T00:00:07.261205+00:00",
     "weeks_simulated": 12,
     "random_seed": 115,
     "realism_mode": "BPI Calibrated",
@@ -65,7 +65,7 @@
       "incorrect_decisions": 7,
       "overall_accuracy": 53.333333333333336,
       "final_bank_size": 63,
-      "final_avg_confidence": 0.35117956436181597,
+      "final_avg_confidence": 0.35390617479618974,
       "total_workflow_events": 1560,
       "total_behavioral_events": 1800
     },
@@ -73,11 +73,11 @@
       "condition": "GLOBAL_RAG",
       "weeks_run": 12,
       "total_decisions": 15,
-      "correct_decisions": 10,
-      "incorrect_decisions": 5,
-      "overall_accuracy": 66.66666666666666,
+      "correct_decisions": 12,
+      "incorrect_decisions": 3,
+      "overall_accuracy": 80.0,
       "final_bank_size": 63,
-      "final_avg_confidence": 0.3545542161773604,
+      "final_avg_confidence": 0.35682586516630227,
       "total_workflow_events": 1560,
       "total_behavioral_events": 1800
     },
@@ -88,8 +88,8 @@
       "correct_decisions": 12,
       "incorrect_decisions": 3,
       "overall_accuracy": 80.0,
-      "final_bank_size": 74,
-      "final_avg_confidence": 0.4532547457259197,
+      "final_bank_size": 75,
+      "final_avg_confidence": 0.4616722063788261,
       "total_workflow_events": 1560,
       "total_behavioral_events": 1800
     }
@@ -97,12 +97,12 @@
   "accuracies": {
     "SILOED_TYPICAL": 33.33333333333333,
     "SILOED_ADVANCED": 53.333333333333336,
-    "GLOBAL_RAG": 66.66666666666666,
+    "GLOBAL_RAG": 80.0,
     "CONTEXT_BANK": 80.0
   },
   "improvements_over_baseline": {
     "SILOED_ADVANCED": 20.000000000000007,
-    "GLOBAL_RAG": 33.33333333333333,
+    "GLOBAL_RAG": 46.66666666666667,
     "CONTEXT_BANK": 46.66666666666667
   },
   "main_comparison": {
@@ -325,78 +325,77 @@
       "primary_metrics": {
         "decision_quality_scores": {
           "vendor_agent": [
-            100.0,
+            0.0,
             100.0,
             100.0
           ],
           "proposal_agent": [
-            0.0,
+            100.0,
             100.0
           ],
           "billing_agent": [
             100.0,
+            0.0,
             100.0,
+            100.0,
+            100.0,
+            0.0
+          ],
+          "staffing_agent": [
             100.0,
             100.0,
             100.0,
             100.0
-          ],
-          "staffing_agent": [
-            100.0,
-            0.0,
-            100.0,
-            0.0
           ]
         },
         "weekly_dqs": [
           0.0,
           0.0,
-          100.0,
-          50.0,
-          100.0,
           0.0,
           100.0,
-          100.0,
-          100.0,
-          100.0,
           50.0,
-          100.0
+          100.0,
+          100.0,
+          100.0,
+          100.0,
+          100.0,
+          100.0,
+          0.0
         ],
         "overall_dqs": 80.0,
         "exception_handling_rates": [
           0.0,
           0.0,
-          100.0,
-          50.0,
-          100.0,
           0.0,
           100.0,
-          100.0,
-          100.0,
-          100.0,
           50.0,
-          100.0
+          100.0,
+          100.0,
+          100.0,
+          100.0,
+          100.0,
+          100.0,
+          0.0
         ],
-        "overall_ehr": 66.66666666666667,
+        "overall_ehr": 62.5,
         "institutional_memory_utilization": [
           0,
           0,
+          300.0,
+          250.0,
+          200.0,
+          200.0,
+          500.0,
           500.0,
           100.0,
-          400.0,
-          300.0,
-          400.0,
-          300.0,
-          300.0,
-          450.0,
           500.0,
+          450.0,
           500.0
         ],
-        "overall_imu": 312.5,
+        "overall_imu": 291.6666666666667,
         "organizational_error_rates": [
           0,
           0,
-          0,
           1,
           0,
           1,
@@ -404,8 +403,9 @@
           0,
           0,
           0,
-          1,
-          0
+          0,
+          0,
+          1
         ],
         "total_oer": 3
       },
@@ -413,30 +413,30 @@
         "context_object_growth": [
           15,
           18,
-          28,
-          33,
-          38,
-          45,
-          50,
-          54,
-          59,
-          64,
-          69,
-          74
+          24,
+          29,
+          34,
+          42,
+          47,
+          51,
+          60,
+          65,
+          70,
+          75
         ],
         "avg_confidence_history": [
-          0.7775200000000001,
-          0.7364066666666669,
-          0.7232605538095239,
-          0.6733314785050504,
-          0.6345593758714387,
-          0.626023822479013,
-          0.5916628619180607,
-          0.5602216126587267,
-          0.5467746580730556,
-          0.5224240736175985,
-          0.49780799334506803,
-          0.4532547457259197
+          0.7741866666666667,
+          0.7357122222222223,
+          0.7035481716666667,
+          0.6593066604827584,
+          0.6167467745278823,
+          0.60416974897429,
+          0.569320007776306,
+          0.5382760432105985,
+          0.5437512147694505,
+          0.5198212708523406,
+          0.4967065811678485,
+          0.4616722063788261
         ],
         "contradiction_counts": [
           0,
@@ -455,25 +455,25 @@
       },
       "synthesis_metrics": {
         "summary": {
-          "total_patterns_crystallized": 11,
+          "total_patterns_crystallized": 12,
           "total_validations_propagated": 0,
-          "total_decay_adjustments": 18,
-          "average_intelligence_score": 0.29000000000000004,
-          "peak_intelligence_score": 0.34,
+          "total_decay_adjustments": 17,
+          "average_intelligence_score": 0.3,
+          "peak_intelligence_score": 0.5,
           "active_weeks": 4,
           "crystallized_entities": [],
-          "objects_created": 11
+          "objects_created": 12
         },
         "weekly_scores": [
           0.0,
           0.0,
-          0.34,
+          0.12,
           0.0,
           0.0,
-          0.3,
+          0.32,
           0.0,
           0.0,
-          0.26,
+          0.5,
           0.0,
           0.0,
           0.26
@@ -482,56 +482,54 @@
           null,
           null,
           {
-            "patterns_crystallized": 6,
+            "patterns_crystallized": 2,
             "validations_propagated": 0,
-            "decay_rates_adjusted": 1,
+            "decay_rates_adjusted": 0,
             "new_objects_created": [
-              "CTX-80603071",
-              "CTX-688FB46F",
-              "CTX-73C51860",
-              "CTX-7C00D14C",
-              "CTX-EBEC4408",
-              "CTX-DA4F5D6F"
+              "CTX-73EAB9BF",
+              "CTX-37754A47"
             ],
-            "objects_updated": [
-              "CTX-001"
-            ],
+            "objects_updated": [],
             "confidence_boosts": {}
           },
           null,
           null,
           {
-            "patterns_crystallized": 3,
+            "patterns_crystallized": 4,
             "validations_propagated": 0,
-            "decay_rates_adjusted": 3,
+            "decay_rates_adjusted": 2,
             "new_objects_created": [
-              "CTX-AA1DA73E",
-              "CTX-6627D7AD",
-              "CTX-B4A7D61A"
+              "CTX-F85ED704",
+              "CTX-7B4522D5",
+              "CTX-529DA13F",
+              "CTX-AAD22361"
             ],
             "objects_updated": [
               "CTX-001",
-              "CTX-002",
-              "CTX-006"
+              "CTX-002"
             ],
             "confidence_boosts": {}
           },
           null,
           null,
           {
-            "patterns_crystallized": 1,
+            "patterns_crystallized": 5,
             "validations_propagated": 0,
             "decay_rates_adjusted": 6,
             "new_objects_created": [
-              "CTX-02952298"
+              "CTX-9618EB70",
+              "CTX-806DBA6C",
+              "CTX-B1B0936E",
+              "CTX-50E99FFA",
+              "CTX-73F19059"
             ],
             "objects_updated": [
               "CTX-001",
               "CTX-002",
-              "CTX-006",
-              "CTX-C15CDD25",
-              "CTX-ACE1341B",
-              "CTX-68622C2A"
+              "CTX-C9ADEA08",
+              "CTX-24B24D5A",
+              "CTX-0D6E1C83",
+              "CTX-CCD2B922"
             ],
             "confidence_boosts": {}
           },
@@ -540,19 +538,20 @@
           {
             "patterns_crystallized": 1,
             "validations_propagated": 0,
-            "decay_rates_adjusted": 8,
+            "decay_rates_adjusted": 9,
             "new_objects_created": [
-              "CTX-C34682F9"
+              "CTX-56F8E91E"
             ],
             "objects_updated": [
               "CTX-001",
               "CTX-002",
-              "CTX-006",
-              "CTX-C15CDD25",
-              "CTX-ACE1341B",
-              "CTX-68622C2A",
-              "CTX-48314D94",
-              "CTX-2D18439A"
+              "CTX-C9ADEA08",
+              "CTX-24B24D5A",
+              "CTX-0D6E1C83",
+              "CTX-843A66EA",
+              "CTX-CCD2B922",
+              "CTX-7CE24F57",
+              "CTX-E9B35369"
             ],
             "confidence_boosts": {}
           }
@@ -597,14 +596,14 @@
         "correct_decisions": 12,
         "incorrect_decisions": 3,
         "accuracy": 80.0,
-        "final_bank_size": 74,
-        "final_avg_confidence": 0.4532547457259197
+        "final_bank_size": 75,
+        "final_avg_confidence": 0.4616722063788261
       }
     },
     "comparison": {
       "dqs_improvement": 46.666666666666664,
-      "ehr_improvement": 45.83333333333334,
-      "imu_improvement": 312.5,
+      "ehr_improvement": 41.66666666666667,
+      "imu_improvement": 291.6666666666667,
       "errors_avoided": 7,
       "accuracy_improvement": 46.66666666666667
     }

@@ -9,6 +9,12 @@ Supports four experimental conditions:
 - SILOED_ADVANCED: Agent sees department + adjacent departments, with basic decay
 - GLOBAL_RAG: Agent sees all context, but no sophistication features
 - CONTEXT_BANK: Agent sees all context with full sophistication (decay, provenance, etc.)
+
+This is the calibrated decision model. Without an API key, responses are
+simulated: success is a random draw against the condition's configured accuracy
+(PerformanceCalibration), then a canned correct or incorrect response is scored
+by keyword. Retrieved context is put in the prompt but only a real API call
+reads it. For outcomes that depend on retrieval, see simulation/mechanistic.py.
 """
 
 from dataclasses import dataclass, field
@@ -151,7 +157,7 @@ class AgentExhaustGenerator:
         self._decision_counter = 0
 
         # Set up random state for reproducible noise
-        self._rng = random.Random(seed or SIMULATION_CONFIG.random_seed)
+        self._rng = random.Random(seed if seed is not None else SIMULATION_CONFIG.random_seed)
 
         # Get calibration configs
         self.performance_calibration = SIMULATION_CONFIG.performance_calibration

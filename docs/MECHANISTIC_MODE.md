@@ -44,12 +44,18 @@ Mean accuracy with 95% confidence interval:
 |---|---|---|
 | SILOED_TYPICAL | 18.9% [17.0, 20.8] | 24.9% [22.7, 27.0] |
 | SILOED_ADVANCED | 58.3% [55.8, 60.9] | 68.1% [65.6, 70.7] |
-| GLOBAL_RAG | 69.3% [66.3, 72.3] | 84.7% [82.2, 87.3] |
-| CONTEXT_BANK | 76.0% [74.0, 78.0] | 89.9% [88.3, 91.4] |
+| GLOBAL_RAG | 70.1% [67.5, 72.8] | 85.3% [82.5, 88.1] |
+| CONTEXT_BANK | 75.8% [73.7, 77.9] | 88.3% [86.6, 89.9] |
 
-Paired difference CONTEXT_BANK minus GLOBAL_RAG: **+6.7 points [+3.3, +10.1]**
-with chaos (wins/ties/losses 60/15/25), **+5.1 [+2.2, +8.0]** without.
-CONTEXT_BANK is also the most consistent condition (std 9.8 vs 15.0 under chaos).
+Paired difference CONTEXT_BANK minus GLOBAL_RAG:
+
+- **With chaos: +5.7 points [+2.5, +8.8]** (wins/ties/losses 56/13/31).
+- **Without chaos: +3.0 points [-0.1, +6.1]** (42/18/40), not statistically
+  distinguishable from zero.
+
+The bank's advantage is a chaos-resilience effect: it matters when the record
+contains misleading information. CONTEXT_BANK is also the most consistent
+condition (std 10.4 vs 13.2 under chaos, 8.2 vs 14.0 without).
 
 SILOED_ADVANCED beats SILOED_TYPICAL on 100 of 100 seeds with chaos, so the
 "partial sophistication trap" does not appear. In the calibrated model it came
@@ -70,33 +76,48 @@ Share of decisions by path (chaos):
 | | Correct guidance | Wrong guidance | Misapplied | Standard process |
 |---|---|---|---|---|
 | SILOED_ADVANCED | 53% | 9% | 6% | 31% |
-| GLOBAL_RAG | 67% | 8% | 9% | 16% |
-| CONTEXT_BANK | 74% | 1% | 10% | 16% |
+| GLOBAL_RAG | 68% | 7% | 8% | 18% |
+| CONTEXT_BANK | 73% | 1% | 10% | 15% |
 
 The bank wins by not acting on wrong guidance: injected contradictions and
-records of its own past mistakes.
+records of past mistakes.
 
-Ablation (CONTEXT_BANK minus GLOBAL_RAG, points):
+Ablation (CONTEXT_BANK minus GLOBAL_RAG, points, 95% CI):
 
 | Bank features | Chaos | No chaos |
 |---|---|---|
-| All | +6.7 | +5.2 |
-| Without confidence filtering | +7.3 | +2.5 |
-| Without validation | +8.0 | +3.6 |
-| Without supersession | +6.7 | +5.2 |
-| None (synthesis only) | +3.7 [-0.1, +7.6] | +0.1 |
+| All | +5.7 [+2.5, +8.8] | +3.0 [-0.1, +6.1] |
+| Without confidence filtering | +4.1 [+0.8, +7.4] | +1.3 [-1.8, +4.4] |
+| Without validation | +6.7 [+3.3, +10.0] | +3.6 [+0.6, +6.6] |
+| Without supersession | +5.7 (never triggers) | +3.0 |
+| None (synthesis only) | +1.3 [-2.0, +4.5] | -0.2 [-3.5, +3.1] |
 
-Confidence and validation each catch most wrong guidance, so removing either
-alone costs little; removing both erases the advantage. Supersession never
-triggers in these runs. Under chaos, validation slightly hurts on its own,
-because feedback also blames correct knowledge when the agent misapplies it.
+Confidence filtering carries most of the effect. Validation, as modeled, is
+slightly harmful: outcome feedback also discredits correct knowledge whenever
+the agent misapplies it, and that cost outweighs what it adds once confidence
+filtering is already catching most wrong guidance. Supersession never triggers.
+The "complete stack" claim is not supported: one primitive does most of the work.
 
 ## Sensitivity
 
-CONTEXT_BANK minus GLOBAL_RAG stays between +4.3 and +7.5 points, with every
-95% interval above zero, when varying base rate (0.10-0.40), recall
-(0.70-0.95), interpretation accuracy (0.80-0.90) and top-k (3-10), with and
-without chaos.
+With chaos, CONTEXT_BANK minus GLOBAL_RAG stays between +4.5 and +5.8 points,
+every 95% interval above zero, when varying base rate (0.10-0.40), recall
+(0.70-0.95), interpretation accuracy (0.80-0.90) and top-k (3-10). Without
+chaos it ranges +2.6 to +4.4, and about half the intervals include zero.
+
+## Review fixes (October 2026)
+
+A hostile review found and fixed issues that inflated the first published
+version of these numbers (bank minus RAG was +6.7 with chaos, +5.1 without):
+
+- Consecutive run seeds reused each other's weeks (seed + week), so the 100 runs
+  were not independent and the intervals were too narrow. Weekly seeds are now
+  seed * 1000 + week.
+- The bank credited or blamed wrong guidance the agent had not followed.
+- A workload surge persisted until the next week with any chaos event.
+- Seed 0 was silently replaced by 42.
+
+Calibrated-mode results are unchanged by these fixes.
 
 ## Limitations
 
@@ -114,3 +135,6 @@ without chaos.
 - **Siloed conditions do not index chat-derived knowledge** (objects with no
   workflow), a modeling choice that favors the global conditions.
 - **Feedback is immediate** and assigns credit to whatever the agent acted on.
+- **Workload overload errors are not applied.** The chaos config defines an
+  error increase during surges, but no agent ever reads it (in either mode).
+  It would apply equally to all conditions.

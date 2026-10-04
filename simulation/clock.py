@@ -141,7 +141,7 @@ class SimulationClock:
             raise ValueError(f"Unknown decision_mode: {decision_mode}")
         self.decision_mode = decision_mode
         self.condition = condition
-        self.seed = seed or SIMULATION_CONFIG.random_seed
+        self.seed = seed if seed is not None else SIMULATION_CONFIG.random_seed
         self.realism_config = realism_config
 
         # Determine if this condition uses a context bank
@@ -317,16 +317,13 @@ class SimulationClock:
         if self.bank is not None:
             self.bank.current_week = week
 
-        # NOTE: Formula-based seeding (seed + week) does not guarantee identical
-        # event sequences across WITHOUT_BANK and WITH_BANK conditions because
-        # different code paths consume different numbers of random calls, causing
-        # RNG state to diverge between arms.
-        #
-        # Current approach is sufficient for proof-of-concept demonstration.
-        # Future iteration: snapshot RNG state before phase 1 begins and restore
-        # it before phase 2 to guarantee matched event sequences across both
-        # conditions. This would allow true controlled comparison rather than
-        # approximately matched comparison.
+        # Randomness across conditions, for a given run seed:
+        # - Structured and behavioral events use fresh per-week seeds, and the
+        #   chaos engine draws the same number of values every week, so all
+        #   conditions see the same events and the same chaos schedule.
+        # - Each condition's decision RNG is seeded identically but consumed
+        #   differently (retrieval draws vary with what is visible), so decision
+        #   noise is not matched between conditions.
 
         # Process chaos events (v3.0). Applied under every condition so comparisons
         # are fair: agent drift and workload surges hit all agents, while knowledge
@@ -335,30 +332,33 @@ class SimulationClock:
         chaos_impacts = []
         if self.chaos_engine:
             chaos_events = self.chaos_engine.get_events_for_week(week)
-            if chaos_events:
-                chaos_impacts, chaos_objects = self.chaos_engine.apply_events(
-                    chaos_events,
-                    self.bank.get_all() if self.bank is not None else [],
-                    week,
-                )
-                # Deposit chaos-generated objects (e.g., contradicting policies)
-                if self.bank is not None:
-                    for obj in chaos_objects:
-                        self.bank.deposit(obj, check_contradictions=True)
+            # Called even with no events: apply_events resets the per-week
+            # workload multiplier, so a surge lasts only the week it occurs
+            chaos_impacts, chaos_objects = self.chaos_engine.apply_events(
+                chaos_events,
+                self.bank.get_all() if self.bank is not None and chaos_events else [],
+                week,
+            )
+            # Deposit chaos-generated objects (e.g., contradicting policies)
+            if self.bank is not None:
+                for obj in chaos_objects:
+                    self.bank.deposit(obj, check_contradictions=True)
 
         # Get event multiplier from chaos (workload surge)
         event_multiplier = 1.0
         if self.chaos_engine:
             event_multiplier = self.chaos_engine.get_event_multiplier()
 
-        # Generate structured events
-        cases, events = generate_weekly_events(week, seed=self.seed + week)
+        # Generate structured events. Weekly seeds are spaced by run seed
+        # (seed * 1000 + week) so consecutive run seeds do not reuse each
+        # other's weeks, as seed + week would (seed 43 week 1 == seed 42 week 2).
+        cases, events = generate_weekly_events(week, seed=self.seed * 1000 + week)
 
         # Generate behavioral events (scaled by chaos multiplier)
         behavioral_count = int(SIMULATION_CONFIG.events_per_week.behavioral_events * event_multiplier)
         behavioral = generate_behavioral_events(
             week,
-            seed=self.seed + week + 1000,
+            seed=self.seed * 1000 + 500 + week,
             total_events=behavioral_count,
         )
 

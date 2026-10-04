@@ -187,3 +187,55 @@ class TestMechanisticSimulation:
     def test_invalid_mode_rejected(self):
         with pytest.raises(ValueError):
             SimulationClock(RunCondition.CONTEXT_BANK, decision_mode="bogus")
+
+
+class TestReviewRegressions:
+    """Regressions for bugs found in review."""
+
+    def test_unfollowed_wrong_guidance_gets_no_credit(self, seeded_bank):
+        # Wrong guidance the agent never follows (interpretation accuracy 0) must
+        # not be validated by a lucky standard-process outcome (base rate 1)
+        seeded_bank.deposit(_contradiction(
+            "CTX-001", "W4",
+            "Brightline Consulting cleared: Brightline Consulting now uses the standard SOW process.",
+        ), check_contradictions=False)
+        # Hide the ground truth below the bank's confidence floor
+        seeded_bank.get("CTX-001").decay_function = DecayFunction.linear
+        seeded_bank.get("CTX-001").decay_rate = 1.0
+        cfg = MechanisticConfig(retrieval_recall=1.0, interpretation_accuracy=0.0, base_success_rate=1.0)
+        model = MechanisticDecisionModel(RunCondition.CONTEXT_BANK, seed=1, config=cfg)
+
+        decision = model.decide("vendor_agent", BRIGHTLINE_SOW_SCENARIO, week=6, context_bank=seeded_bank)
+
+        assert decision.outcome == DecisionOutcome.CORRECT
+        assert decision.outcome_notes == "standard process"
+        assert decision.context_used == []
+        assert all(not o.validated_by for o in seeded_bank.get_all())
+
+    def test_seed_zero_is_not_replaced_by_default(self):
+        assert SimulationClock(RunCondition.CONTEXT_BANK, seed=0).seed == 0
+
+    def test_consecutive_seeds_do_not_share_weeks(self):
+        def week_events(seed, week):
+            clock = SimulationClock(RunCondition.SILOED_TYPICAL, seed=seed)
+            snapshot = clock.run_week(week)
+            return [e.raw_content for e in snapshot.behavioral_events if e.raw_content]
+
+        assert week_events(43, 1) != week_events(42, 2)
+
+    def test_workload_surge_lasts_one_week(self):
+        from calibration.realism_config import CHAOS_ENABLED_CONFIG
+
+        realism = copy.deepcopy(CHAOS_ENABLED_CONFIG)  # the test edits the schedule
+        clock = SimulationClock(RunCondition.SILOED_TYPICAL, seed=42, realism_config=realism)
+        surge_week = realism.chaos.workload_surge.surge_weeks[0]
+        for week in range(1, surge_week + 1):
+            clock.run_week(week)
+        assert clock.chaos_engine.get_event_multiplier() > 1.0
+
+        clock.chaos_engine.config.random_chaos_probability = 0.0
+        clock.chaos_engine.config.knowledge_departure.departure_weeks = []
+        clock.chaos_engine.config.policy_contradiction.contradiction_scenarios = []
+        clock.chaos_engine.config.agent_drift.drift_start_weeks = []
+        clock.run_week(surge_week + 1)  # a week with no chaos events at all
+        assert clock.chaos_engine.get_event_multiplier() == 1.0

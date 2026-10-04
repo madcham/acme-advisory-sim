@@ -280,6 +280,12 @@ class PerformanceCalibration:
     - SILOED_ADVANCED: Sophisticated silos with overlap and decay
     - GLOBAL_RAG: Unified but unsophisticated
     - CONTEXT_BANK: Full sophistication
+
+    Calibrated mode only. These numbers ARE the result in that mode: a decision
+    succeeds when a random draw falls below them, and retrieved context does not
+    change the outcome. With equal values for all conditions, GLOBAL_RAG and
+    CONTEXT_BANK score identically. Mechanistic mode (simulation/mechanistic.py)
+    does not use them.
     """
 
     # Per-condition calibration
