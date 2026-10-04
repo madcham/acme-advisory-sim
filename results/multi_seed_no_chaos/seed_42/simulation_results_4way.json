@@ -1,10 +1,12 @@
 {
   "metadata": {
-    "timestamp": "2026-09-27T17:28:23.459117+00:00",
+    "timestamp": "2026-10-04T02:05:02.588705+00:00",
     "weeks_simulated": 12,
     "random_seed": 42,
     "realism_mode": "BPI Calibrated",
     "comparison_type": "4-way",
+    "decision_mode": "calibrated",
+    "mechanistic_config": null,
     "realism_config": {
       "bpi_calibration": {
         "enabled": true,
@@ -54,7 +56,7 @@
       "incorrect_decisions": 9,
       "overall_accuracy": 26.666666666666668,
       "final_bank_size": 74,
-      "final_avg_confidence": 0.4414005177515593,
+      "final_avg_confidence": 0.43437842961487644,
       "total_workflow_events": 1560,
       "total_behavioral_events": 1800
     },
@@ -66,7 +68,7 @@
       "incorrect_decisions": 5,
       "overall_accuracy": 53.333333333333336,
       "final_bank_size": 74,
-      "final_avg_confidence": 0.4441941514272318,
+      "final_avg_confidence": 0.437938379249365,
       "total_workflow_events": 1560,
       "total_behavioral_events": 1800
     },
@@ -78,7 +80,7 @@
       "incorrect_decisions": 2,
       "overall_accuracy": 80.0,
       "final_bank_size": 74,
-      "final_avg_confidence": 0.4468996906586508,
+      "final_avg_confidence": 0.44064391848078394,
       "total_workflow_events": 1560,
       "total_behavioral_events": 1800
     }
@@ -151,7 +153,21 @@
           100.0,
           0.0
         ],
-        "overall_ehr": 45.833333333333336,
+        "decisions_per_week": [
+          0,
+          0,
+          1,
+          2,
+          2,
+          1,
+          2,
+          1,
+          1,
+          2,
+          2,
+          1
+        ],
+        "overall_ehr": 60.0,
         "institutional_memory_utilization": [
           0,
           0,
@@ -366,7 +382,21 @@
           100.0,
           100.0
         ],
-        "overall_ehr": 66.66666666666667,
+        "decisions_per_week": [
+          0,
+          0,
+          1,
+          2,
+          2,
+          1,
+          2,
+          1,
+          1,
+          2,
+          2,
+          1
+        ],
+        "overall_ehr": 80.0,
         "institutional_memory_utilization": [
           0,
           0,
@@ -374,14 +404,14 @@
           0.0,
           50.0,
           0.0,
-          100.0,
-          100.0,
+          50.0,
+          0.0,
           0.0,
           50.0,
-          150.0,
+          50.0,
           0.0
         ],
-        "overall_imu": 45.833333333333336,
+        "overall_imu": 25.0,
         "organizational_error_rates": [
           0,
           0,
@@ -402,43 +432,43 @@
         "context_object_growth": [
           15,
           18,
-          25,
-          30,
-          35,
-          46,
-          51,
-          55,
+          27,
+          32,
+          37,
+          45,
+          50,
+          54,
           59,
           64,
           69,
           74
         ],
         "avg_confidence_history": [
-          0.7775200000000001,
-          0.7380733333333335,
-          0.7185921781333334,
-          0.6728074245777778,
-          0.6309342565651809,
-          0.6295888599928027,
-          0.5995090901853583,
-          0.5648248447601564,
-          0.5516815590044924,
-          0.5230830916321763,
-          0.5006243793280221,
-          0.4468996906586508
+          0.77552,
+          0.7394344444444446,
+          0.7329940538271605,
+          0.6863948121041665,
+          0.6436305416832792,
+          0.6371215470605751,
+          0.6051220394408295,
+          0.5698610685508958,
+          0.5472243427178521,
+          0.5199003429720157,
+          0.49811266853689173,
+          0.44064391848078394
         ],
         "contradiction_counts": [
           0,
           0,
+          0,
+          0,
+          0,
           1,
           1,
           1,
-          2,
-          2,
-          2,
-          2,
-          2,
-          2,
+          1,
+          1,
+          1,
           2
         ]
       },
@@ -447,8 +477,8 @@
           "total_patterns_crystallized": 11,
           "total_validations_propagated": 4,
           "total_decay_adjustments": 4,
-          "average_intelligence_score": 0.325,
-          "peak_intelligence_score": 0.64,
+          "average_intelligence_score": 0.355,
+          "peak_intelligence_score": 0.58,
           "active_weeks": 4,
           "crystallized_entities": [],
           "objects_created": 11
@@ -456,13 +486,13 @@
         "weekly_scores": [
           0.0,
           0.0,
-          0.18,
+          0.3,
           0.0,
           0.0,
-          0.64,
+          0.58,
           0.0,
           0.0,
-          0.34,
+          0.4,
           0.0,
           0.0,
           0.14
@@ -471,13 +501,15 @@
           null,
           null,
           {
-            "patterns_crystallized": 3,
+            "patterns_crystallized": 5,
             "validations_propagated": 0,
             "decay_rates_adjusted": 0,
             "new_objects_created": [
-              "CTX-A8512EE8",
-              "CTX-666C4AF4",
-              "CTX-43F539C1"
+              "CTX-7E9820FE",
+              "CTX-3DEA9AEB",
+              "CTX-C9505BFB",
+              "CTX-50FFF63A",
+              "CTX-17C85C4B"
             ],
             "objects_updated": [],
             "confidence_boosts": {}
@@ -485,17 +517,14 @@
           null,
           null,
           {
-            "patterns_crystallized": 7,
+            "patterns_crystallized": 4,
             "validations_propagated": 2,
             "decay_rates_adjusted": 1,
             "new_objects_created": [
-              "CTX-EC682146",
-              "CTX-3968ED1D",
-              "CTX-7E99C4D6",
-              "CTX-8C690C1C",
-              "CTX-2A89FE01",
-              "CTX-3DBBBD5B",
-              "CTX-80C2678A"
+              "CTX-53430EEC",
+              "CTX-1A6B0014",
+              "CTX-9D833413",
+              "CTX-461F4AA6"
             ],
             "objects_updated": [
               "CTX-003",
@@ -510,10 +539,12 @@
           null,
           null,
           {
-            "patterns_crystallized": 0,
+            "patterns_crystallized": 1,
             "validations_propagated": 2,
             "decay_rates_adjusted": 1,
-            "new_objects_created": [],
+            "new_objects_created": [
+              "CTX-3594E54C"
+            ],
             "objects_updated": [
               "CTX-002",
               "CTX-003",
@@ -531,7 +562,7 @@
             "validations_propagated": 0,
             "decay_rates_adjusted": 2,
             "new_objects_created": [
-              "CTX-F629EDE7"
+              "CTX-A6AB6890"
             ],
             "objects_updated": [
               "CTX-001",
@@ -587,13 +618,13 @@
         "incorrect_decisions": 2,
         "accuracy": 80.0,
         "final_bank_size": 74,
-        "final_avg_confidence": 0.4468996906586508
+        "final_avg_confidence": 0.44064391848078394
       }
     },
     "comparison": {
       "dqs_improvement": 20.0,
-      "ehr_improvement": 20.833333333333336,
-      "imu_improvement": 45.833333333333336,
+      "ehr_improvement": 20.0,
+      "imu_improvement": 25.0,
       "errors_avoided": 4,
       "accuracy_improvement": 20.0
     }

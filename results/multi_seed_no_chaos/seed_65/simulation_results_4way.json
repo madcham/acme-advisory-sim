@@ -1,10 +1,12 @@
 {
   "metadata": {
-    "timestamp": "2026-09-27T17:28:27.999067+00:00",
+    "timestamp": "2026-10-04T02:05:07.094217+00:00",
     "weeks_simulated": 12,
     "random_seed": 65,
     "realism_mode": "BPI Calibrated",
     "comparison_type": "4-way",
+    "decision_mode": "calibrated",
+    "mechanistic_config": null,
     "realism_config": {
       "bpi_calibration": {
         "enabled": true,
@@ -54,7 +56,7 @@
       "incorrect_decisions": 6,
       "overall_accuracy": 46.666666666666664,
       "final_bank_size": 74,
-      "final_avg_confidence": 0.44238716599732164,
+      "final_avg_confidence": 0.44377333789613604,
       "total_workflow_events": 1560,
       "total_behavioral_events": 1800
     },
@@ -66,7 +68,7 @@
       "incorrect_decisions": 5,
       "overall_accuracy": 53.333333333333336,
       "final_bank_size": 74,
-      "final_avg_confidence": 0.44325080882339796,
+      "final_avg_confidence": 0.4446369807222124,
       "total_workflow_events": 1560,
       "total_behavioral_events": 1800
     },
@@ -78,7 +80,7 @@
       "incorrect_decisions": 3,
       "overall_accuracy": 73.33333333333333,
       "final_bank_size": 74,
-      "final_avg_confidence": 0.4445976342297325,
+      "final_avg_confidence": 0.4459838061285469,
       "total_workflow_events": 1560,
       "total_behavioral_events": 1800
     }
@@ -151,7 +153,21 @@
           0.0,
           100.0
         ],
-        "overall_ehr": 41.666666666666664,
+        "decisions_per_week": [
+          0,
+          0,
+          1,
+          2,
+          2,
+          1,
+          2,
+          1,
+          1,
+          2,
+          2,
+          1
+        ],
+        "overall_ehr": 46.666666666666664,
         "institutional_memory_utilization": [
           0,
           0,
@@ -366,7 +382,21 @@
           50.0,
           100.0
         ],
-        "overall_ehr": 62.5,
+        "decisions_per_week": [
+          0,
+          0,
+          1,
+          2,
+          2,
+          1,
+          2,
+          1,
+          1,
+          2,
+          2,
+          1
+        ],
+        "overall_ehr": 73.33333333333333,
         "institutional_memory_utilization": [
           0,
           0,
@@ -374,14 +404,14 @@
           0.0,
           50.0,
           0.0,
-          100.0,
-          100.0,
+          50.0,
+          0.0,
           0.0,
           50.0,
-          150.0,
+          50.0,
           0.0
         ],
-        "overall_imu": 45.833333333333336,
+        "overall_imu": 25.0,
         "organizational_error_rates": [
           0,
           0,
@@ -405,36 +435,36 @@
           27,
           32,
           37,
-          45,
-          50,
-          54,
+          46,
+          51,
+          55,
           59,
           64,
           69,
           74
         ],
         "avg_confidence_history": [
-          0.7775200000000001,
-          0.7352955555555556,
-          0.7234554118518517,
-          0.6804402938749998,
-          0.6402901188229186,
-          0.6332290153002518,
-          0.6014461730034135,
-          0.5665068406688845,
-          0.5506780923722752,
-          0.5233409164696085,
-          0.4994772824056696,
-          0.4445976342297325
+          0.7808533333333334,
+          0.7376566666666667,
+          0.7271576113580247,
+          0.6818321887708333,
+          0.6429234890706665,
+          0.6397932927914601,
+          0.6076119684357405,
+          0.5738341764055394,
+          0.5539746155485088,
+          0.5280163392263073,
+          0.5051040855521196,
+          0.4459838061285469
         ],
         "contradiction_counts": [
           1,
+          1,
+          1,
+          1,
+          1,
           2,
           2,
-          2,
-          2,
-          4,
-          4,
           4,
           4,
           4,
@@ -448,7 +478,7 @@
           "total_validations_propagated": 4,
           "total_decay_adjustments": 4,
           "average_intelligence_score": 0.355,
-          "peak_intelligence_score": 0.58,
+          "peak_intelligence_score": 0.64,
           "active_weeks": 4,
           "crystallized_entities": [],
           "objects_created": 11
@@ -459,10 +489,10 @@
           0.3,
           0.0,
           0.0,
-          0.58,
+          0.64,
           0.0,
           0.0,
-          0.4,
+          0.34,
           0.0,
           0.0,
           0.14
@@ -475,11 +505,11 @@
             "validations_propagated": 0,
             "decay_rates_adjusted": 0,
             "new_objects_created": [
-              "CTX-72A1F90B",
-              "CTX-0D7DDB9D",
-              "CTX-8588E5C9",
-              "CTX-E0A1DD90",
-              "CTX-937BFCF8"
+              "CTX-B6B75255",
+              "CTX-2B3CE0F1",
+              "CTX-5F43A57A",
+              "CTX-844BAE64",
+              "CTX-EBAD8F8A"
             ],
             "objects_updated": [],
             "confidence_boosts": {}
@@ -487,14 +517,15 @@
           null,
           null,
           {
-            "patterns_crystallized": 4,
+            "patterns_crystallized": 5,
             "validations_propagated": 2,
             "decay_rates_adjusted": 1,
             "new_objects_created": [
-              "CTX-CB7BAAE5",
-              "CTX-343D5EDC",
-              "CTX-F66B4D52",
-              "CTX-E46BB717"
+              "CTX-822C7D0D",
+              "CTX-C6EDB72F",
+              "CTX-683E016E",
+              "CTX-3B728F4A",
+              "CTX-AAF9F4BC"
             ],
             "objects_updated": [
               "CTX-003",
@@ -509,12 +540,10 @@
           null,
           null,
           {
-            "patterns_crystallized": 1,
+            "patterns_crystallized": 0,
             "validations_propagated": 2,
             "decay_rates_adjusted": 1,
-            "new_objects_created": [
-              "CTX-CEC5DCC4"
-            ],
+            "new_objects_created": [],
             "objects_updated": [
               "CTX-002",
               "CTX-003",
@@ -532,7 +561,7 @@
             "validations_propagated": 0,
             "decay_rates_adjusted": 2,
             "new_objects_created": [
-              "CTX-6045A1CF"
+              "CTX-DD603199"
             ],
             "objects_updated": [
               "CTX-001",
@@ -588,13 +617,13 @@
         "incorrect_decisions": 3,
         "accuracy": 73.33333333333333,
         "final_bank_size": 74,
-        "final_avg_confidence": 0.4445976342297325
+        "final_avg_confidence": 0.4459838061285469
       }
     },
     "comparison": {
       "dqs_improvement": 26.666666666666664,
-      "ehr_improvement": 20.833333333333336,
-      "imu_improvement": 45.833333333333336,
+      "ehr_improvement": 26.666666666666664,
+      "imu_improvement": 25.0,
       "errors_avoided": 3,
       "accuracy_improvement": 26.666666666666664
     }

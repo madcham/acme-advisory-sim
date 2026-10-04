@@ -1,3 +1,5 @@
+> **Legacy calibrated-mode output: not supported.** Accuracies in this run were set in configuration, not measured, and the narrative below was fixed text written regardless of the data. See `results/legacy_calibrated/README.md` and `docs/MECHANISTIC_MODE.md` for current results.
+
 # Acme Advisory: Twelve Weeks with the Context Bank
 
 *Simulation Results Summary*
@@ -99,15 +101,15 @@ The simulation shows graduated improvement over time, not a binary switch:
 
 | Week | Without Bank | With Bank | Bank Size |
 |------|--------------|-----------|-----------|
-| 3 | 0% | 100% | 28 |
-| 4 | 100% | 50% | 33 |
-| 5 | 100% | 100% | 38 |
-| 6 | 0% | 100% | 45 |
-| 7 | 50% | 100% | 50 |
-| 8 | 100% | 0% | 54 |
-| 9 | 100% | 100% | 60 |
-| 10 | 100% | 50% | 65 |
-| 11 | 100% | 100% | 70 |
+| 3 | 0% | 100% | 29 |
+| 4 | 100% | 50% | 34 |
+| 5 | 100% | 100% | 39 |
+| 6 | 0% | 100% | 46 |
+| 7 | 50% | 100% | 51 |
+| 8 | 100% | 0% | 55 |
+| 9 | 100% | 100% | 61 |
+| 10 | 100% | 50% | 66 |
+| 11 | 100% | 100% | 71 |
 | 12 | 0% | 100% | 75 |
 
 **Key observation:** WITHOUT_BANK shows occasional correct decisions (baseline human knowledge and lucky guesses), but no systematic improvement. WITH_BANK shows consistent high performance with slight variations due to retrieval noise and interpretation uncertainty—realistic modeling of how institutional memory actually works.

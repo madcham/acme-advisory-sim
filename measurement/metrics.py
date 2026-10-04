@@ -75,7 +75,7 @@ class SimulationMetrics:
     """Complete metrics for a simulation run."""
     # Primary metrics (business readable)
     decision_quality_scores: Dict[str, List[float]]  # by agent, per week
-    exception_handling_rates: List[float]  # per week
+    exception_handling_rates: List[float]  # per week (0.0 for weeks with no decisions)
     institutional_memory_utilization: List[float]  # per week
     organizational_error_rates: List[int]  # per week
 
@@ -97,6 +97,9 @@ class SimulationMetrics:
     crystallized_entities: List[str] = field(default_factory=list)  # entities that were crystallized
     confidence_boosts_history: List[Dict[str, float]] = field(default_factory=list)  # per week
     synthesis_objects_created: List[str] = field(default_factory=list)  # IDs of synthesized objects
+
+    # Decisions made each week (aligned with exception_handling_rates)
+    decisions_per_week: List[int] = field(default_factory=list)
 
     # Chaos metrics (v3.0)
     chaos_metrics: Optional[ChaosImpactMetrics] = None
@@ -127,8 +130,12 @@ class SimulationMetrics:
         return self.exception_handling_rates
 
     def overall_ehr(self) -> float:
-        """Calculate overall Exception Handling Rate."""
-        return statistics.mean(self.exception_handling_rates) if self.exception_handling_rates else 0.0
+        """Overall Exception Handling Rate: share of all decisions handled correctly.
+
+        Computed over decisions, not as a mean of weekly rates, because weeks
+        with no decisions report 0.0 and would drag a weekly mean down.
+        """
+        return (self.correct_decisions / self.total_decisions * 100) if self.total_decisions else 0.0
 
     def overall_imu(self) -> float:
         """Calculate overall Institutional Memory Utilization."""
@@ -164,6 +171,7 @@ class SimulationMetrics:
                 "weekly_dqs": self.weekly_dqs(),
                 "overall_dqs": self.overall_dqs(),
                 "exception_handling_rates": self.exception_handling_rates,
+                "decisions_per_week": self.decisions_per_week,
                 "overall_ehr": self.overall_ehr(),
                 "institutional_memory_utilization": self.institutional_memory_utilization,
                 "overall_imu": self.overall_imu(),
@@ -319,6 +327,7 @@ class MetricsCalculator:
         # Initialize tracking
         dqs_by_agent: Dict[str, List[float]] = {}
         ehr_history = []
+        decisions_per_week = []
         imu_history = []
         oer_history = []
         growth_history = []
@@ -357,6 +366,7 @@ class MetricsCalculator:
 
             # EHR this week
             ehr_history.append(calculate_ehr(snapshot.agent_decisions))
+            decisions_per_week.append(len(snapshot.agent_decisions))
 
             # IMU this week
             imu_history.append(snapshot.institutional_memory_utilization)
@@ -461,6 +471,7 @@ class MetricsCalculator:
         return SimulationMetrics(
             decision_quality_scores=dqs_by_agent,
             exception_handling_rates=ehr_history,
+            decisions_per_week=decisions_per_week,
             institutional_memory_utilization=imu_history,
             organizational_error_rates=oer_history,
             context_object_growth=growth_history,

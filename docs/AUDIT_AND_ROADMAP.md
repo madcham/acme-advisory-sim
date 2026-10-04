@@ -1,5 +1,12 @@
 # Context Bank Simulation: Comprehensive Audit & Roadmap
 
+> **Status (October 2026):** the results cited in this audit (Context Bank 80% vs
+> RAG 53%, the 46-point "partial sophistication trap", "thesis validated", Enron
+> calibration) came from calibrated mode, where accuracies are set in configuration,
+> and the Enron calibration was never applied to those runs. They are not supported.
+> Current results and limitations: `docs/MECHANISTIC_MODE.md`. The architecture and
+> roadmap content remains useful as design history.
+
 **Audit Date:** May 2026
 **Auditor:** Claude Code Analysis
 **Codebase Version:** Post 4-condition implementation

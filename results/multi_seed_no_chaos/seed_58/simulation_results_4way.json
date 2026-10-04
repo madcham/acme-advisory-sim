@@ -1,10 +1,12 @@
 {
   "metadata": {
-    "timestamp": "2026-09-27T17:28:26.598242+00:00",
+    "timestamp": "2026-10-04T02:05:05.727952+00:00",
     "weeks_simulated": 12,
     "random_seed": 58,
     "realism_mode": "BPI Calibrated",
     "comparison_type": "4-way",
+    "decision_mode": "calibrated",
+    "mechanistic_config": null,
     "realism_config": {
       "bpi_calibration": {
         "enabled": true,
@@ -54,7 +56,7 @@
       "incorrect_decisions": 6,
       "overall_accuracy": 46.666666666666664,
       "final_bank_size": 74,
-      "final_avg_confidence": 0.4388341940726521,
+      "final_avg_confidence": 0.44441638658465543,
       "total_workflow_events": 1560,
       "total_behavioral_events": 1800
     },
@@ -66,7 +68,7 @@
       "incorrect_decisions": 7,
       "overall_accuracy": 40.0,
       "final_bank_size": 74,
-      "final_avg_confidence": 0.4341033479570705,
+      "final_avg_confidence": 0.4416461780463367,
       "total_workflow_events": 1560,
       "total_behavioral_events": 1800
     },
@@ -78,7 +80,7 @@
       "incorrect_decisions": 3,
       "overall_accuracy": 66.66666666666666,
       "final_bank_size": 74,
-      "final_avg_confidence": 0.4395339203451746,
+      "final_avg_confidence": 0.44552465358887866,
       "total_workflow_events": 1560,
       "total_behavioral_events": 1800
     }
@@ -151,7 +153,21 @@
           50.0,
           0.0
         ],
-        "overall_ehr": 25.0,
+        "decisions_per_week": [
+          0,
+          0,
+          1,
+          2,
+          2,
+          1,
+          2,
+          1,
+          1,
+          2,
+          2,
+          1
+        ],
+        "overall_ehr": 33.33333333333333,
         "institutional_memory_utilization": [
           0,
           0,
@@ -366,7 +382,21 @@
           100.0,
           100.0
         ],
-        "overall_ehr": 54.166666666666664,
+        "decisions_per_week": [
+          0,
+          0,
+          1,
+          2,
+          2,
+          1,
+          2,
+          1,
+          1,
+          2,
+          2,
+          1
+        ],
+        "overall_ehr": 66.66666666666666,
         "institutional_memory_utilization": [
           0,
           0,
@@ -374,14 +404,14 @@
           0.0,
           50.0,
           0.0,
-          100.0,
+          50.0,
           0.0,
           0.0,
           50.0,
-          150.0,
+          50.0,
           0.0
         ],
-        "overall_imu": 37.5,
+        "overall_imu": 25.0,
         "organizational_error_rates": [
           0,
           0,
@@ -405,27 +435,27 @@
           25,
           30,
           35,
-          43,
-          48,
-          52,
-          60,
-          65,
-          70,
+          44,
+          49,
+          53,
+          59,
+          64,
+          69,
           74
         ],
         "avg_confidence_history": [
-          0.7775200000000001,
-          0.7408511111111112,
-          0.7200118869333335,
-          0.6701613485777778,
-          0.6279906557080381,
-          0.6260090720981005,
-          0.5948360058046759,
-          0.5597944632916934,
-          0.5394432959233388,
-          0.5144495412478789,
-          0.4940260507346615,
-          0.4395339203451746
+          0.7741866666666667,
+          0.7334900000000001,
+          0.7030474869333332,
+          0.6595041402444444,
+          0.6171054682080382,
+          0.6179110921687875,
+          0.5888175927663577,
+          0.5553763452463412,
+          0.5454944604936117,
+          0.5205916275422916,
+          0.49945472196683843,
+          0.44552465358887866
         ],
         "contradiction_counts": [
           0,
@@ -438,8 +468,8 @@
           0,
           0,
           0,
-          1,
-          1
+          0,
+          0
         ]
       },
       "synthesis_metrics": {
@@ -447,8 +477,8 @@
           "total_patterns_crystallized": 11,
           "total_validations_propagated": 4,
           "total_decay_adjustments": 3,
-          "average_intelligence_score": 0.40750000000000003,
-          "peak_intelligence_score": 0.555,
+          "average_intelligence_score": 0.4075,
+          "peak_intelligence_score": 0.575,
           "active_weeks": 4,
           "crystallized_entities": [],
           "objects_created": 11
@@ -459,13 +489,13 @@
           0.18,
           0.0,
           0.0,
-          0.515,
+          0.575,
           0.0,
           0.0,
-          0.555,
+          0.435,
           0.0,
           0.0,
-          0.38
+          0.44
         ],
         "weekly_results": [
           null,
@@ -475,9 +505,9 @@
             "validations_propagated": 0,
             "decay_rates_adjusted": 0,
             "new_objects_created": [
-              "CTX-D91EC0C9",
-              "CTX-991CA39A",
-              "CTX-438E90BB"
+              "CTX-930AAD1B",
+              "CTX-4C357FFD",
+              "CTX-3C887354"
             ],
             "objects_updated": [],
             "confidence_boosts": {}
@@ -485,14 +515,15 @@
           null,
           null,
           {
-            "patterns_crystallized": 4,
+            "patterns_crystallized": 5,
             "validations_propagated": 1,
             "decay_rates_adjusted": 0,
             "new_objects_created": [
-              "CTX-69B51AE4",
-              "CTX-7FCFAEAF",
-              "CTX-F754D8F5",
-              "CTX-5A602EA0"
+              "CTX-717C7244",
+              "CTX-55B5F886",
+              "CTX-32533C3B",
+              "CTX-49C57283",
+              "CTX-1ADAFA3B"
             ],
             "objects_updated": [
               "CTX-002"
@@ -504,14 +535,12 @@
           null,
           null,
           {
-            "patterns_crystallized": 4,
+            "patterns_crystallized": 2,
             "validations_propagated": 1,
             "decay_rates_adjusted": 1,
             "new_objects_created": [
-              "CTX-0F7155F0",
-              "CTX-BAA51B7A",
-              "CTX-E757506A",
-              "CTX-86AC3B63"
+              "CTX-EABE3178",
+              "CTX-406285C2"
             ],
             "objects_updated": [
               "CTX-003",
@@ -524,10 +553,12 @@
           null,
           null,
           {
-            "patterns_crystallized": 0,
+            "patterns_crystallized": 1,
             "validations_propagated": 2,
             "decay_rates_adjusted": 2,
-            "new_objects_created": [],
+            "new_objects_created": [
+              "CTX-3C6C9007"
+            ],
             "objects_updated": [
               "CTX-003",
               "CTX-006",
@@ -588,13 +619,13 @@
         "incorrect_decisions": 3,
         "accuracy": 66.66666666666666,
         "final_bank_size": 74,
-        "final_avg_confidence": 0.4395339203451746
+        "final_avg_confidence": 0.44552465358887866
       }
     },
     "comparison": {
       "dqs_improvement": 33.333333333333336,
-      "ehr_improvement": 29.166666666666664,
-      "imu_improvement": 37.5,
+      "ehr_improvement": 33.33333333333333,
+      "imu_improvement": 25.0,
       "errors_avoided": 3,
       "accuracy_improvement": 33.33333333333333
     }

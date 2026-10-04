@@ -4,7 +4,7 @@ Visualization Charts for Simulation Results.
 Creates business and technical dashboards using Plotly.
 """
 
-from typing import Dict, Any, List, Optional
+from typing import Dict, Any, List, Optional, Tuple
 from pathlib import Path
 import json
 
@@ -16,9 +16,28 @@ except ImportError:
     PLOTLY_AVAILABLE = False
 
 
+def _weekly_with_gaps(metrics: Dict[str, Any], key: str) -> List[Optional[float]]:
+    """A weekly primary metric, with None (a gap) for weeks that had no decisions.
+
+    Weekly rates report 0.0 for empty weeks, which would plot as 0%.
+    """
+    rates = metrics["primary_metrics"][key]
+    counts = metrics["primary_metrics"].get("decisions_per_week") or [1] * len(rates)
+    weekly = [rate if n else None for rate, n in zip(rates, counts)]
+    return weekly + [None] * (12 - len(weekly))
+
+
+def _weekly_accuracy(metrics: Dict[str, Any]) -> List[Optional[float]]:
+    """Weekly accuracy, with gaps for weeks that had no decisions."""
+    return _weekly_with_gaps(metrics, "exception_handling_rates")
+
+
 def create_business_dashboard(
     comparison_data: Dict[str, Any],
     output_path: str = "results/business_dashboard.html",
+    labels: Tuple[str, str] = ("Without Bank", "With Bank"),
+    note: str = "",
+    accuracies: Optional[Dict[str, float]] = None,
 ) -> str:
     """
     Create business leader readable dashboard.
@@ -32,6 +51,8 @@ def create_business_dashboard(
     Args:
         comparison_data: Output from MetricsCalculator.compare_conditions()
         output_path: Where to save the HTML file
+        labels: Names of the two compared conditions (reference, other)
+        note: Context shown under the title (decision mode, sample size)
 
     Returns:
         Path to generated HTML file
@@ -47,29 +68,24 @@ def create_business_dashboard(
     fig = make_subplots(
         rows=2, cols=2,
         subplot_titles=(
-            "Decision Quality Score Over Time",
-            "Organizational Errors by Condition",
-            "Institutional Memory Utilization",
-            "Exception Handling Success Rate"
+            "Accuracy by Week (gaps: no decisions)",
+            "Incorrect Decisions",
+            f"Relevant Knowledge Read ({labels[1]})",
+            "Overall Accuracy"
         ),
         specs=[[{"type": "scatter"}, {"type": "bar"}],
                [{"type": "scatter"}, {"type": "bar"}]]
     )
 
-    # Chart 1: DQS over time
-    # Get average DQS per week for each condition
-    without_dqs = without["primary_metrics"]["exception_handling_rates"]
-    with_dqs = with_bank["primary_metrics"]["exception_handling_rates"]
-
-    # Pad to 12 weeks if needed
-    without_dqs = without_dqs + [0] * (12 - len(without_dqs))
-    with_dqs = with_dqs + [0] * (12 - len(with_dqs))
+    # Chart 1: accuracy by week
+    without_dqs = _weekly_accuracy(without)
+    with_dqs = _weekly_accuracy(with_bank)
 
     fig.add_trace(
         go.Scatter(
             x=weeks, y=without_dqs,
             mode='lines+markers',
-            name='Without Bank',
+            name=labels[0],
             line=dict(color='#EF4444', width=2),
             marker=dict(size=8)
         ),
@@ -79,7 +95,7 @@ def create_business_dashboard(
         go.Scatter(
             x=weeks, y=with_dqs,
             mode='lines+markers',
-            name='With Bank',
+            name=labels[1],
             line=dict(color='#10B981', width=2),
             marker=dict(size=8)
         ),
@@ -92,7 +108,7 @@ def create_business_dashboard(
 
     fig.add_trace(
         go.Bar(
-            x=['Without Bank', 'With Bank'],
+            x=list(labels),
             y=[without_errors, with_errors],
             marker_color=['#EF4444', '#10B981'],
             text=[without_errors, with_errors],
@@ -103,14 +119,13 @@ def create_business_dashboard(
     )
 
     # Chart 3: IMU over time
-    with_imu = with_bank["primary_metrics"]["institutional_memory_utilization"]
-    with_imu = with_imu + [0] * (12 - len(with_imu))
+    with_imu = _weekly_with_gaps(with_bank, "institutional_memory_utilization")
 
     fig.add_trace(
         go.Scatter(
             x=weeks, y=with_imu,
             mode='lines+markers',
-            name='IMU %',
+            name='Relevant knowledge read %',
             line=dict(color='#3B82F6', width=2),
             marker=dict(size=8),
             fill='tozeroy',
@@ -119,16 +134,19 @@ def create_business_dashboard(
         row=2, col=1
     )
 
-    # Chart 4: Success rate by condition
-    without_accuracy = without["summary"]["accuracy"]
-    with_accuracy = with_bank["summary"]["accuracy"]
+    # Chart 4: overall accuracy, for every condition in the run when given
+    if not accuracies:
+        accuracies = {
+            labels[0]: without["summary"]["accuracy"],
+            labels[1]: with_bank["summary"]["accuracy"],
+        }
 
     fig.add_trace(
         go.Bar(
-            x=['Without Bank', 'With Bank'],
-            y=[without_accuracy, with_accuracy],
-            marker_color=['#EF4444', '#10B981'],
-            text=[f'{without_accuracy:.1f}%', f'{with_accuracy:.1f}%'],
+            x=list(accuracies),
+            y=list(accuracies.values()),
+            marker_color='#6B7280',
+            text=[f'{a:.1f}%' for a in accuracies.values()],
             textposition='auto',
             showlegend=False
         ),
@@ -138,28 +156,24 @@ def create_business_dashboard(
     # Update layout
     fig.update_layout(
         title={
-            'text': 'Acme Advisory: Context Bank Impact - Business View',
-            'font': {'size': 24}
+            'text': f'Acme Advisory: Single Run, {labels[0]} vs {labels[1]}'
+                    + (f'<br><sup>{note}</sup>' if note else ''),
+            'font': {'size': 22}
         },
         height=800,
         showlegend=True,
-        legend=dict(
-            orientation="h",
-            yanchor="bottom",
-            y=1.02,
-            xanchor="right",
-            x=1
-        ),
+        legend=dict(orientation="h", yanchor="top", y=-0.08, xanchor="left", x=0),
+        margin=dict(t=110),
         template='plotly_white'
     )
 
     # Update axes labels
     fig.update_xaxes(title_text="Week", row=1, col=1)
-    fig.update_yaxes(title_text="DQS Score", row=1, col=1)
+    fig.update_yaxes(title_text="Accuracy %", row=1, col=1)
     fig.update_yaxes(title_text="Error Count", row=1, col=2)
     fig.update_xaxes(title_text="Week", row=2, col=1)
-    fig.update_yaxes(title_text="IMU %", row=2, col=1)
-    fig.update_yaxes(title_text="Success Rate %", row=2, col=2)
+    fig.update_yaxes(title_text="% of relevant objects", row=2, col=1)
+    fig.update_yaxes(title_text="Accuracy %", row=2, col=2)
 
     # Save
     output = Path(output_path)
@@ -172,6 +186,8 @@ def create_business_dashboard(
 def create_technical_dashboard(
     comparison_data: Dict[str, Any],
     output_path: str = "results/technical_dashboard.html",
+    labels: Tuple[str, str] = ("Without Bank", "With Bank"),
+    note: str = "",
 ) -> str:
     """
     Create technical leader readable dashboard.
@@ -203,10 +219,10 @@ def create_technical_dashboard(
         subplot_titles=(
             "Context Object Growth",
             "Average Confidence Over Time",
-            "Decision Accuracy by Week",
+            "Accuracy by Week (gaps: no decisions)",
             "Contradiction Detection",
-            "Bank Utilization",
-            "Improvement Summary"
+            "Relevant Knowledge Read",
+            f"{labels[1]} Accuracy % (delta vs {labels[0]})"
         ),
         specs=[[{"type": "scatter"}, {"type": "scatter"}],
                [{"type": "scatter"}, {"type": "scatter"}],
@@ -244,8 +260,7 @@ def create_technical_dashboard(
     )
 
     # Chart 3: Decision accuracy by week (EHR as proxy)
-    ehr = with_bank["primary_metrics"]["exception_handling_rates"]
-    ehr = ehr + [0] * (12 - len(ehr))
+    ehr = _weekly_accuracy(with_bank)
 
     fig.add_trace(
         go.Scatter(
@@ -272,14 +287,13 @@ def create_technical_dashboard(
     )
 
     # Chart 5: Bank utilization (IMU)
-    imu = with_bank["primary_metrics"]["institutional_memory_utilization"]
-    imu = imu + [0] * (12 - len(imu))
+    imu = _weekly_with_gaps(with_bank, "institutional_memory_utilization")
 
     fig.add_trace(
         go.Bar(
             x=weeks, y=imu,
             marker_color='#3B82F6',
-            name='IMU %'
+            name='Relevant knowledge read %'
         ),
         row=3, col=1
     )
@@ -294,19 +308,9 @@ def create_technical_dashboard(
             delta={'reference': comparison_data["without_bank"]["summary"]["accuracy"]},
             gauge={
                 'axis': {'range': [0, 100]},
-                'bar': {'color': '#10B981'},
-                'steps': [
-                    {'range': [0, 50], 'color': '#FEE2E2'},
-                    {'range': [50, 75], 'color': '#FEF3C7'},
-                    {'range': [75, 100], 'color': '#D1FAE5'}
-                ],
-                'threshold': {
-                    'line': {'color': 'red', 'width': 2},
-                    'thickness': 0.75,
-                    'value': 90
-                }
+                'bar': {'color': '#6B7280'},
             },
-            title={'text': 'With Bank Accuracy %'}
+            # The subplot title already names the comparison
         ),
         row=3, col=2
     )
@@ -314,8 +318,9 @@ def create_technical_dashboard(
     # Update layout
     fig.update_layout(
         title={
-            'text': 'Acme Advisory: Context Bank Technical Metrics',
-            'font': {'size': 24}
+            'text': f'Acme Advisory: Single Run, {labels[1]} Internals'
+                    + (f'<br><sup>{note}</sup>' if note else ''),
+            'font': {'size': 22}
         },
         height=1000,
         showlegend=True,
@@ -353,12 +358,12 @@ def _create_fallback_html(
     <h1>{title}</h1>
     <p>Install Plotly for interactive charts: <code>pip install plotly</code></p>
     <div class="metric">
-        <div class="metric-label">Overall Accuracy Improvement</div>
-        <div class="metric-value">+{data.get('comparison', {}).get('accuracy_improvement', 0):.1f}%</div>
+        <div class="metric-label">Accuracy difference (points)</div>
+        <div class="metric-value">{data.get('comparison', {}).get('accuracy_improvement', 0):+.1f}</div>
     </div>
     <div class="metric">
-        <div class="metric-label">Errors Avoided</div>
-        <div class="metric-value">{data.get('comparison', {}).get('errors_avoided', 0)}</div>
+        <div class="metric-label">Difference in incorrect decisions (reference minus other)</div>
+        <div class="metric-value">{data.get('comparison', {}).get('errors_avoided', 0):+d}</div>
     </div>
     <h2>Raw Data</h2>
     <pre>{json.dumps(data, indent=2, default=str)}</pre>
@@ -385,9 +390,19 @@ class ChartGenerator:
     def generate_all(
         self,
         comparison_data: Dict[str, Any],
+        labels: Tuple[str, str] = ("Without Bank", "With Bank"),
+        note: str = "",
+        accuracies: Optional[Dict[str, float]] = None,
     ) -> Dict[str, str]:
         """
-        Generate all dashboards.
+        Generate all dashboards for a two-condition comparison.
+
+        Args:
+            comparison_data: Output from MetricsCalculator.compare_conditions()
+            labels: Names of the two compared conditions (reference, other)
+            note: Context shown under the title (decision mode, sample size)
+            accuracies: Accuracy of every condition in the run, for the
+                overall accuracy chart (defaults to the two compared)
 
         Returns dict mapping dashboard name to file path.
         """
@@ -395,12 +410,17 @@ class ChartGenerator:
 
         paths["business_dashboard"] = create_business_dashboard(
             comparison_data,
-            str(self.output_dir / "business_dashboard.html")
+            str(self.output_dir / "business_dashboard.html"),
+            labels=labels,
+            note=note,
+            accuracies=accuracies,
         )
 
         paths["technical_dashboard"] = create_technical_dashboard(
             comparison_data,
-            str(self.output_dir / "technical_dashboard.html")
+            str(self.output_dir / "technical_dashboard.html"),
+            labels=labels,
+            note=note,
         )
 
         return paths

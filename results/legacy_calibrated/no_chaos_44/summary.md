@@ -1,3 +1,5 @@
+> **Legacy calibrated-mode output: not supported.** Accuracies in this run were set in configuration, not measured, and the narrative below was fixed text written regardless of the data. See `results/legacy_calibrated/README.md` and `docs/MECHANISTIC_MODE.md` for current results.
+
 # Acme Advisory: Twelve Weeks with the Context Bank
 
 *Simulation Results Summary*

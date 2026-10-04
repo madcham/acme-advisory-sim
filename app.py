@@ -106,9 +106,31 @@ METRICS_GLOSSARY = {
 # DATA LOADING
 # =============================================================================
 
+# The tabs below explore a legacy single run in calibrated mode (accuracies set
+# in config). Current results are multi-seed mechanistic runs, summarized by
+# render_current_findings().
+APP_DIR = Path(__file__).resolve().parent
+LEGACY_DIR = APP_DIR / "results" / "legacy_calibrated"
+CURRENT_DIRS = {
+    "With chaos": APP_DIR / "results" / "mechanistic",
+    "Without chaos": APP_DIR / "results" / "mechanistic_no_chaos",
+}
+
+
+def load_current_findings() -> Dict[str, Dict[str, Any]]:
+    """Load aggregated mechanistic multi-seed results, keyed by chaos setting."""
+    found = {}
+    for label, directory in CURRENT_DIRS.items():
+        path = directory / "aggregated_results.json"
+        if path.exists():
+            with open(path) as f:
+                found[label] = json.load(f)
+    return found
+
+
 def load_results() -> Optional[Dict[str, Any]]:
-    """Load simulation results from JSON file."""
-    results_path = Path("results/simulation_results.json")
+    """Load the legacy calibrated run's results."""
+    results_path = LEGACY_DIR / "simulation_results.json"
     if results_path.exists():
         with open(results_path) as f:
             return json.load(f)
@@ -117,7 +139,7 @@ def load_results() -> Optional[Dict[str, Any]]:
 
 def load_decisions() -> Optional[Dict[str, Any]]:
     """Load all decisions from JSON file."""
-    decisions_path = Path("results/all_decisions.json")
+    decisions_path = LEGACY_DIR / "all_decisions.json"
     if decisions_path.exists():
         with open(decisions_path) as f:
             return json.load(f)
@@ -126,7 +148,7 @@ def load_decisions() -> Optional[Dict[str, Any]]:
 
 def load_bank_state() -> Optional[Dict[str, Any]]:
     """Load final bank state from JSON file."""
-    bank_path = Path("results/final_bank_state.json")
+    bank_path = LEGACY_DIR / "final_bank_state.json"
     if bank_path.exists():
         with open(bank_path) as f:
             return json.load(f)
@@ -155,14 +177,14 @@ results = load_results()
 has_results = results is not None
 
 if has_results:
-    st.sidebar.success("✓ Simulation results loaded")
+    st.sidebar.success("✓ Legacy calibrated run loaded")
     timestamp = results.get('metadata', {}).get('timestamp', 'Unknown')[:10]
     realism_mode = results.get('metadata', {}).get('realism_mode', 'Standard')
     st.sidebar.caption(f"Run date: {timestamp}")
     st.sidebar.caption(f"Mode: {realism_mode}")
 else:
-    st.sidebar.warning("No results found")
-    st.sidebar.caption("Run `python main.py` first")
+    st.sidebar.warning("Legacy run not found")
+    st.sidebar.caption("Expected in results/legacy_calibrated/")
 
 st.sidebar.divider()
 
@@ -181,12 +203,57 @@ with st.sidebar.expander("📖 Quick Glossary"):
     """)
 
 st.sidebar.divider()
-st.sidebar.caption("Run: `python main.py`")
+st.sidebar.caption("Current results: `python run_multi_seed.py --mode mechanistic`")
 st.sidebar.caption("UI: `streamlit run app.py`")
 
 # =============================================================================
 # WELCOME & TUTORIAL SECTION
 # =============================================================================
+
+def render_current_findings() -> None:
+    """Current multi-seed mechanistic results, shown above the legacy explorer."""
+    findings = load_current_findings()
+    if not findings:
+        st.warning(
+            "Current results not found. Generate them with "
+            "`python run_multi_seed.py --mode mechanistic` (and `--no-chaos`)."
+        )
+        return
+
+    st.markdown("### Current results (mechanistic mode, multi-seed)")
+    rows = []
+    for label, data in findings.items():
+        n = data["metadata"]["total_runs"]
+        for condition, stats in data["condition_statistics"].items():
+            rows.append({
+                "Setting": label,
+                "Condition": condition,
+                "Mean accuracy (%)": round(stats["mean"], 1),
+                "95% CI": f"[{stats['ci95_low']:.1f}, {stats['ci95_high']:.1f}]",
+                "Seeds": n,
+            })
+    st.dataframe(rows, hide_index=True)
+
+    for label, data in findings.items():
+        for name, comp in data["paired_comparisons"].items():
+            if comp["condition"] == "CONTEXT_BANK" and comp["reference"] == "GLOBAL_RAG":
+                st.markdown(
+                    f"**{label}:** CONTEXT_BANK minus GLOBAL_RAG = **{comp['mean']:+.1f} points** "
+                    f"[{comp['ci95_low']:+.1f}, {comp['ci95_high']:+.1f}] "
+                    f"(wins/ties/losses {comp['wins']}/{comp['ties']}/{comp['losses']})"
+                )
+    st.caption("Method, ablation and limitations: docs/MECHANISTIC_MODE.md")
+
+    st.warning(
+        "**The tabs below explore a legacy single run in calibrated mode.** In that mode each "
+        "condition's accuracy is set in `config/simulation_config.py` and retrieved context does "
+        "not affect outcomes, so its accuracy numbers restate the configuration and are not "
+        "evidence about the Context Bank. The tabs remain useful for browsing scenarios, "
+        "decisions, the knowledge store and chaos events."
+    )
+
+
+render_current_findings()
 
 # Session state for tutorial
 if "show_welcome" not in st.session_state:
@@ -252,21 +319,25 @@ if st.session_state.show_welcome:
         improvement = with_acc - without_acc
         errors_avoided = comparison.get("comparison", {}).get("errors_avoided", 0)
 
-        st.markdown("### 📈 Your Simulation Results")
+        st.markdown("### 📈 Legacy Run (calibrated mode)")
 
         col1, col2, col3, col4 = st.columns(4)
 
         with col1:
-            st.metric("Without Context Bank", f"{without_acc:.0f}%", help="Baseline accuracy")
+            st.metric("Without Context Bank", f"{without_acc:.0f}%", help="Configured accuracy, single run")
         with col2:
-            st.metric("With Context Bank", f"{with_acc:.0f}%", f"+{improvement:.0f}%", help="Improved accuracy")
+            st.metric("With Context Bank", f"{with_acc:.0f}%", f"{improvement:+.0f} pts", help="Configured accuracy, single run")
         with col3:
-            st.metric("Mistakes Prevented", errors_avoided, help="Errors avoided")
+            st.metric("Difference in Incorrect Decisions", f"{errors_avoided:+d}", help="Without minus with")
         with col4:
             bank_size = with_bank.get("summary", {}).get("final_bank_size", 0)
             st.metric("Knowledge Items", bank_size, help="Institutional memory captured")
 
-        st.success(f"**Unified knowledge improved decision accuracy by {improvement:.0f}%** — preventing {errors_avoided} costly mistakes that occur when agents operate on fragmented, siloed information.")
+        st.info(
+            f"In this legacy run accuracy differed by **{improvement:+.0f} points**. Calibrated-mode "
+            "accuracies are set in configuration, so this difference is an input, not a finding. "
+            "See the current results above."
+        )
 
     else:
         st.warning("""
@@ -369,10 +440,10 @@ if st.session_state.show_welcome:
         👉 **Go to the "🔍 Decision History" tab**
 
         1. Toggle to **"WITHOUT Context Bank"**
-        2. Find a decision marked ❌ — the agent made a mistake
-        3. Toggle to **"WITH Context Bank"**
-        4. Find the same scenario — now marked ✅
-        5. See the **"📚 Used knowledge"** that made the difference
+        2. Find a decision marked ❌
+        3. Toggle to **"WITH Context Bank"** and find the same scenario
+        4. See the **"📚 Used knowledge"** it recorded (in calibrated mode the
+           outcome itself is a random draw at a configured rate)
 
         ---
 
@@ -381,8 +452,8 @@ if st.session_state.show_welcome:
         👉 **Go to the "📊 Results Dashboard" tab**
 
         1. Look at the **accuracy comparison** — before vs after
-        2. Check the **"Mistakes Prevented"** metric
-        3. See the **week-by-week chart** — accuracy improves as knowledge accumulates
+        2. Check the **"Difference in Incorrect Decisions"** metric
+        3. See the **week-by-week chart** (one or two decisions per week, so it is noisy)
 
         ---
 
@@ -391,8 +462,8 @@ if st.session_state.show_welcome:
         👉 **Go to the "⚡ Stress Testing" tab**
 
         1. See what **disruptions** were injected (staff leaving, policies changing)
-        2. Notice the system **maintained high accuracy** despite chaos
-        3. This proves the Context Bank preserves knowledge even under stress
+        2. Compare accuracy with and without disruptions
+        3. For a test of resilience, use the multi-seed mechanistic results above
 
         ---
 
@@ -402,7 +473,7 @@ if st.session_state.show_welcome:
 
         1. See how many **patterns** were identified
         2. See how **successful decisions** reinforced knowledge reliability
-        3. This is how the system gets smarter over time
+        3. See which reliability updates the bank made
         """)
 
     # Quick Commands
@@ -451,7 +522,7 @@ if st.session_state.show_welcome:
     # Dismiss button
     col1, col2, col3 = st.columns([1, 1, 1])
     with col2:
-        if st.button("✓ Got it — Show me the simulation", use_container_width=True, type="primary"):
+        if st.button("✓ Got it — Show me the simulation", width="stretch", type="primary"):
             st.session_state.show_welcome = False
             st.rerun()
 
@@ -721,7 +792,7 @@ with tabs[1]:
         )
         fig.add_hline(y=70, line_dash="dash", line_color="orange",
                       annotation_text="70% - Recommended trust threshold")
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width="stretch")
 
         st.caption("💡 **Tip:** Items that fall below 70% reliability may need revalidation before use.")
 
@@ -825,8 +896,8 @@ with tabs[2]:
 with tabs[3]:
     st.header("📊 Results Dashboard")
     st.markdown("""
-    See how the Context Bank improved decision-making. The simulation runs twice:
-    once **without** the bank (baseline) and once **with** it.
+    The legacy calibrated run, side by side: once **without** the bank and once
+    **with** it. Accuracies in this mode are set in configuration.
     """)
 
     if not results:
@@ -838,7 +909,7 @@ with tabs[3]:
         improvement = comparison.get("comparison", {})
 
         # Key metrics with explanations
-        st.subheader("📈 Key Improvements")
+        st.subheader("📈 Key Metrics (legacy calibrated run)")
 
         col1, col2, col3, col4 = st.columns(4)
 
@@ -850,19 +921,19 @@ with tabs[3]:
             st.metric(
                 "Decision Accuracy",
                 f"{with_acc:.0f}%",
-                f"+{acc_improvement:.0f}%" if acc_improvement > 0 else f"{acc_improvement:.0f}%",
-                help="Percentage of decisions that were correct. The delta shows improvement over baseline."
+                f"{acc_improvement:+.0f} pts",
+                help="Percentage of decisions that were correct. The delta is the difference from the baseline, in points."
             )
             st.caption(f"Baseline: {without_acc:.0f}%")
 
         with col2:
             errors_avoided = improvement.get("errors_avoided", 0)
             st.metric(
-                "Mistakes Prevented",
-                errors_avoided,
-                help="Number of incorrect decisions that were avoided thanks to the Context Bank"
+                "Difference in Incorrect Decisions",
+                f"{errors_avoided:+d}",
+                help="Incorrect decisions without the bank minus with it"
             )
-            st.caption("Fewer errors = less risk")
+            st.caption("Positive = fewer errors with the bank")
 
         with col3:
             bank_size = with_bank.get("summary", {}).get("final_bank_size", 0)
@@ -876,16 +947,16 @@ with tabs[3]:
         with col4:
             dqs_imp = improvement.get('dqs_improvement', 0)
             st.metric(
-                "Quality Score Gain",
-                f"+{dqs_imp:.1f}",
-                help="Improvement in Decision Quality Score (DQS). This measures week-over-week decision accuracy."
+                "Quality Score Difference",
+                f"{dqs_imp:+.1f}",
+                help="Difference in Decision Quality Score (mean per-agent weekly accuracy)."
             )
-            st.caption("Cumulative improvement")
+            st.caption("With minus without")
 
         st.divider()
 
         # Visual comparison
-        st.subheader("📊 Before vs After Comparison")
+        st.subheader("📊 Side-by-Side Comparison")
 
         col1, col2 = st.columns(2)
 
@@ -915,7 +986,7 @@ with tabs[3]:
                 barmode="group",
                 showlegend=True,
             )
-            st.plotly_chart(fig, use_container_width=True)
+            st.plotly_chart(fig, width="stretch")
 
         with col2:
             without_correct = without.get("summary", {}).get("correct_decisions", 0)
@@ -934,16 +1005,15 @@ with tabs[3]:
                 barmode="stack",
                 yaxis_title="Number of Decisions",
             )
-            st.plotly_chart(fig, use_container_width=True)
+            st.plotly_chart(fig, width="stretch")
 
         st.divider()
 
         # Week-by-week progression
         st.subheader("📅 Week-by-Week Performance")
         st.markdown("""
-        Watch how performance evolves over the 12-week simulation. The Context Bank
-        typically shows increasing benefit as more knowledge accumulates and agents
-        learn to retrieve it effectively.
+        Performance over the 12 weeks. Each week has only one or two decisions, so
+        week-to-week movement is mostly noise.
         """)
 
         without_ehr = without.get("primary_metrics", {}).get("exception_handling_rates", [])
@@ -953,9 +1023,20 @@ with tabs[3]:
         max_weeks = max(len(without_ehr), len(with_ehr), len(bank_growth))
         progression_data = []
 
+        # Weeks with no decisions report 0.0; show them as gaps, not 0% accuracy
+        all_decisions = load_decisions() or {}
+        decision_weeks = {
+            arm: {d["week"] for d in all_decisions.get(arm, [])}
+            for arm in ("without_bank", "with_bank")
+        }
+
         for week in range(max_weeks):
-            w_val = without_ehr[week] if week < len(without_ehr) else 0
-            wb_val = with_ehr[week] if week < len(with_ehr) else 0
+            w_val = without_ehr[week] if week < len(without_ehr) else None
+            wb_val = with_ehr[week] if week < len(with_ehr) else None
+            if week + 1 not in decision_weeks["without_bank"]:
+                w_val = None
+            if week + 1 not in decision_weeks["with_bank"]:
+                wb_val = None
             bank_size = bank_growth[week] if week < len(bank_growth) else 0
 
             progression_data.append({
@@ -973,7 +1054,7 @@ with tabs[3]:
                     progression_data,
                     x="Week",
                     y=["Without Bank (%)", "With Bank (%)"],
-                    title="Decision Accuracy Over Time",
+                    title="Accuracy by Week (gaps: no decisions)",
                     markers=True,
                     color_discrete_map={
                         "Without Bank (%)": "#ff6b6b",
@@ -985,7 +1066,7 @@ with tabs[3]:
                     yaxis_title="Accuracy (%)",
                     legend_title="Condition",
                 )
-                st.plotly_chart(fig, use_container_width=True)
+                st.plotly_chart(fig, width="stretch")
 
             with col2:
                 fig = px.area(
@@ -996,7 +1077,7 @@ with tabs[3]:
                 )
                 fig.update_traces(fill='tozeroy', line_color='#339af0')
                 fig.update_layout(yaxis_title="Items in Context Bank")
-                st.plotly_chart(fig, use_container_width=True)
+                st.plotly_chart(fig, width="stretch")
 
         st.divider()
 
@@ -1130,7 +1211,7 @@ with tabs[4]:
                     )
                     fig.update_layout(yaxis_range=[0, 100])
                     fig.update_traces(marker_color='#845ef7')
-                    st.plotly_chart(fig, use_container_width=True)
+                    st.plotly_chart(fig, width="stretch")
 
             st.divider()
 
@@ -1171,7 +1252,7 @@ with tabs[4]:
                             if sr.get('confidence_boosts'):
                                 st.markdown("Reliability increased:")
                                 for obj_id, conf in list(sr.get('confidence_boosts', {}).items())[:5]:
-                                    st.text(f"{obj_id}: +{(conf-0.5)*100:.0f}%")
+                                    st.text(f"{obj_id}: now {conf*100:.0f}%")
 
                         with col3:
                             st.markdown(f"**⏱️ Aging Updates:** {decays}")
@@ -1187,8 +1268,8 @@ with tabs[4]:
 with tabs[5]:
     st.header("⚡ Stress Testing")
     st.markdown("""
-    Test how the Context Bank performs under realistic organizational stress.
-    These simulated disruptions mirror real-world challenges that threaten institutional memory.
+    The disruptions injected into the run: staff departures, contradicting policies,
+    agent drift and workload surges.
     """)
 
     # Check for realism data
@@ -1203,8 +1284,10 @@ with tabs[5]:
         mode_colors = {
             "Standard": ("info", "No stress testing"),
             "Chaos Only": ("warning", "Disruptions active"),
+            "Chaos Enabled": ("warning", "Disruptions active"),
             "BPI Calibrated": ("info", "Real timing patterns"),
             "Full Realism": ("success", "All features active"),
+            "Full Realism (BPI + Chaos)": ("success", "All features active"),
         }
         msg_type, description = mode_colors.get(realism_mode, ("info", ""))
 
@@ -1304,7 +1387,7 @@ with tabs[5]:
             height=300,
         )
         fig.update_traces(marker_color='#339af0')
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width="stretch")
         st.caption("Peak: 10-11 AM (matches real office patterns)")
 
     with col2:
@@ -1319,7 +1402,7 @@ with tabs[5]:
             height=300,
         )
         fig.update_traces(marker_color='#339af0')
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width="stretch")
         st.caption("Weekday-heavy, minimal weekends (like real business)")
 
     st.divider()

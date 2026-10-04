@@ -1,5 +1,12 @@
 # Context Bank Simulation: Design Rationale
 
+> **Status (October 2026):** the accuracy figures in this document (for example
+> 55% / 62% / 70% / 85%, and 80% for the Context Bank under chaos) are the design
+> targets entered in `config/simulation_config.py` (`PerformanceCalibration`), not
+> measured results. In calibrated mode they determine the outcome. Measured results
+> come from mechanistic mode: see `docs/MECHANISTIC_MODE.md`. The design reasoning
+> here remains the intent behind the simulation.
+
 ## The Core Question
 
 **What happens when AI agents and employees operate on fragmented, siloed knowledge vs. a unified, continuously-updated institutional memory?**

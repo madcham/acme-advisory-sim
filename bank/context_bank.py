@@ -497,6 +497,10 @@ class ContextBank:
             objects_acted_on_this_week=len(self._actions_this_week),
         )
 
+    def reads_this_week(self) -> frozenset:
+        """IDs of objects read at least once in the current week."""
+        return frozenset(self._reads_this_week)
+
     def clear(self) -> None:
         """Clear all objects from the bank."""
         self._objects.clear()

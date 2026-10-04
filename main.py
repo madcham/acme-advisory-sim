@@ -273,7 +273,12 @@ def run_simulation(
 
     # Generate charts
     chart_gen = ChartGenerator(str(output_path))
-    chart_paths = chart_gen.generate_all(comparison)
+    chart_paths = chart_gen.generate_all(
+        comparison,
+        labels=("WITHOUT_BANK", "WITH_BANK"),
+        note="Calibrated mode: accuracies are set in config, not measured. "
+             "Single run; see run_multi_seed.py.",
+    )
 
     if verbose:
         for name, path in chart_paths.items():
@@ -281,7 +286,17 @@ def run_simulation(
 
     # Generate summary
     summary_gen = SummaryGenerator(str(output_path))
-    summary_path = summary_gen.generate(comparison)
+    summary_path = summary_gen.generate(
+        {"WITHOUT_BANK": summary_without, "WITH_BANK": summary_with},
+        decisions={
+            "WITHOUT_BANK": clock_without.all_decisions,
+            "WITH_BANK": clock_with.all_decisions,
+        },
+        decision_mode="calibrated",
+        headline=("WITH_BANK", "WITHOUT_BANK"),
+        seed=seed,
+        realism_mode=realism_mode,
+    )
 
     if verbose:
         print(f"  Saved: {summary_path}")
@@ -563,7 +578,17 @@ def run_4way_comparison(
 
     # Generate charts (use main comparison for chart generation)
     chart_gen = ChartGenerator(str(output_path))
-    chart_paths = chart_gen.generate_all(main_comparison)
+    mode_note = (
+        "Mechanistic mode" if decision_mode == "mechanistic"
+        else "Calibrated mode: accuracies are set in config, not measured"
+    )
+    chart_paths = chart_gen.generate_all(
+        main_comparison,
+        labels=("SILOED_TYPICAL", "CONTEXT_BANK"),
+        accuracies=accuracies,
+        note=f"{mode_note}. Single run of 15 decisions per condition; "
+             "see summary.md for all four conditions and run_multi_seed.py for comparisons.",
+    )
 
     if verbose:
         for name, path in chart_paths.items():
@@ -571,7 +596,14 @@ def run_4way_comparison(
 
     # Generate summary
     summary_gen = SummaryGenerator(str(output_path))
-    summary_path = summary_gen.generate(main_comparison)
+    summary_path = summary_gen.generate(
+        {name: data["summary"] for name, data in condition_results.items()},
+        decisions={name: data["clock"].all_decisions for name, data in condition_results.items()},
+        decision_mode=decision_mode,
+        headline=("CONTEXT_BANK", "GLOBAL_RAG"),
+        seed=seed,
+        realism_mode=realism_mode,
+    )
 
     if verbose:
         print(f"  Saved: {summary_path}")

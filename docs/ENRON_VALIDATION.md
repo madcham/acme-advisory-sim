@@ -1,5 +1,25 @@
 # Enron Corpus Validation: Empirical Proof of Context Primitives Thesis
 
+> **Status (October 2026): the conclusions in this document are not supported.**
+>
+> - **The Enron calibration was never applied to any reported run.** `SimulationClock`
+>   does not pass calibration to the behavioral generator, `run_enron_comparison.py`
+>   computes it but builds the clock without it, and the generator stores the
+>   calibrated rates without using them. The corpus statistics below are descriptive
+>   only.
+> - **The measured rates are heuristic and approximate.** Categories are assigned in
+>   priority order (so "exception rate" requires an instruction phrase too), quoted
+>   and forwarded text is counted (inflating message length), and the denominator
+>   includes short emails the pattern counter skips. The "guessed" baselines in the
+>   comparison tables do not match the code's previous defaults (0.30 / 0.03 / 0.02
+>   / 0.03, no message-length default).
+> - **The 80% vs 53% result and the "partial sophistication trap"** come from a single
+>   run in calibrated mode, where each condition's accuracy is set in configuration.
+>   They restate that configuration.
+>
+> Current results: `docs/MECHANISTIC_MODE.md` (CONTEXT_BANK minus GLOBAL_RAG: +5.5
+> points [+2.5, +8.6] with chaos, +3.3 [+0.1, +6.5] without; no Enron input).
+
 **Date:** May 2026
 **Purpose:** Validate Context Bank advantage using real organizational communication patterns
 

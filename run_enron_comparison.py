@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
 """
-4-Condition Comparison with Enron-Calibrated Behavioral Exhaust.
+Single-run 4-condition comparison, optionally reporting Enron corpus statistics.
 
-This script proves the Context Bank thesis by comparing:
-1. SILOED_TYPICAL   - No primitives, department-only    (~55%)
-2. SILOED_ADVANCED  - No primitives, broader visibility (~62%)
-3. GLOBAL_RAG       - No primitives, full visibility    (~70%)
-4. CONTEXT_BANK     - Full primitives + synthesis       (~85%)
+LIMITATIONS (read before using any output):
+- Runs one seed in calibrated mode, where each condition's accuracy is set in
+  config/simulation_config.py; the accuracies printed restate that config.
+- The Enron calibration is computed but NOT applied: SimulationClock does not
+  accept it, and the behavioral generator does not use the calibrated rates.
+  Corpus statistics are descriptive only.
 
-The key finding: Context Bank with primitives beats alternatives by 15-30 points,
-even when behavioral exhaust is calibrated from real organizational emails (Enron).
+For comparisons, use run_multi_seed.py --mode mechanistic (docs/MECHANISTIC_MODE.md).
 """
 
 import sys
@@ -186,7 +186,7 @@ def print_summary(results: Dict[str, Any]) -> None:
     gap_vs_baseline = bank_accuracy - baseline
     gap_vs_rag = bank_accuracy - rag_accuracy
 
-    print("  KEY FINDINGS:")
+    print("  DIFFERENCES (single run):")
     print(f"    • Context Bank vs Siloed Typical:  +{gap_vs_baseline:.1f} points")
     print(f"    • Context Bank vs Global RAG:      +{gap_vs_rag:.1f} points")
     print()
@@ -194,9 +194,9 @@ def print_summary(results: Dict[str, Any]) -> None:
     # Error reduction
     baseline_errors = conditions["SILOED_TYPICAL"]["total_errors"]
     bank_errors = conditions["CONTEXT_BANK"]["total_errors"]
-    error_reduction = ((baseline_errors - bank_errors) / baseline_errors * 100) if baseline_errors > 0 else 0
-
-    print(f"    • Error reduction: {error_reduction:.0f}% fewer organizational errors")
+    # Counts, not a percentage reduction: with a handful of decisions a ratio
+    # like "100% fewer" is meaningless
+    print(f"    • Incorrect decisions: {baseline_errors} (SILOED_TYPICAL) vs {bank_errors} (CONTEXT_BANK)")
     print()
 
     # Synthesis value
@@ -206,15 +206,16 @@ def print_summary(results: Dict[str, Any]) -> None:
         print()
 
     print("  " + "=" * 66)
-    print("  THESIS VALIDATED: Context primitives provide 15+ point advantage")
+    print("  Calibrated mode, single seed: these accuracies restate configured")
+    print("  values. Use run_multi_seed.py --mode mechanistic for comparisons.")
     print("  " + "=" * 66)
     print()
 
     # Calibration note
     cal = results["calibration"]
     if cal["source"] == "enron":
-        print(f"  Note: Behavioral exhaust calibrated from {cal['sample_size']:,} real")
-        print(f"        organizational emails (CMU Enron corpus)")
+        print(f"  Note: Enron statistics were computed from {cal['sample_size']:,} emails")
+        print(f"        but are not applied to the simulation (descriptive only).")
     print()
 
 
@@ -223,13 +224,13 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description="Run 4-condition comparison")
     parser.add_argument("--weeks", type=int, default=12, help="Weeks to simulate")
-    parser.add_argument("--enron", type=str, help="Path to Enron emails.csv")
+    parser.add_argument("--enron", type=str, help="Path to Enron emails.csv (optional)")
     parser.add_argument("--quick", action="store_true", help="Quick 4-week run")
 
     args = parser.parse_args()
 
     weeks = 4 if args.quick else args.weeks
-    enron_path = args.enron or "/Users/madhu/Downloads/emails.csv"
+    enron_path = args.enron
 
     results = run_comparison(
         weeks=weeks,

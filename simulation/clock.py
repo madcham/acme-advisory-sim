@@ -279,21 +279,24 @@ class SimulationClock:
         for agent in agent_total:
             dqs[agent] = (agent_correct[agent] / agent_total[agent] * 100) if agent_total[agent] > 0 else 0
 
-        # Exception Handling Rate
-        total_exceptions = len([d for d in decisions if d.scenario_type in
-                               ["vendor_sow", "staffing_assignment", "payment_escalation", "go_no_go"]])
-        correct_exceptions = len([d for d in decisions if d.outcome.value == "correct"])
-        ehr = (correct_exceptions / total_exceptions * 100) if total_exceptions > 0 else 0
+        # Exception Handling Rate (numerator and denominator use the same filter;
+        # counting all correct decisions over a subset could exceed 100%)
+        exception_types = {"vendor_sow", "staffing_assignment", "payment_escalation", "go_no_go"}
+        exceptions = [d for d in decisions if d.scenario_type in exception_types]
+        correct_exceptions = len([d for d in exceptions if d.outcome.value == "correct"])
+        ehr = (correct_exceptions / len(exceptions) * 100) if exceptions else 0
 
-        # Institutional Memory Utilization
-        if self.use_bank and bank_snapshot:
-            read_count = bank_snapshot.objects_read_this_week
-            total_relevant = len(set(
+        # Institutional Memory Utilization: share of this week's relevant
+        # ground-truth objects that were read (counting every object read made
+        # this exceed 100%)
+        if self.use_bank and bank_snapshot and self.bank is not None:
+            relevant = {
                 ctx_id
                 for scenario in scenarios
                 for ctx_id in scenario.ground_truth_context_ids
-            ))
-            imu = (read_count / total_relevant * 100) if total_relevant > 0 else 0
+            }
+            read_relevant = relevant & self.bank.reads_this_week()
+            imu = (len(read_relevant) / len(relevant) * 100) if relevant else 0
         else:
             imu = 0
 
