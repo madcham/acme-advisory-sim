@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "timestamp": "2026-10-04T00:00:08.586053+00:00",
+    "timestamp": "2026-10-04T00:45:17.832059+00:00",
     "weeks_simulated": 12,
     "random_seed": 122,
     "realism_mode": "BPI Calibrated",
@@ -89,7 +89,7 @@
       "incorrect_decisions": 6,
       "overall_accuracy": 60.0,
       "final_bank_size": 75,
-      "final_avg_confidence": 0.4535820745361669,
+      "final_avg_confidence": 0.45557662848485325,
       "total_workflow_events": 1560,
       "total_behavioral_events": 1800
     }
@@ -430,13 +430,13 @@
           0.7223141847619049,
           0.6803762638585859,
           0.639628000323193,
-          0.6270849218019298,
-          0.5941917270993108,
-          0.5628759271062095,
-          0.5492281206923632,
-          0.5231894056715216,
-          0.49878730332950305,
-          0.4535820745361669
+          0.629828982550616,
+          0.5966425955861756,
+          0.5651285509463856,
+          0.5516859585375141,
+          0.5254474085497503,
+          0.5008745778298291,
+          0.45557662848485325
         ],
         "contradiction_counts": [
           1,
@@ -456,10 +456,10 @@
       "synthesis_metrics": {
         "summary": {
           "total_patterns_crystallized": 12,
-          "total_validations_propagated": 0,
+          "total_validations_propagated": 4,
           "total_decay_adjustments": 16,
-          "average_intelligence_score": 0.29500000000000004,
-          "peak_intelligence_score": 0.34,
+          "average_intelligence_score": 0.5075000000000001,
+          "peak_intelligence_score": 0.595,
           "active_weeks": 4,
           "crystallized_entities": [],
           "objects_created": 12
@@ -470,13 +470,13 @@
           0.34,
           0.0,
           0.0,
-          0.26,
+          0.56,
           0.0,
           0.0,
-          0.26,
+          0.535,
           0.0,
           0.0,
-          0.32
+          0.595
         ],
         "weekly_results": [
           null,
@@ -486,12 +486,12 @@
             "validations_propagated": 0,
             "decay_rates_adjusted": 1,
             "new_objects_created": [
-              "CTX-EBA8BB7B",
-              "CTX-6EC8C4AF",
-              "CTX-57B4D782",
-              "CTX-1082EAC6",
-              "CTX-B4EF2C9D",
-              "CTX-AA2BA160"
+              "CTX-46A27012",
+              "CTX-58E36479",
+              "CTX-A5BCBA6F",
+              "CTX-03D3EDE2",
+              "CTX-1D77C977",
+              "CTX-11F5A492"
             ],
             "objects_updated": [
               "CTX-001"
@@ -502,58 +502,69 @@
           null,
           {
             "patterns_crystallized": 3,
-            "validations_propagated": 0,
+            "validations_propagated": 2,
             "decay_rates_adjusted": 2,
             "new_objects_created": [
-              "CTX-68385123",
-              "CTX-CE4A2D4B",
-              "CTX-DFBFE07C"
+              "CTX-2DED1403",
+              "CTX-6DAD3175",
+              "CTX-AA076737"
             ],
             "objects_updated": [
+              "CTX-002",
+              "CTX-003",
               "CTX-001",
               "CTX-002"
             ],
-            "confidence_boosts": {}
+            "confidence_boosts": {
+              "CTX-002": 0.95,
+              "CTX-003": 0.9299999999999999
+            }
           },
           null,
           null,
           {
             "patterns_crystallized": 1,
-            "validations_propagated": 0,
+            "validations_propagated": 1,
             "decay_rates_adjusted": 5,
             "new_objects_created": [
-              "CTX-2F069B5F"
+              "CTX-4401F762"
             ],
             "objects_updated": [
+              "CTX-003",
               "CTX-001",
               "CTX-002",
-              "CTX-84EC5FF8",
-              "CTX-E0AB6800",
-              "CTX-70B5D799"
+              "CTX-61805B03",
+              "CTX-27BFFB55",
+              "CTX-D888F564"
             ],
-            "confidence_boosts": {}
+            "confidence_boosts": {
+              "CTX-003": 0.95
+            }
           },
           null,
           null,
           {
             "patterns_crystallized": 2,
-            "validations_propagated": 0,
+            "validations_propagated": 1,
             "decay_rates_adjusted": 8,
             "new_objects_created": [
-              "CTX-8128A644",
-              "CTX-0A9A167D"
+              "CTX-E6502DEC",
+              "CTX-671C08CD"
             ],
             "objects_updated": [
+              "CTX-006",
               "CTX-001",
               "CTX-002",
               "CTX-006",
-              "CTX-84EC5FF8",
-              "CTX-E0AB6800",
-              "CTX-B509F429",
-              "CTX-70B5D799",
-              "CTX-54A0B055"
+              "CTX-61805B03",
+              "CTX-27BFFB55",
+              "CTX-E7585304",
+              "CTX-D888F564",
+              "CTX-FB723F8B"
             ],
-            "confidence_boosts": {}
+            "confidence_boosts": {
+              "CTX-006": 0.95
+            }
           }
         ],
         "confidence_boosts_history": [
@@ -562,13 +573,20 @@
           {},
           {},
           {},
+          {
+            "CTX-002": 0.95,
+            "CTX-003": 0.9299999999999999
+          },
           {},
           {},
+          {
+            "CTX-003": 0.95
+          },
           {},
           {},
-          {},
-          {},
-          {}
+          {
+            "CTX-006": 0.95
+          }
         ]
       },
       "chaos_metrics": {
@@ -597,7 +615,7 @@
         "incorrect_decisions": 6,
         "accuracy": 60.0,
         "final_bank_size": 75,
-        "final_avg_confidence": 0.4535820745361669
+        "final_avg_confidence": 0.45557662848485325
       }
     },
     "comparison": {

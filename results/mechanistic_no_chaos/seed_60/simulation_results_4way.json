@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "timestamp": "2026-10-03T23:59:57.056836+00:00",
+    "timestamp": "2026-10-04T00:45:06.306120+00:00",
     "weeks_simulated": 12,
     "random_seed": 60,
     "realism_mode": "BPI Calibrated",
@@ -89,7 +89,7 @@
       "incorrect_decisions": 2,
       "overall_accuracy": 86.66666666666667,
       "final_bank_size": 76,
-      "final_avg_confidence": 0.45611609150159377,
+      "final_avg_confidence": 0.4593977592051219,
       "total_workflow_events": 1560,
       "total_behavioral_events": 1800
     }
@@ -427,16 +427,16 @@
         "avg_confidence_history": [
           0.77552,
           0.7311011111111112,
-          0.6963761827692309,
+          0.6963761827692306,
           0.6551806543870967,
           0.6179074330818888,
-          0.6113273567347425,
-          0.5791484327100802,
-          0.5482697566503177,
-          0.546260503550045,
-          0.5224624049764411,
-          0.49875612263447383,
-          0.45611609150159377
+          0.613771801179187,
+          0.5813484327100802,
+          0.5503067936873548,
+          0.5498352986320122,
+          0.5256691521355321,
+          0.501653438325495,
+          0.4593977592051219
         ],
         "contradiction_counts": [
           0,
@@ -456,10 +456,10 @@
       "synthesis_metrics": {
         "summary": {
           "total_patterns_crystallized": 13,
-          "total_validations_propagated": 0,
+          "total_validations_propagated": 5,
           "total_decay_adjustments": 14,
-          "average_intelligence_score": 0.315,
-          "peak_intelligence_score": 0.38,
+          "average_intelligence_score": 0.5337500000000001,
+          "peak_intelligence_score": 0.68,
           "active_weeks": 4,
           "crystallized_entities": [],
           "objects_created": 13
@@ -470,13 +470,13 @@
           0.24,
           0.0,
           0.0,
-          0.38,
+          0.68,
           0.0,
           0.0,
-          0.38,
+          0.68,
           0.0,
           0.0,
-          0.26
+          0.535
         ],
         "weekly_results": [
           null,
@@ -486,10 +486,10 @@
             "validations_propagated": 0,
             "decay_rates_adjusted": 0,
             "new_objects_created": [
-              "CTX-8392FE8F",
-              "CTX-7018F06F",
-              "CTX-29DE072B",
-              "CTX-007C9C9A"
+              "CTX-E43F4495",
+              "CTX-0E108303",
+              "CTX-DE4E84D7",
+              "CTX-F4F5A114"
             ],
             "objects_updated": [],
             "confidence_boosts": {}
@@ -498,60 +498,73 @@
           null,
           {
             "patterns_crystallized": 5,
-            "validations_propagated": 0,
+            "validations_propagated": 2,
             "decay_rates_adjusted": 2,
             "new_objects_created": [
-              "CTX-0A32C8A0",
-              "CTX-C2B0F015",
-              "CTX-FE584451",
-              "CTX-CA22D185",
-              "CTX-560D4848"
+              "CTX-04C703AA",
+              "CTX-15B09F32",
+              "CTX-22BE24D9",
+              "CTX-8FBC4504",
+              "CTX-628EEA2C"
             ],
             "objects_updated": [
+              "CTX-003",
+              "CTX-006",
               "CTX-001",
               "CTX-006"
             ],
-            "confidence_boosts": {}
+            "confidence_boosts": {
+              "CTX-003": 0.9299999999999999,
+              "CTX-006": 0.95
+            }
           },
           null,
           null,
           {
             "patterns_crystallized": 3,
-            "validations_propagated": 0,
+            "validations_propagated": 2,
             "decay_rates_adjusted": 5,
             "new_objects_created": [
-              "CTX-AC675B26",
-              "CTX-25FCECA7",
-              "CTX-A1CDF8B4"
+              "CTX-59148179",
+              "CTX-324F074B",
+              "CTX-B2F33F55"
             ],
             "objects_updated": [
+              "CTX-003",
+              "CTX-1E2DF6B2",
               "CTX-001",
               "CTX-006",
-              "CTX-D8272408",
-              "CTX-3115D057",
-              "CTX-54157389"
+              "CTX-8FB94FBB",
+              "CTX-E7CDC9A0",
+              "CTX-1E2DF6B2"
             ],
-            "confidence_boosts": {}
+            "confidence_boosts": {
+              "CTX-003": 0.95,
+              "CTX-1E2DF6B2": 0.9
+            }
           },
           null,
           null,
           {
             "patterns_crystallized": 1,
-            "validations_propagated": 0,
+            "validations_propagated": 1,
             "decay_rates_adjusted": 7,
             "new_objects_created": [
-              "CTX-FFC0EC7C"
+              "CTX-1D25E2E3"
             ],
             "objects_updated": [
+              "CTX-1E2DF6B2",
               "CTX-001",
               "CTX-006",
-              "CTX-D8272408",
-              "CTX-3115D057",
-              "CTX-F273C5B6",
-              "CTX-54157389",
-              "CTX-0F96FB6B"
+              "CTX-8FB94FBB",
+              "CTX-E7CDC9A0",
+              "CTX-7EF9DDD2",
+              "CTX-1E2DF6B2",
+              "CTX-87437073"
             ],
-            "confidence_boosts": {}
+            "confidence_boosts": {
+              "CTX-1E2DF6B2": 0.95
+            }
           }
         ],
         "confidence_boosts_history": [
@@ -560,13 +573,21 @@
           {},
           {},
           {},
+          {
+            "CTX-003": 0.9299999999999999,
+            "CTX-006": 0.95
+          },
           {},
           {},
+          {
+            "CTX-003": 0.95,
+            "CTX-1E2DF6B2": 0.9
+          },
           {},
           {},
-          {},
-          {},
-          {}
+          {
+            "CTX-1E2DF6B2": 0.95
+          }
         ]
       },
       "chaos_metrics": {
@@ -595,7 +616,7 @@
         "incorrect_decisions": 2,
         "accuracy": 86.66666666666667,
         "final_bank_size": 76,
-        "final_avg_confidence": 0.45611609150159377
+        "final_avg_confidence": 0.4593977592051219
       }
     },
     "comparison": {

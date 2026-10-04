@@ -239,3 +239,155 @@ class TestReviewRegressions:
         clock.chaos_engine.config.agent_drift.drift_start_weeks = []
         clock.run_week(surge_week + 1)  # a week with no chaos events at all
         assert clock.chaos_engine.get_event_multiplier() == 1.0
+
+
+class TestOutcomeAttribution:
+    """
+    The Context Bank credits or blames a record only when the action taken is
+    the one the record recommends; when the agent departs from the advice, the
+    error is the agent's and the record is left alone.
+    """
+
+    CONTRADICTION = "Brightline Consulting cleared: Brightline Consulting now uses the standard SOW process."
+
+    def _bank_with_contradiction_on_top(self, bank):
+        """Make the false policy the consulted record by hiding CTX-001."""
+        contradiction = _contradiction("CTX-001", "W4", self.CONTRADICTION)
+        bank.deposit(contradiction, check_contradictions=False)
+        truth = bank.get("CTX-001")
+        truth.decay_function = DecayFunction.linear
+        truth.decay_rate = 1.0  # below the bank's confidence floor by week 6
+        return contradiction
+
+    def _decide(self, bank, condition=RunCondition.CONTEXT_BANK, **cfg):
+        config = MechanisticConfig(retrieval_recall=1.0, **cfg)
+        model = MechanisticDecisionModel(condition, seed=1, config=config)
+        return model.decide("vendor_agent", BRIGHTLINE_SOW_SCENARIO, week=6, context_bank=bank)
+
+    @staticmethod
+    def _untouched(obj):
+        return not obj.validated_by and not obj.invalidated_by and not obj.acted_on_by
+
+    def test_followed_correct_advice_credits_record(self, seeded_bank):
+        decision = self._decide(seeded_bank, interpretation_accuracy=1.0)
+        truth = seeded_bank.get("CTX-001")
+
+        assert decision.outcome == DecisionOutcome.CORRECT
+        assert decision.context_used == ["CTX-001"]
+        assert len(truth.validated_by) == 1 and not truth.invalidated_by
+        assert [a.outcome for a in truth.acted_on_by] == ["correct"]
+
+    def test_misapplied_correct_advice_does_not_blame_record(self, seeded_bank):
+        decision = self._decide(seeded_bank, interpretation_accuracy=0.0)
+
+        assert decision.outcome == DecisionOutcome.INCORRECT
+        assert decision.outcome_notes == "misapplied correct guidance"
+        assert decision.context_used == ["CTX-001"]  # engaged with it, badly
+        assert "deviated from CTX-001" in decision.reasoning
+        assert self._untouched(seeded_bank.get("CTX-001"))
+
+    def test_followed_wrong_advice_blames_record(self, seeded_bank):
+        contradiction = self._bank_with_contradiction_on_top(seeded_bank)
+        decision = self._decide(seeded_bank, interpretation_accuracy=1.0)
+
+        assert decision.outcome_notes == "followed wrong guidance"
+        assert decision.context_used == [contradiction.id]
+        assert len(contradiction.invalidated_by) == 1 and not contradiction.validated_by
+        assert [a.outcome for a in contradiction.acted_on_by] == ["incorrect"]
+
+    def test_rejected_wrong_advice_then_right_action_leaves_record_alone(self, seeded_bank):
+        contradiction = self._bank_with_contradiction_on_top(seeded_bank)
+        decision = self._decide(seeded_bank, interpretation_accuracy=0.0, base_success_rate=1.0)
+
+        assert decision.outcome == DecisionOutcome.CORRECT
+        assert self._untouched(contradiction)
+
+    def test_standard_action_matching_wrong_advice_blames_record(self, seeded_bank):
+        # The agent did not rely on the false policy, but the action it took is
+        # the one that policy recommends, and an observer cannot tell the two
+        # apart; the bad outcome counts against the policy
+        contradiction = self._bank_with_contradiction_on_top(seeded_bank)
+        decision = self._decide(seeded_bank, interpretation_accuracy=0.0, base_success_rate=0.0)
+
+        assert decision.outcome_notes == "standard process"
+        assert decision.context_used == []
+        assert len(contradiction.invalidated_by) == 1
+
+    def test_decision_record_carries_its_outcome(self, seeded_bank):
+        decision = self._decide(seeded_bank, interpretation_accuracy=0.0)
+        record = decision.deposited_context
+
+        assert record.structured_data["decision_correct"] is False
+        assert len(record.invalidated_by) == 1 and not record.validated_by
+
+    @pytest.mark.parametrize("condition", [
+        RunCondition.SILOED_ADVANCED, RunCondition.GLOBAL_RAG,
+    ])
+    def test_other_conditions_record_no_feedback(self, seeded_bank, condition):
+        decision = self._decide(seeded_bank, condition=condition, interpretation_accuracy=1.0)
+
+        assert all(self._untouched(o) for o in seeded_bank.get_all())
+        assert self._untouched(decision.deposited_context)
+
+    def test_validation_switch_disables_all_feedback(self, seeded_bank):
+        decision = self._decide(seeded_bank, interpretation_accuracy=1.0, use_validation=False)
+
+        assert all(self._untouched(o) for o in seeded_bank.get_all())
+        assert self._untouched(decision.deposited_context)
+
+    def test_followed_actions_reach_validation_propagation(self, seeded_bank):
+        from bank.synthesis import run_synthesis_pass
+
+        truth = seeded_bank.get("CTX-001")
+        truth.confidence_at_creation = 0.6  # room below propagation's 0.95 cap
+        self._decide(seeded_bank, interpretation_accuracy=1.0)
+        run_synthesis_pass(seeded_bank, 6)
+
+        assert truth.confidence_at_creation > 0.6
+
+    def test_deviations_do_not_reach_validation_propagation(self, seeded_bank):
+        from bank.synthesis import run_synthesis_pass
+
+        truth = seeded_bank.get("CTX-001")
+        truth.confidence_at_creation = 0.6  # room below propagation's 0.95 cap
+        self._decide(seeded_bank, interpretation_accuracy=0.0)
+        run_synthesis_pass(seeded_bank, 6)
+
+        assert truth.confidence_at_creation == 0.6
+
+
+class TestCrossProcessReproducibility:
+    """Same seeds must give the same results in every process."""
+
+    SCRIPT = (
+        "from simulation.clock import SimulationClock\n"
+        "from config.simulation_config import RunCondition\n"
+        "from calibration.realism_config import FULL_REALISM_CONFIG\n"
+        "out = []\n"
+        "for seed in range(42, 62):\n"
+        "    clock = SimulationClock(RunCondition.CONTEXT_BANK, seed=seed,\n"
+        "                            realism_config=FULL_REALISM_CONFIG, decision_mode='mechanistic')\n"
+        "    for week in range(1, 13):\n"
+        "        clock.run_week(week)\n"
+        "    out.append(clock.get_summary()['overall_accuracy'])\n"
+        "print(out)\n"
+    )
+
+    def _run(self, hash_seed: str) -> str:
+        import os
+        import subprocess
+        import sys
+        from pathlib import Path
+
+        root = Path(__file__).resolve().parent.parent
+        env = {**os.environ, "PYTHONHASHSEED": hash_seed, "PYTHONPATH": str(root)}
+        result = subprocess.run(
+            [sys.executable, "-c", self.SCRIPT], cwd=root, env=env,
+            capture_output=True, text=True, check=True,
+        )
+        return result.stdout
+
+    def test_results_do_not_depend_on_string_hashing(self):
+        # Hash seeds 1 and 3 gave different results before synthesis iterated
+        # entities in sorted order
+        assert self._run("1") == self._run("3")

@@ -23,8 +23,14 @@ effects on agents. The conditions differ only as described in the thesis:
     SILOED_ADVANCED  own + adjacent departments; relevance x decayed confidence
     GLOBAL_RAG       everything; relevance only
     CONTEXT_BANK     everything, minus superseded and low-confidence objects;
-                     relevance x decayed confidence x validation record, and the
-                     bank records outcome feedback on the objects agents act on
+                     relevance x decayed confidence x validation record; records
+                     outcome feedback; runs synthesis (crystallization,
+                     validation propagation, adaptive decay)
+
+Outcome feedback (CONTEXT_BANK) is attributed only by what an observer could
+see: a record is credited or blamed when the action taken is the one it
+recommends. When the agent departs from the advice, the error is the agent's
+and the record is left alone.
 """
 
 import random
@@ -246,8 +252,10 @@ class MechanisticDecisionModel:
         gt_ids = scenario.ground_truth_context_ids
 
         retrieved: List[ContextObject] = []
-        acted_on: Optional[ContextObject] = None
-        acted_guidance = Guidance.NEUTRAL
+        # The top-ranked result that bears on the decision, i.e. the guidance
+        # the agent is shown first. None if nothing usable or context is ignored.
+        consulted: Optional[ContextObject] = None
+        consulted_guidance = Guidance.NEUTRAL
 
         if bank is not None and self.condition != RunCondition.SILOED_TYPICAL:
             retrieved = self._retrieve(bank, agent_id, scenario.entities)
@@ -256,27 +264,51 @@ class MechanisticDecisionModel:
                 for obj in retrieved:
                     g = guidance(obj, gt_ids, bank)
                     if g != Guidance.NEUTRAL:
-                        acted_on, acted_guidance = obj, g
+                        consulted, consulted_guidance = obj, g
                         break
 
         p_follow = _apply_error_multiplier(cfg.interpretation_accuracy, accuracy_modifier)
         p_base = _apply_error_multiplier(cfg.base_success_rate, accuracy_modifier)
 
-        if acted_guidance == Guidance.CORRECT:
+        # Whether the agent acted on the consulted guidance, well or badly
+        # (misapplying it still counts). Attribution of the outcome is separate,
+        # below, and depends only on what is observable.
+        engaged = False
+        if consulted_guidance == Guidance.CORRECT:
             correct = self._rng.random() < p_follow
+            engaged = True
             path = "followed correct guidance" if correct else "misapplied correct guidance"
-        elif acted_guidance == Guidance.WRONG and self._rng.random() < p_follow:
+        elif consulted_guidance == Guidance.WRONG and self._rng.random() < p_follow:
             correct = False
+            engaged = True
             path = "followed wrong guidance"
         else:
-            # Includes wrong guidance the agent did not follow: it falls back to
-            # standard process, so that object played no part in the outcome
-            acted_on = None
+            # No usable guidance, or wrong guidance the agent did not follow:
+            # it falls back to standard process
             correct = self._rng.random() < p_base
             path = "standard process"
 
         action = scenario.correct_action if correct else scenario.incorrect_action
-        used = [acted_on.id] if acted_on is not None else []
+        used = consulted if engaged else None
+
+        # What an observer can tell: whether the action taken is the one the
+        # consulted record recommends. Correct guidance recommends the correct
+        # action; wrong guidance (a false policy, a past mistake) recommends the
+        # standard-process action. This reads the record's advice, not its truth.
+        recommended = None
+        if consulted is not None:
+            recommended = (
+                scenario.correct_action if consulted_guidance == Guidance.CORRECT
+                else scenario.incorrect_action
+            )
+        matched_advice = consulted is not None and action == recommended
+        deviated = consulted is not None and not matched_advice
+
+        reasoning = path
+        if used is not None:
+            reasoning += f" ({used.id})"
+        if deviated:
+            reasoning += f"; deviated from {consulted.id}, which was not credited or blamed"
         self._decision_counter += 1
 
         decision = AgentDecision(
@@ -290,10 +322,10 @@ class MechanisticDecisionModel:
             scenario_description=scenario.description,
             entities_involved=scenario.entities,
             decision_taken=action,
-            reasoning=f"{path}" + (f" ({acted_on.id})" if acted_on is not None else ""),
-            confidence=0.8 if acted_on is not None else 0.6,
+            reasoning=reasoning,
+            confidence=0.8 if used is not None else 0.6,
             context_retrieved=[o.id for o in retrieved],
-            context_used=used,
+            context_used=[used.id] if used is not None else [],
             outcome=DecisionOutcome.CORRECT if correct else DecisionOutcome.INCORRECT,
             outcome_notes=path,
         )
@@ -302,11 +334,24 @@ class MechanisticDecisionModel:
             for obj in retrieved:
                 bank.record_read(obj.id, agent_id, f"Retrieved for {scenario.scenario_type}")
             decision.deposited_context = self._decision_record(decision, gt_ids, correct, week)
+
             if self.condition == RunCondition.CONTEXT_BANK and cfg.use_validation:
-                # Outcome feedback: the bank credits or discredits what was acted on,
-                # and stores the new decision record with its known outcome
-                if acted_on is not None:
-                    bank.record_validation(acted_on.id, agent_id, validated=correct)
+                # Outcome feedback, attributed by what is observable:
+                # - The action matches the consulted record's advice: the record
+                #   is credited or blamed, and the action is logged (synthesis
+                #   reads correct actions to propagate validation).
+                # - The action departs from the advice: the error is the agent's,
+                #   so the record is left alone. The deviation is not logged as
+                #   an action because synthesis counts actions as activity.
+                outcome = "correct" if correct else "incorrect"
+                if matched_advice:
+                    bank.record_validation(consulted.id, agent_id, validated=correct)
+                    bank.record_action(
+                        consulted.id, agent_id,
+                        f"Followed for {scenario.scenario_type}", outcome=outcome,
+                    )
+                # The new decision record describes the action actually taken,
+                # so its advice always matches and the outcome applies to it
                 decision.deposited_context.record_validation(agent_id, validated=correct)
 
         return decision

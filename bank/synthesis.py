@@ -198,7 +198,10 @@ class SynthesisEngine:
         # Group objects by primary entity
         for obj in self.bank.get_all():
             entities = self._extract_entities(obj)
-            for entity in entities:
+            # Sorted: set order varies between processes (string hashing is
+            # randomized), which made crystal creation order, and so results,
+            # differ between runs of the same seed
+            for entity in sorted(entities):
                 entity_objects[entity].append(obj)
 
         clusters = []
